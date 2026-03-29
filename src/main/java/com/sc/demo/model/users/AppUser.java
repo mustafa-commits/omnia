@@ -18,15 +18,11 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-
     String headFamilyName;
-
 
     String mobile1;
 
-
     String mobile2;
-
 
     String address;
 
