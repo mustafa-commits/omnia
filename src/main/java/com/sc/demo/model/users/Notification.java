@@ -19,16 +19,26 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long notification_id;
 
-    Integer identity;
+    Integer receiveId;
+
+    Integer sendId;
+
+    String title;
+
+    String description;
+
+    Integer isActive;
 
     LocalDateTime createDate;
 
     LocalDateTime lastUpdate;
 
-    Integer isActive;
-
-    String description;
-
+    public Notification(Integer receiveId, Integer sendId, String title, String description) {
+        this.sendId = sendId;
+        this.receiveId = receiveId;
+        this.title = title;
+        this.description = description;
+    }
 }
 
 
