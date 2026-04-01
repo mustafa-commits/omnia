@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "sc_notification")
@@ -33,11 +34,16 @@ public class Notification {
 
     LocalDateTime lastUpdate;
 
-    public Notification(Integer receiveId, Integer sendId, String title, String description) {
+    @OneToMany
+    private List<NotificationDetails> notificationDetails;
+
+    public Notification(Integer receiveId, Integer sendId, String title,
+                        String description, List notificationDetails) {
         this.sendId = sendId;
         this.receiveId = receiveId;
         this.title = title;
         this.description = description;
+        this.notificationDetails = notificationDetails;
     }
 }
 

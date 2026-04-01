@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @Entity
 @Table(name = "sc_notification_details")
 @Getter
@@ -16,9 +17,11 @@ public class NotificationDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long notification_details_id;
+    private Long notification_details_id;
 
-    Long user_id;
+    private Long user_id;
 
-    Long notification_id;
+    @ManyToOne
+    @JoinColumn(name = "notification_id")
+    private Notification notification;
 }

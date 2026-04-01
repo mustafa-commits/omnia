@@ -14,7 +14,8 @@ public class NotificationService {
 
     public Notification createNotification(NotificationRequest notificationRequest){
         Notification entity = new Notification(notificationRequest.sendId(), notificationRequest.receiveId(),
-                notificationRequest.title(), notificationRequest.description());
+                notificationRequest.title(), notificationRequest.description(),
+                notificationRequest.notificationDetails());
 
         Notification notification = notificationRepo.save(entity);
 
