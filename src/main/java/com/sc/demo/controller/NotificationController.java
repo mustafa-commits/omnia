@@ -6,6 +6,7 @@ import com.sc.demo.repository.NotificationRepo;
 import com.sc.demo.service.users.LoginService;
 import com.sc.demo.service.users.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,5 +20,10 @@ public class NotificationController {
     @PostMapping("/V1/api/sc/createNotification")
     public Notification createNotification(@RequestBody NotificationRequest notificationRequest){
         return notificationService.createNotification(notificationRequest);
+    }
+
+    @GetMapping("/V1/api/sc/getNotification")
+    public Notification getNotification(@RequestBody long id){
+        return notificationService.notification1(id);
     }
 }
