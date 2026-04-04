@@ -2,6 +2,7 @@ package com.sc.demo.controller;
 
 import com.sc.demo.model.notification.Notification;
 import com.sc.demo.model.users.dto.NotificationRequest;
+import com.sc.demo.model.users.dto.NotificationResponse;
 import com.sc.demo.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,4 +22,11 @@ public class NotificationController {
     public Notification getNotification(@RequestParam long nid){
         return notificationService.notification1(nid);
     }
+
+
+    @GetMapping("/V2/api/sc/getNotification")
+    public NotificationResponse getNotification2(@RequestParam long nid){
+        return notificationService.notification(nid);
+    }
+
 }

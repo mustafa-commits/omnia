@@ -43,17 +43,10 @@ public class NotificationService {
 
     public Notification createNotification(NotificationRequest notificationRequest){
 
-        List<NotificationDetails> notificationDetailsList=new ArrayList<>();
-        for (NotificationDetails notificationDetail : notificationRequest.notificationDetails()) {
-
-            notificationDetailsList.add(new NotificationDetails(notificationDetail.getUser_id()));
-        }
-
-
-
         Notification notification = new Notification(notificationRequest.sendId(),
                 notificationRequest.title(), notificationRequest.description(),
-                notificationDetailsRepo.saveAll(notificationDetailsList));
+                notificationRequest.notificationDetails()
+        );
 
         notification= notificationRepo.save(notification);
 
@@ -63,8 +56,9 @@ public class NotificationService {
     public NotificationResponse notification(long id) {
 
         NotificationResponse NoteCome = jdbcClient.sql("""
-                    select N.TITLE, N.DESCRIPTION, ND.USER_ID from SC_NOTIFICATION N
-                            left join SC_NOTIFICATION_DETAILS ND on N.NOTIFICATION_ID = ND.NOTIFICATION_ID where id = :Id
+                    select N.TITLE, N.DESCRIPTION, N.send_id
+                    from SC_NOTIFICATION N
+                            left join SC_NOTIFICATION_DETAILS ND on N.NOTIFICATION_ID = ND.NOTIFICATION_ID where user_id = :Id
                 """).param("Id",id).query(NotificationResponse.class).single();
 
         return NoteCome;
