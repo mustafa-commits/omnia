@@ -1,4 +1,4 @@
-package com.sc.demo.model.users;
+package com.sc.demo.model.notification;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,4 +24,10 @@ public class NotificationDetails {
     @ManyToOne
     @JoinColumn(name = "notification_id")
     private Notification notification;
+
+
+    public NotificationDetails(Long user_id) {
+        this.user_id = user_id;
+    }
+
 }

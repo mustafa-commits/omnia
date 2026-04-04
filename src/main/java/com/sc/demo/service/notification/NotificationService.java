@@ -1,14 +1,18 @@
-package com.sc.demo.service.users;
+package com.sc.demo.service.notification;
 
-import com.sc.demo.model.users.Notification;
+import com.sc.demo.model.notification.Notification;
+import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.users.dto.NotificationRequest;
 import com.sc.demo.model.users.dto.NotificationResponse;
 import com.sc.demo.repository.AppUserRepo;
+import com.sc.demo.repository.NotificationDetailsRepo;
 import com.sc.demo.repository.NotificationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,8 +27,12 @@ public class NotificationService {
     @Autowired
     private JdbcClient jdbcClient;
 
+
+    @Autowired
+    private NotificationDetailsRepo notificationDetailsRepo;
+
     public Notification notification1(long notification_id) {
-        Optional<Notification> byId = appUserRepo.findById(notification_id);
+        Optional<Notification> byId = notificationRepo.findById(notification_id);
 
         if (byId.isPresent()) {
             return byId.get();
@@ -34,11 +42,20 @@ public class NotificationService {
     }
 
     public Notification createNotification(NotificationRequest notificationRequest){
-        Notification entity = new Notification(notificationRequest.sendId(), notificationRequest.receiveId(),
-                notificationRequest.title(), notificationRequest.description(),
-                notificationRequest.notificationDetails());
 
-        Notification notification = notificationRepo.save(entity);
+        List<NotificationDetails> notificationDetailsList=new ArrayList<>();
+        for (NotificationDetails notificationDetail : notificationRequest.notificationDetails()) {
+
+            notificationDetailsList.add(new NotificationDetails(notificationDetail.getUser_id()));
+        }
+
+
+
+        Notification notification = new Notification(notificationRequest.sendId(),
+                notificationRequest.title(), notificationRequest.description(),
+                notificationDetailsRepo.saveAll(notificationDetailsList));
+
+        notification= notificationRepo.save(notification);
 
         return notification;
     }

@@ -1,12 +1,13 @@
 package com.sc.demo.model.users.dto;
 
+import com.sc.demo.model.notification.NotificationDetails;
+
 import java.util.List;
 
 public record NotificationRequest(
-        Integer receiveId,
         Integer sendId,
         String title,
         String description,
-        List notificationDetails
+        List<NotificationDetails> notificationDetails
 ) {
 }

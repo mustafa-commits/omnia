@@ -1,4 +1,4 @@
-package com.sc.demo.model.users;
+package com.sc.demo.model.notification;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,11 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Notification {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long notification_id;
-
-    Integer receiveId;
 
     Integer sendId;
 
@@ -34,16 +33,21 @@ public class Notification {
 
     LocalDateTime lastUpdate;
 
-    @OneToMany
+    @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     private List<NotificationDetails> notificationDetails;
 
-    public Notification(Integer receiveId, Integer sendId, String title,
-                        String description, List notificationDetails) {
+    public Notification(Integer sendId, String title,
+                        String description, List<NotificationDetails> notificationDetails) {
         this.sendId = sendId;
-        this.receiveId = receiveId;
         this.title = title;
         this.description = description;
         this.notificationDetails = notificationDetails;
+        this.isActive=1;
+    }
+
+    @PrePersist
+    public void prePersist(){
+        this.createDate=LocalDateTime.now();
     }
 }
 
