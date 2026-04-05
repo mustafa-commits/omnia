@@ -49,17 +49,16 @@ public class NotificationService {
         );
 
         notification= notificationRepo.save(notification);
-
         return notification;
     }
 
-    public NotificationResponse notification(long id) {
+    public NotificationResponse notification(long user_id) {
 
         NotificationResponse NoteCome = jdbcClient.sql("""
                     select N.TITLE, N.DESCRIPTION, N.send_id
                     from SC_NOTIFICATION N
-                            left join SC_NOTIFICATION_DETAILS ND on N.NOTIFICATION_ID = ND.NOTIFICATION_ID where user_id = :Id
-                """).param("Id",id).query(NotificationResponse.class).single();
+                            left join SC_NOTIFICATION_DETAILS ND on N.NOTIFICATION_ID = ND.NOTIFICATION_ID where user_id = :user_id
+                """).param("user_id",user_id).query(NotificationResponse.class).single();
 
         return NoteCome;
     }

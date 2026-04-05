@@ -19,14 +19,14 @@ public class NotificationController {
     }
 
     @GetMapping("/V1/api/sc/getNotification")
-    public Notification getNotification(@RequestParam long nid){
-        return notificationService.notification1(nid);
+    public Notification getNotification(@RequestParam long user_id){
+        return notificationService.notification1(user_id);
     }
 
 
     @GetMapping("/V2/api/sc/getNotification")
-    public NotificationResponse getNotification2(@RequestParam long nid){
-        return notificationService.notification(nid);
+    public NotificationResponse getNotification2(@RequestParam long user_id){
+        return notificationService.notification(user_id);
     }
 
 }
