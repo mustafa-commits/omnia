@@ -4,6 +4,7 @@ import com.sc.demo.model.notification.Notification;
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.users.dto.NotificationRequest;
 import com.sc.demo.model.users.dto.NotificationResponse;
+import com.sc.demo.model.users.dto.PublicNotification;
 import com.sc.demo.repository.AppUserRepo;
 import com.sc.demo.repository.NotificationDetailsRepo;
 import com.sc.demo.repository.NotificationRepo;
@@ -20,9 +21,6 @@ public class NotificationService {
 
     @Autowired
     private NotificationRepo notificationRepo;
-
-    @Autowired
-    private AppUserRepo appUserRepo;
 
     @Autowired
     private JdbcClient jdbcClient;
@@ -45,7 +43,7 @@ public class NotificationService {
 
         Notification notification = new Notification(notificationRequest.sendId(),
                 notificationRequest.title(), notificationRequest.description(),
-                notificationRequest.notificationDetails()
+                notificationRequest.notificationDetails(), notificationRequest.notificationType()
         );
 
         notification= notificationRepo.save(notification);
@@ -61,6 +59,18 @@ public class NotificationService {
                 """).param("user_id",user_id).query(NotificationResponse.class).single();
 
         return NoteCome;
+    }
+
+    public PublicNotification PublicNotification(long user_id) {
+
+        PublicNotification pNote = jdbcClient.sql("""
+                   select n.CREATE_DATE, n.TITLE, n.DESCRIPTION
+                   from SC_NOTIFICATION n
+                   left join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
+                   Where ND.user_id = :user_id;
+                """).param("user_id",user_id).query(PublicNotification.class).single();
+
+        return pNote;
     }
 
 }

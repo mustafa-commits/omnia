@@ -30,6 +30,8 @@ public class Notification {
 
     Integer isActive;
 
+    Integer notificationType;
+
     LocalDateTime createDate;
 
     LocalDateTime lastUpdate;
@@ -38,13 +40,15 @@ public class Notification {
     private List<NotificationDetails> notificationDetails = new ArrayList<>();
 
     public Notification(Integer sendId, String title,
-                        String description, List<NotificationDetails> notificationDetails) {
+                        String description, List<NotificationDetails> notificationDetails,
+                        Integer notificationType) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;
         this.notificationDetails.addAll(notificationDetails);
 //        notificationDetails.get(0).setNotification(this);
         this.isActive=1;
+        this.notificationType = notificationType;
     }
 //        this.notificationDetails = notificationDetails;
 

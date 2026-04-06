@@ -8,6 +8,7 @@ public record NotificationRequest(
         Integer sendId,
         String title,
         String description,
+        Integer notificationType,
         List<NotificationDetails> notificationDetails
 ) {
 }
