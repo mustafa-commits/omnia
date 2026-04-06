@@ -4,6 +4,7 @@ import com.sc.demo.model.notification.Notification;
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.users.dto.NotificationRequest;
 import com.sc.demo.model.users.dto.NotificationResponse;
+import com.sc.demo.model.users.dto.PrivateNotification;
 import com.sc.demo.model.users.dto.PublicNotification;
 import com.sc.demo.repository.AppUserRepo;
 import com.sc.demo.repository.NotificationDetailsRepo;
@@ -63,14 +64,31 @@ public class NotificationService {
 
     public PublicNotification PublicNotification(long user_id) {
 
-        PublicNotification pNote = jdbcClient.sql("""
+        Optional <PublicNotification>  pNote = jdbcClient.sql("""
                    select n.CREATE_DATE, n.TITLE, n.DESCRIPTION
                    from SC_NOTIFICATION n
                    left join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
-                   Where ND.user_id = :user_id;
-                """).param("user_id",user_id).query(PublicNotification.class).single();
+                   Where ND.user_id = :user_id
+                """).param("user_id",user_id).query(PublicNotification.class).optional();
 
-        return pNote;
+        if (pNote.isPresent())
+            return pNote.get();
+            else
+                return null;
     }
 
+    public PrivateNotification PrivateNotification(long notification_type) {
+
+        Optional <PrivateNotification> pNote = jdbcClient.sql("""
+                   SELECT SEND_ID, TITLE, DESCRIPTION, CREATE_DATE
+                   FROM SC_NOTIFICATION
+                   where notification_type = :notification_type;
+                
+                """).param("notification_type",notification_type).query(PrivateNotification.class).optional();
+
+        if (pNote.isPresent())
+            return pNote.get();
+        else
+            return null;
+    }
 }
