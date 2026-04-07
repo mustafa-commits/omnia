@@ -30,7 +30,8 @@ public class Notification {
 
     Integer isActive;
 
-    Integer notificationType;
+    @Enumerated(EnumType.ORDINAL)
+    NotificationType notificationType;
 
     LocalDateTime createDate;
 
@@ -41,7 +42,7 @@ public class Notification {
 
     public Notification(Integer sendId, String title,
                         String description, List<NotificationDetails> notificationDetails,
-                        Integer notificationType) {
+                        NotificationType notificationType) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;
