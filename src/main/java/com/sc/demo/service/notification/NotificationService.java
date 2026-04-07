@@ -62,7 +62,7 @@ public class NotificationService {
         NotificationResponse NoteCome = jdbcClient.sql("""
                     select N.TITLE, N.DESCRIPTION, N.send_id
                     from SC_NOTIFICATION N
-                            left join SC_NOTIFICATION_DETAILS ND on N.NOTIFICATION_ID = ND.NOTIFICATION_ID where user_id = :user_id
+                        join SC_NOTIFICATION_DETAILS ND on N.NOTIFICATION_ID = ND.NOTIFICATION_ID where user_id = :user_id
                 """).param("user_id",user_id).query(NotificationResponse.class).single();
 
         return NoteCome;
