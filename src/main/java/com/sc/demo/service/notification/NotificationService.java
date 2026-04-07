@@ -48,14 +48,11 @@ public class NotificationService {
         );
 
         notification= notificationRepo.save(notification);
+
         for (NotificationDetails n :notificationRequest.notificationDetails()){
             notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(),notification));
         }
-//        .forEach(
-//                e->{
-//
-//                }
-//        );
+
 
         return notification;
     }
