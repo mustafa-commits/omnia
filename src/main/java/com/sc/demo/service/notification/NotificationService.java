@@ -44,10 +44,19 @@ public class NotificationService {
 
         Notification notification = new Notification(notificationRequest.sendId(),
                 notificationRequest.title(), notificationRequest.description(),
-                notificationRequest.notificationDetails(), notificationRequest.notificationType()
+                 notificationRequest.notificationType()
         );
 
         notification= notificationRepo.save(notification);
+        for (NotificationDetails n :notificationRequest.notificationDetails()){
+            notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(),notification));
+        }
+//        .forEach(
+//                e->{
+//
+//                }
+//        );
+
         return notification;
     }
 

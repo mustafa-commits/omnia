@@ -30,4 +30,8 @@ public class NotificationDetails {
         this.user_id = user_id;
     }
 
+    public NotificationDetails(Long user_id, Notification notification) {
+        this.user_id = user_id;
+        this.notification = notification;
+    }
 }
