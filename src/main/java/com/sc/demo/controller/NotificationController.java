@@ -26,7 +26,7 @@ public class NotificationController {
     }
 
 
-    @GetMapping("/V2/api/sc/getNotification")
+    @GetMapping("/V2/api/sc/app/getNotification")
     public NotificationResponse getNotification2(@RequestParam long user_id){
         return notificationService.notification(user_id);
     }
