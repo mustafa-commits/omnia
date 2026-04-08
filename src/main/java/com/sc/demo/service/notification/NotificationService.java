@@ -65,7 +65,7 @@ public class NotificationService {
     // اشعارات التطيق لكل يززر
     public PHoneNotification PHoneNotification(long user_id) {
         Optional <PHoneNotification>  pNote = jdbcClient.sql("""
-                   select n.CREATE_DATE, n.TITLE, n.DESCRIPTION
+                   select n.CREATE_DATE as createDate, n.TITLE, n.DESCRIPTION
                    from SC_NOTIFICATION n
                    join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
                    Where ND.user_id = :user_id
@@ -80,7 +80,7 @@ public class NotificationService {
     // جلب اشعارات الداشبورد حسب النوع (عامة او خاصة)
     public NotificationByType NotificationByType(long notification_type) {
         Optional <NotificationByType> dNote = jdbcClient.sql("""
-                   SELECT SEND_ID, TITLE, DESCRIPTION, CREATE_DATE
+                   SELECT SEND_ID as sendId, TITLE, DESCRIPTION, CREATE_DATE as createDate
                    FROM SC_NOTIFICATION
                    where notification_type = :notification_type;
                 """).param("notification_type",notification_type).query(NotificationByType.class).optional();
@@ -95,7 +95,7 @@ public class NotificationService {
     public AllNotificationFamily AllNotificationFamily(long user_id) {
 
         Optional <AllNotificationFamily>  allDNote = jdbcClient.sql("""
-                   select n.CREATE_DATE, n.TITLE, n.DESCRIPTION, n.notification_type
+                   select n.CREATE_DATE as createDate, n.TITLE, n.DESCRIPTION, n.notification_type as NotificationType
                    from SC_NOTIFICATION n
                    join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
                    Where ND.user_id = :user_id
