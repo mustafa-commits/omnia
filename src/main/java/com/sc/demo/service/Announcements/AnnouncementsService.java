@@ -10,7 +10,10 @@ import com.sc.demo.repository.AnnouncementsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -26,12 +29,17 @@ public class AnnouncementsService {
     private AnnouncementsDetailsRepo announcementsDetailsRepo;
 
     // انشاء تبليغ
-    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest){
+    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file){
         Announcements announcements = new Announcements(announcementsRequest.sendId(),
                 announcementsRequest.title(), announcementsRequest.description());
         announcements = announcementsRepo.save(announcements);
         for (AnnouncementsDetails a : announcementsRequest.announcementsDetails()){
             announcementsDetailsRepo.save(new AnnouncementsDetails(a.getUser_id(), announcements));
+        }
+        try {
+            file.transferTo(new File("put path here"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return announcements;
     }

@@ -38,6 +38,9 @@ public class Announcements {
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsDetails> announcementsDetails = new ArrayList<>();
 
+    @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
+    private List<AnnouncementsAttachment> announcementsAttachment = new ArrayList<>();
+
     public Announcements(Integer sendId, String title, String description) {
         this.sendId = sendId;
         this.title = title;
