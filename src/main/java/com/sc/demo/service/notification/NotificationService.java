@@ -2,6 +2,7 @@ package com.sc.demo.service.notification;
 
 import com.sc.demo.model.notification.Notification;
 import com.sc.demo.model.notification.NotificationDetails;
+import com.sc.demo.model.users.dto.AllNotificationFamily;
 import com.sc.demo.model.users.dto.NotificationRequest;
 import com.sc.demo.model.users.dto.NotificationByType;
 import com.sc.demo.model.users.dto.PHoneNotification;
@@ -63,11 +64,10 @@ public class NotificationService {
 
     // اشعارات التطيق لكل يززر
     public PHoneNotification PHoneNotification(long user_id) {
-
         Optional <PHoneNotification>  pNote = jdbcClient.sql("""
                    select n.CREATE_DATE, n.TITLE, n.DESCRIPTION
                    from SC_NOTIFICATION n
-                   left join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
+                   join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
                    Where ND.user_id = :user_id
                 """).param("user_id",user_id).query(PHoneNotification.class).optional();
 
@@ -79,14 +79,30 @@ public class NotificationService {
 
     // جلب اشعارات الداشبورد حسب النوع (عامة او خاصة)
     public NotificationByType NotificationByType(long notification_type) {
-        Optional <NotificationByType> pNote = jdbcClient.sql("""
+        Optional <NotificationByType> dNote = jdbcClient.sql("""
                    SELECT SEND_ID, TITLE, DESCRIPTION, CREATE_DATE
                    FROM SC_NOTIFICATION
                    where notification_type = :notification_type;
                 """).param("notification_type",notification_type).query(NotificationByType.class).optional();
 
-        if (pNote.isPresent())
-            return pNote.get();
+        if (dNote.isPresent())
+            return dNote.get();
+        else
+            return null;
+    }
+
+    // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
+    public AllNotificationFamily AllNotificationFamily(long user_id) {
+
+        Optional <AllNotificationFamily>  allDNote = jdbcClient.sql("""
+                   select n.CREATE_DATE, n.TITLE, n.DESCRIPTION, n.notification_type
+                   from SC_NOTIFICATION n
+                   join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
+                   Where ND.user_id = :user_id
+                """).param("user_id",user_id).query(AllNotificationFamily.class).optional();
+
+        if (allDNote.isPresent())
+            return allDNote.get();
         else
             return null;
     }
