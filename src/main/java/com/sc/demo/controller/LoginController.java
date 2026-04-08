@@ -2,9 +2,9 @@ package com.sc.demo.controller;
 
 
 import com.sc.demo.model.users.AppUser;
-import com.sc.demo.model.users.dto.AppUserRequest;
-import com.sc.demo.model.users.dto.AppUserRequest2;
-import com.sc.demo.model.users.dto.LoginResponse;
+import com.sc.demo.model.dto.AppUserRequest;
+import com.sc.demo.model.dto.AppUserRequest2;
+import com.sc.demo.model.dto.LoginResponse;
 import com.sc.demo.service.users.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

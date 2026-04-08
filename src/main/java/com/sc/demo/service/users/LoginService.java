@@ -1,14 +1,12 @@
 package com.sc.demo.service.users;
 
 import com.sc.demo.model.users.AppUser;
-import com.sc.demo.model.users.dto.AppUserRequest2;
-import com.sc.demo.model.users.dto.LoginResponse;
+import com.sc.demo.model.dto.AppUserRequest2;
+import com.sc.demo.model.dto.LoginResponse;
 import com.sc.demo.repository.AppUserRepo;
-import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 

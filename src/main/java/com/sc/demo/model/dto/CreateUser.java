@@ -1,4 +1,4 @@
-package com.sc.demo.model.users.dto;
+package com.sc.demo.model.dto;
 
 public record CreateUser(
         String name,

@@ -2,10 +2,10 @@ package com.sc.demo.service.notification;
 
 import com.sc.demo.model.notification.Notification;
 import com.sc.demo.model.notification.NotificationDetails;
-import com.sc.demo.model.users.dto.AllNotificationFamily;
-import com.sc.demo.model.users.dto.NotificationRequest;
-import com.sc.demo.model.users.dto.NotificationByType;
-import com.sc.demo.model.users.dto.PHoneNotification;
+import com.sc.demo.model.dto.AllNotificationFamily;
+import com.sc.demo.model.dto.NotificationRequest;
+import com.sc.demo.model.dto.NotificationByType;
+import com.sc.demo.model.dto.PHoneNotification;
 import com.sc.demo.repository.NotificationDetailsRepo;
 import com.sc.demo.repository.NotificationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +23,8 @@ public class NotificationService {
     @Autowired
     private JdbcClient jdbcClient;
 
-
     @Autowired
     private NotificationDetailsRepo notificationDetailsRepo;
-
-//    public Notification notification1(long notification_id) {
-//        Optional<Notification> byId = notificationRepo.findById(notification_id);
-//
-//        if (byId.isPresent()) {
-//            return byId.get();
-//        } else
-//            return null;
-//
-//    }
 
     // انشاء اشعار
     public Notification createNotification(NotificationRequest notificationRequest){
@@ -45,22 +34,10 @@ public class NotificationService {
         );
         notification= notificationRepo.save(notification);
         for (NotificationDetails n :notificationRequest.notificationDetails()){
-            notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(),notification));
+            notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notification));
         }
         return notification;
     }
-
-//    public NotificationResponse notification(long user_id) {
-//
-//        NotificationResponse NoteCome = jdbcClient.sql("""
-//                    select N.TITLE, N.DESCRIPTION, N.send_id
-//                    from SC_NOTIFICATION N
-//                        join SC_NOTIFICATION_DETAILS ND on N.NOTIFICATION_ID = ND.NOTIFICATION_ID
-//                        where user_id = :user_id
-//                """).param("user_id",user_id).query(NotificationResponse.class).single();
-//
-//        return NoteCome;
-//    }
 
     // اشعارات التطيق لكل يززر
     public PHoneNotification PHoneNotification(long user_id) {

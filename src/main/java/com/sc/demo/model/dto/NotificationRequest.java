@@ -1,4 +1,4 @@
-package com.sc.demo.model.users.dto;
+package com.sc.demo.model.dto;
 
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.notification.NotificationType;

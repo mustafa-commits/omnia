@@ -48,7 +48,7 @@ public class Notification {
         this.description = description;
 //        this.notificationDetails.addAll(notificationDetails);
 //        notificationDetails.get(0).setNotification(this);
-        this.isActive=1;
+        this.isActive = 1;
         this.notificationType = notificationType;
     }
 //        this.notificationDetails = notificationDetails;
