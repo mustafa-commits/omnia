@@ -10,6 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -24,8 +29,16 @@ public class AnnouncementsController {
                                              @RequestParam String title,
                                              @RequestParam String description,
                                              @RequestParam List<AnnouncementsDetails> announcementsDetails,
-                                             @RequestParam MultipartFile file){
-        return announcementsService.createAnnouncements(new AnnouncementsRequest(sendId, title, description, announcementsDetails), file);
+                                             @RequestParam("file") MultipartFile file) throws IOException {
+        String uploadDir = "uploadAttachments/";
+        File directory = new File(uploadDir);
+        if (!directory.exists()){
+            directory.mkdir();
+        }
+        Path filePath = Paths.get(uploadDir + file.getOriginalFilename());
+        Files.write(filePath, file.getBytes());
+        return announcementsService.createAnnouncements(new AnnouncementsRequest
+                (sendId, title, description, announcementsDetails), file);
     }
 
     // تبليغات التلفون
