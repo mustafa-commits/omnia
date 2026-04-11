@@ -28,17 +28,19 @@ public class AnnouncementsController {
     public Announcements createAnnouncements(@RequestParam Integer sendId,
                                              @RequestParam String title,
                                              @RequestParam String description,
-                                             @RequestParam List<AnnouncementsDetails> announcementsDetails,
-                                             @RequestParam("file") MultipartFile file) throws IOException {
-        String uploadDir = "uploadAttachments/";
-        File directory = new File(uploadDir);
-        if (!directory.exists()){
-            directory.mkdir();
-        }
-        Path filePath = Paths.get(uploadDir + file.getOriginalFilename());
-        Files.write(filePath, file.getBytes());
+                                             @RequestParam List<Long> user_id,
+                                             @RequestParam("file") MultipartFile file)  {
+//        throws IOException
+//        String uploadDir = "uploadAttachments/";
+//        File directory = new File(uploadDir);
+//        if (!directory.exists()){
+//            directory.mkdir();
+//        }
+        //Path filePath = Paths.get(uploadDir + file.getOriginalFilename());
+        //Files.write(filePath, file.getBytes());
         return announcementsService.createAnnouncements(new AnnouncementsRequest
-                (sendId, title, description, announcementsDetails), file);
+                (sendId, title, description, null), file
+         , user_id);
     }
 
     // تبليغات التلفون

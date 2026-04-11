@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,15 +30,17 @@ public class AnnouncementsService {
     private AnnouncementsDetailsRepo announcementsDetailsRepo;
 
     // انشاء تبليغ
-    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file){
+    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file, List<Long> user_id){
         Announcements announcements = new Announcements(announcementsRequest.sendId(),
                 announcementsRequest.title(), announcementsRequest.description());
         announcements = announcementsRepo.save(announcements);
-        for (AnnouncementsDetails a : announcementsRequest.announcementsDetails()){
-            announcementsDetailsRepo.save(new AnnouncementsDetails(a.getUser_id(), announcements));
+        if (user_id != null)
+        for (Long a : user_id){
+            announcementsDetailsRepo.save(new AnnouncementsDetails(a, announcements));
         }
+        if (file != null)
         try {
-            file.transferTo(new File("put path here"));
+            file.transferTo(new File("C:\\Users\\ASCF\\Desktop\\Omnia\\Attachments"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -48,9 +51,10 @@ public class AnnouncementsService {
     // اشعارات التطيق لكل يززر
     public PHoneAnnouncements PHoneAnnouncements(long user_id) {
         Optional<PHoneAnnouncements> pNote = jdbcClient.sql("""
-                   select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION
+                   select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION, ad.user_id, at.FILE_NAME
                    from SC_ANNOUNCEMENTS a
-                   join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
+                   Left join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
+                   Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
                    Where ad.user_id = :user_id
                 """).param("user_id",user_id).query(PHoneAnnouncements.class).optional();
 
