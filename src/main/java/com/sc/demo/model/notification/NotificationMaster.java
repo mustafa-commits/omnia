@@ -16,7 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification {
+public class NotificationMaster {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,14 +40,14 @@ public class Notification {
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     private List<NotificationDetails> notificationDetails = new ArrayList<>();
 
-    public Notification(Integer sendId, String title,
-                        String description, //List<NotificationDetails> notificationDetails,
-                        NotificationType notificationType) {
+    public NotificationMaster(Integer sendId, String title,
+                              String description, //List<NotificationDetails> notificationDetails,
+                              NotificationType notificationType) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;
 //        this.notificationDetails.addAll(notificationDetails);
-//        notificationDetails.get(0).setNotification(this);
+//        notificationDetails.get(0).setNotificationMaster(this);
         this.isActive = 1;
         this.notificationType = notificationType;
     }

@@ -23,15 +23,15 @@ public class NotificationDetails {
 
     @ManyToOne
     @JoinColumn(name = "notification_id")
-    private Notification notification;
+    private NotificationMaster notificationMaster;
 
 
     public NotificationDetails(Long user_id) {
         this.user_id = user_id;
     }
 
-    public NotificationDetails(Long user_id, Notification notification) {
+    public NotificationDetails(Long user_id, NotificationMaster notificationMaster) {
         this.user_id = user_id;
-        this.notification = notification;
+        this.notificationMaster = notificationMaster;
     }
 }

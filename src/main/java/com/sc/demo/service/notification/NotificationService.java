@@ -1,6 +1,7 @@
 package com.sc.demo.service.notification;
 
-import com.sc.demo.model.notification.Notification;
+import com.google.firebase.messaging.*;
+import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.dto.AllNotificationFamily;
 import com.sc.demo.model.dto.NotificationRequest;
@@ -12,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -26,17 +30,42 @@ public class NotificationService {
     @Autowired
     private NotificationDetailsRepo notificationDetailsRepo;
 
+
+    @Autowired
+    private FirebaseMessaging firebaseMessaging;
+
     // انشاء اشعار
-    public Notification createNotification(NotificationRequest notificationRequest){
-        Notification notification = new Notification(notificationRequest.sendId(),
+    public NotificationMaster createNotification(NotificationRequest notificationRequest){
+        NotificationMaster notificationMaster = new NotificationMaster(notificationRequest.sendId(),
                 notificationRequest.title(), notificationRequest.description(),
                  notificationRequest.notificationType()
         );
-        notification= notificationRepo.save(notification);
+
+        Notification firebaseNotification = Notification
+                .builder()
+                .setTitle(notificationRequest.title())
+                .setBody(notificationRequest.description())
+                .build();
+
+        List<Message> messageList = List.of();
+        ApnsConfig apnsConfig = getApnsConfig();
+
+        notificationMaster = notificationRepo.save(notificationMaster);
         for (NotificationDetails n :notificationRequest.notificationDetails()){
-            notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notification));
+            notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
+
+
+            messageList.add(Message.builder()
+                    .setToken("")
+                    .setNotification(firebaseNotification)
+                    .setApnsConfig(apnsConfig)
+                    .build()
+            );
+
+
         }
-        return notification;
+        firebaseMessaging.sendEachAsync(messageList);
+        return notificationMaster;
     }
 
     // اشعارات التطيق لكل يززر
@@ -82,5 +111,14 @@ public class NotificationService {
             return allDNote.get();
         else
             return null;
+    }
+
+
+    private ApnsConfig getApnsConfig() {
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("content_available",1);
+        ApsAlert apsAlert= ApsAlert.builder().setTitle("AL-AYN").setSubtitle("اشعار").build();
+        return ApnsConfig.builder()
+                .setAps(Aps.builder().setSound("1").putAllCustomData(map2).setAlert(apsAlert).build()).build();
     }
 }

@@ -1,6 +1,6 @@
 package com.sc.demo.controller;
 
-import com.sc.demo.model.notification.Notification;
+import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.dto.AllNotificationFamily;
 import com.sc.demo.model.dto.NotificationRequest;
 import com.sc.demo.model.dto.NotificationByType;
@@ -17,7 +17,7 @@ public class NotificationController {
 
     // انشاء اشعار
     @PostMapping("/V1/api/sc/createNotification")
-    public Notification createNotification(@RequestBody NotificationRequest notificationRequest){
+    public NotificationMaster createNotification(@RequestBody NotificationRequest notificationRequest){
         return notificationService.createNotification(notificationRequest);
     }
 
