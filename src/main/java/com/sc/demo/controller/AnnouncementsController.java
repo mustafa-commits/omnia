@@ -1,7 +1,6 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.model.announcements.Announcements;
-import com.sc.demo.model.announcements.AnnouncementsDetails;
 import com.sc.demo.model.dto.AllAnnouncementsFamily;
 import com.sc.demo.model.dto.AnnouncementsRequest;
 import com.sc.demo.model.dto.PHoneAnnouncements;
@@ -10,11 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -29,7 +23,7 @@ public class AnnouncementsController {
                                              @RequestParam String title,
                                              @RequestParam String description,
                                              @RequestParam List<Long> user_id,
-                                             @RequestParam("file") MultipartFile file)  {
+                                             @RequestParam MultipartFile file)  {
 //        throws IOException
 //        String uploadDir = "uploadAttachments/";
 //        File directory = new File(uploadDir);
