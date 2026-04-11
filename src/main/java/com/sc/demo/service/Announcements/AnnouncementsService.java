@@ -8,6 +8,7 @@ import com.sc.demo.model.dto.PHoneAnnouncements;
 import com.sc.demo.repository.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.AnnouncementsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,9 @@ public class AnnouncementsService {
     @Autowired
     private AnnouncementsDetailsRepo announcementsDetailsRepo;
 
+    @Autowired
+    private Environment environment;
+
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file, List<Long> user_id){
         Announcements announcements = new Announcements(announcementsRequest.sendId(),
@@ -40,7 +44,11 @@ public class AnnouncementsService {
         }
         if (file != null)
         try {
-            file.transferTo(new File("C:\\Users\\ASCF\\Desktop\\Omnia\\Attachments"));
+            String originalFilename = file.getOriginalFilename();
+            String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
+            String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
+
+            file.transferTo(new File(filePath));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
