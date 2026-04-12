@@ -23,19 +23,19 @@ public class NotificationToken {
     @JoinColumn(name = "fk_appUser_id")
     private NotificationMaster notificationMaster;
 
-    String token;
+    private String token;
 
-    Long tokenType;
+    private Long tokenType;
 
-    Boolean isActive;
+    private Boolean isActive;
 
-    LocalDateTime createDate;
+    private LocalDateTime createDate;
 
-    Long createBy;
+    private Long createBy;
 
-    LocalDateTime lastUpdate;
+    private LocalDateTime lastUpdate;
 
-    Long lastCreateBy;
+    private Long lastCreateBy;
 
     public NotificationToken(Long notification_token_id,  String token, Long tokenType, Boolean isActive) {
         this.notification_token_id = notification_token_id;
