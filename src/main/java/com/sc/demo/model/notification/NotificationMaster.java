@@ -1,5 +1,7 @@
 package com.sc.demo.model.notification;
 
+
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,17 +43,13 @@ public class NotificationMaster {
     private List<NotificationDetails> notificationDetails = new ArrayList<>();
 
     public NotificationMaster(Integer sendId, String title,
-                              String description, //List<NotificationDetails> notificationDetails,
-                              NotificationType notificationType) {
+                              String description, NotificationType notificationType) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;
-//        this.notificationDetails.addAll(notificationDetails);
-//        notificationDetails.get(0).setNotificationMaster(this);
         this.isActive = 1;
         this.notificationType = notificationType;
     }
-//        this.notificationDetails = notificationDetails;
 
     @PrePersist
     public void prePersist(){

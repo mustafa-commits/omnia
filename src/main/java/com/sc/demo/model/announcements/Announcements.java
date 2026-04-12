@@ -1,6 +1,5 @@
 package com.sc.demo.model.announcements;
 
-import com.sc.demo.model.notification.NotificationType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
