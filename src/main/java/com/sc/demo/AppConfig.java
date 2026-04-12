@@ -37,7 +37,6 @@ public class AppConfig {
         config.setUsername(USER);
         config.setPassword(PASSWORD);
         System.out.println(DRIVER);
-        config.setDriverClassName(DRIVER);
 
         config.setMaximumPoolSize(5);
         config.setMinimumIdle(1);
