@@ -23,7 +23,7 @@ public class NotificationDetails {
 
     @ManyToOne
     @JoinColumn(name = "notification_id")
-    private NotificationMaster notificationMaster;
+    private NotificationMaster notification;
 
 
     public NotificationDetails(Long user_id) {
@@ -32,6 +32,6 @@ public class NotificationDetails {
 
     public NotificationDetails(Long user_id, NotificationMaster notificationMaster) {
         this.user_id = user_id;
-        this.notificationMaster = notificationMaster;
+        this.notification = notificationMaster;
     }
 }

@@ -17,11 +17,11 @@ public class NotificationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long notification_token_id;
+    private Long notification_token_id;
 
     @OneToOne
     @JoinColumn(name = "fk_appUser_id")
-    Long user_id;
+    private NotificationMaster notificationMaster;
 
     String token;
 
@@ -37,9 +37,8 @@ public class NotificationToken {
 
     Long lastCreateBy;
 
-    public NotificationToken(Long notification_token_id, Long user_id, String token, Long tokenType, Boolean isActive) {
+    public NotificationToken(Long notification_token_id,  String token, Long tokenType, Boolean isActive) {
         this.notification_token_id = notification_token_id;
-        this.user_id = user_id;
         this.token = token;
         this.tokenType = tokenType;
         this.isActive = true;

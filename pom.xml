@@ -48,6 +48,33 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc10-production</artifactId>
+			<version>19.24.0.0</version>
+			<type>pom</type>
+		</dependency>
+		<!--		-production-->
+
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ucp</artifactId>
+			<version>23.3.0.23.09</version>
+		</dependency>
+
+
+
+		<dependency>
+			<groupId>com.oracle.database.nls</groupId>
+			<artifactId>orai18n</artifactId>
+			<version>23.3.0.23.09</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -60,6 +87,38 @@
 			<optional>true</optional>
 		</dependency>
 
+	<!--oracle db libs-->
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ojdbc10-production</artifactId>
+			<version>19.24.0.0</version>
+			<type>pom</type>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.jdbc</groupId>
+			<artifactId>ucp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle.database.nls</groupId>
+			<artifactId>orai18n</artifactId>
+			<version>23.3.0.23.09</version>
+		</dependency>
+
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.boot</groupId>-->
+<!--			<artifactId>spring-boot-starter-jdbc</artifactId>-->
+<!--		</dependency>-->
+
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<dependency>
 			<groupId>com.google.firebase</groupId>

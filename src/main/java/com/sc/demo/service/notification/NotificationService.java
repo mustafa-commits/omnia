@@ -36,6 +36,11 @@ public class NotificationService {
 
     // انشاء اشعار
     public NotificationMaster createNotification(NotificationRequest notificationRequest){
+
+        Map<String, String> map = new HashMap<>();
+        map.put("notification_type", "3");
+        map.put("content_available", "1");
+
         NotificationMaster notificationMaster = new NotificationMaster(notificationRequest.sendId(),
                 notificationRequest.title(), notificationRequest.description(),
                  notificationRequest.notificationType()
@@ -57,6 +62,7 @@ public class NotificationService {
 
             messageList.add(Message.builder()
                     .setToken("")
+                    .putAllData(map)
                     .setNotification(firebaseNotification)
                     .setApnsConfig(apnsConfig)
                     .build()

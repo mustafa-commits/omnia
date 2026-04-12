@@ -42,6 +42,9 @@ public class NotificationMaster {
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     private List<NotificationDetails> notificationDetails = new ArrayList<>();
 
+    @OneToOne(mappedBy = "notificationMaster", cascade = CascadeType.ALL)
+    private NotificationToken notificationToken;
+
     public NotificationMaster(Integer sendId, String title,
                               String description, NotificationType notificationType) {
         this.sendId = sendId;
