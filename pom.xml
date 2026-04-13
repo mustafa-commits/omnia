@@ -49,27 +49,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ojdbc10-production</artifactId>
-			<version>19.24.0.0</version>
-			<type>pom</type>
-		</dependency>
-		<!--		-production-->
-
-		<dependency>
-			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ucp</artifactId>
-			<version>23.3.0.23.09</version>
-		</dependency>
-
-
-
-		<dependency>
-			<groupId>com.oracle.database.nls</groupId>
-			<artifactId>orai18n</artifactId>
-			<version>23.3.0.23.09</version>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
@@ -88,27 +67,32 @@
 		</dependency>
 
 	<!--oracle db libs-->
-		<dependency>
-			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ojdbc10-production</artifactId>
-			<version>19.24.0.0</version>
-			<type>pom</type>
-		</dependency>
-		<dependency>
-			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ucp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.oracle.database.nls</groupId>
-			<artifactId>orai18n</artifactId>
-			<version>23.3.0.23.09</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>com.oracle.database.jdbc</groupId>-->
+<!--			<artifactId>ojdbc10-production</artifactId>-->
+<!--			<version>19.24.0.0</version>-->
+<!--			<type>pom</type>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>com.oracle.database.jdbc</groupId>-->
+<!--			<artifactId>ucp</artifactId>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>com.oracle.database.nls</groupId>-->
+<!--			<artifactId>orai18n</artifactId>-->
+<!--			<version>23.3.0.23.09</version>-->
+<!--		</dependency>-->
 
 <!--		<dependency>-->
 <!--			<groupId>org.springframework.boot</groupId>-->
 <!--			<artifactId>spring-boot-starter-jdbc</artifactId>-->
 <!--		</dependency>-->
 
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>3.0.3</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework</groupId>
