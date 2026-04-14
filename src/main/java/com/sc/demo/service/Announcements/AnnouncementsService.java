@@ -34,7 +34,8 @@ public class AnnouncementsService {
     private Environment environment;
 
     // انشاء تبليغ
-    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file, List<Long> user_id){
+    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
+                                             MultipartFile file, List<Long> user_id){
         Announcements announcements = new Announcements(announcementsRequest.sendId(),
                 announcementsRequest.title(), announcementsRequest.description());
         announcements = announcementsRepo.save(announcements);
@@ -55,22 +56,33 @@ public class AnnouncementsService {
         return announcements;
     }
 
-
     // اشعارات التطيق لكل يززر
     public PHoneAnnouncements PHoneAnnouncements(long user_id) {
         Optional<PHoneAnnouncements> pNote = jdbcClient.sql("""
-                   select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION, ad.user_id, at.FILE_NAME
+                   select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION, 
+                   ad.user_id, at.FILE_NAME
                    from SC_ANNOUNCEMENTS a
                    Left join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
                    Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
                    Where ad.user_id = :user_id
-                """).param("user_id",user_id).query(PHoneAnnouncements.class).optional();
+                """).param("user_id",user_id)
+                .query(PHoneAnnouncements.class).optional();
 
         if (pNote.isPresent())
             return pNote.get();
         else
             return null;
     }
+    /*(  select json_arrayagg(
+                json_object('img_name' is 'http://10.76.232.55:8090/i/ayn_hc/ayn_hic/hic_pharmacy_supply_order_files/' || pharmacy_supplier_files_id
+                                          || '.' || substr (file_type, instr (file_type, '/', 1) + 1)
+                           ,'full_img' is case when upper (substr (file_type, instr (file_type, '/', 1) + 1)) = 'pdf'
+                                             then n'<img src="../i/ayn_hc/pdf.png" width="100" height="100" id="image1">'
+                                             when upper (substr (file_type, 0, instr (file_type, '/', 1) - 1)) = 'image'
+                                             then n'<img src="http://10.76.232.55:8090/i/ayn_hc/ayn_hic/hic_pharmacy_supply_order_files/' || pharmacy_supplier_files_id
+                                                 || '.' || substr (file_type, instr (file_type, '/', 1) + 1) || '" width="100" height="100" id="image1">'
+                                             else n'<img src="../i/ayn_hc/unknown.png" width="100" height="100" id="image1">'
+                                      end) ) */
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
     public AllAnnouncementsFamily AllAnnouncementsFamily(long user_id) {

@@ -3,8 +3,10 @@ package com.sc.demo.model.dto;
 import java.time.LocalDateTime;
 
 public record PHoneAnnouncements(
-        LocalDateTime createDate,
+        Long user_id,
         String title,
-        String description
+        String description,
+        LocalDateTime createDate,
+        String fileName
 ) {
 }
