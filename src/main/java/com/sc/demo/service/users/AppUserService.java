@@ -18,9 +18,9 @@ public class AppUserService {
     @Autowired
     private JdbcClient jdbcClient;
 
-    public AppUserRequest getFamilyInfoInHomePage(AppUserRequest appUserRequest){
+    public AppUserRequest getFamilyInfoInHomePage(Long user_id){
         Optional<AppUserRequest> userData = jdbcClient.sql("""
-                        SELECT R.FAMILY_PERSON_ID
+                        SELECT R.FAMILY_PERSON_ID AS id
                                ,TRIM(
                                   REGEXP_REPLACE(
                                       COALESCE(H.PERSON_NAME_FIRST, '') || ' ' ||
@@ -30,7 +30,7 @@ public class AppUserService {
                                       '\\s+', ' '
                                   )
                               ) AS PERSON_FULL_NAME
-                              ,H.FAMILY_PERSONS_ID
+                              ,H.FAMILY_PERSONS_ID AS pesonId
                               ,H.RELATION_ID
                               ,H.BIRTH_DATE
                               ,H.GENDER
@@ -52,8 +52,9 @@ public class AppUserService {
                                WHERE     R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
                                      AND F.OLD_FAM_NO = F1.OLD_FAM_NO)
                         AND D.FOLLOW_DESCION_STATUS = 2
-                        order by R.FAMILY_PERSON_ID;
-                """).param("user_id", appUserRequest.user_id())
+                        order by R.FAMILY_PERSON_ID
+                """)
+                .param("user_id", user_id)
                 //AND H.IS_GUARDIAN = :P0_1
                 //AND     H.RELATION_ID != 100
                     .query(AppUserRequest.class)

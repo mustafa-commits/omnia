@@ -22,7 +22,7 @@ public class NotificationMaster {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long notification_id;
+    private Long notification_id;
 
     Integer sendId;
 
