@@ -1,10 +1,10 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.model.notification.NotificationMaster;
-import com.sc.demo.model.dto.AllNotificationFamily;
+import com.sc.demo.model.dto.AllNotificationFamilyRequest;
 import com.sc.demo.model.dto.NotificationRequest;
 import com.sc.demo.model.dto.NotificationByType;
-import com.sc.demo.model.dto.PHoneNotification;
+import com.sc.demo.model.dto.PHoneNotificationRequest;
 import com.sc.demo.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class NotificationController {
 
     // اشعارات التلفون
     @GetMapping("/V1/api/sc/getPHoneNotification")
-    public PHoneNotification getPHoneNotification(@RequestParam long user_id){
+    public PHoneNotificationRequest getPHoneNotification(@RequestParam long user_id){
         return notificationService.PHoneNotification(user_id);
     }
 
@@ -35,7 +35,7 @@ public class NotificationController {
 
     // جميع اشعارات الداشبورد للعائلة
     @GetMapping("/V1/api/sc/getAllNotificationFamily")
-    public AllNotificationFamily getAllNotificationFamily(@RequestParam long user_id){
+    public AllNotificationFamilyRequest getAllNotificationFamily(@RequestParam long user_id){
         return notificationService.AllNotificationFamily(user_id);
     }
 

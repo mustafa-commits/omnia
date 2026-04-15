@@ -1,10 +1,10 @@
-package com.sc.demo.service.Announcements;
+package com.sc.demo.service.announcements;
 
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
-import com.sc.demo.model.dto.AllAnnouncementsFamily;
+import com.sc.demo.model.dto.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.AnnouncementsRequest;
-import com.sc.demo.model.dto.PHoneAnnouncements;
+import com.sc.demo.model.dto.PHoneAnnouncementsRequest;
 import com.sc.demo.repository.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.AnnouncementsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +57,8 @@ public class AnnouncementsService {
     }
 
     // اشعارات التطيق لكل يززر
-    public PHoneAnnouncements PHoneAnnouncements(long user_id) {
-        Optional<PHoneAnnouncements> pNote = jdbcClient.sql("""
+    public PHoneAnnouncementsRequest PHoneAnnouncements(long user_id) {
+        Optional<PHoneAnnouncementsRequest> pNote = jdbcClient.sql("""
                    select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION, 
                    ad.user_id, at.FILE_NAME
                    from SC_ANNOUNCEMENTS a
@@ -66,7 +66,7 @@ public class AnnouncementsService {
                    Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
                    Where ad.user_id = :user_id
                 """).param("user_id",user_id)
-                .query(PHoneAnnouncements.class).optional();
+                .query(PHoneAnnouncementsRequest.class).optional();
 
         if (pNote.isPresent())
             return pNote.get();
@@ -85,14 +85,14 @@ public class AnnouncementsService {
                                       end) ) */
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
-    public AllAnnouncementsFamily AllAnnouncementsFamily(long user_id) {
+    public AllAnnouncementsFamilyRequest AllAnnouncementsFamily(long user_id) {
 
-        Optional <AllAnnouncementsFamily>  allDNote = jdbcClient.sql("""
+        Optional <AllAnnouncementsFamilyRequest>  allDNote = jdbcClient.sql("""
                    select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION
                    from SC_ANNOUNCEMENTS a
                    join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
                    Where ad.user_id = :user_id
-                """).param("user_id",user_id).query(AllAnnouncementsFamily.class).optional();
+                """).param("user_id",user_id).query(AllAnnouncementsFamilyRequest.class).optional();
 
         if (allDNote.isPresent())
             return allDNote.get();

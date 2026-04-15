@@ -16,7 +16,7 @@ public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    Long user_id;
 
     String headFamilyName;
 

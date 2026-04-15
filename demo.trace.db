@@ -3463,7 +3463,7 @@ select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION
 	at org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate.query(NamedParameterJdbcTemplate.java:224)
 	at org.springframework.jdbc.core.simple.DefaultJdbcClient$DefaultStatementSpec$NamedParamMappedQuerySpec.list(DefaultJdbcClient.java:410)
 	at org.springframework.jdbc.core.simple.JdbcClient$MappedQuerySpec.optional(JdbcClient.java:462)
-	at com.sc.demo.service.Announcements.AnnouncementsService.PHoneAnnouncements(AnnouncementsService.java:46)
+	at com.sc.demo.service.announcements.AnnouncementsService.PHoneAnnouncements(AnnouncementsService.java:46)
 	at com.sc.demo.controller.AnnouncementsController.getPHoneAnnouncements(AnnouncementsController.java:25)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:565)

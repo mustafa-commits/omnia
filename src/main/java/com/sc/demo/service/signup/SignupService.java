@@ -16,7 +16,7 @@ public class SignupService {
     public long signup(CreateUser createUser) {
         return appUserRepo.save(
                 new AppUser(createUser.name(), createUser.mobile())
-        ).getId();
+        ).getUser_id();
     }
 
 

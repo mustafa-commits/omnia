@@ -15,7 +15,7 @@ public class AppUserInformationController {
     private AppUserService appUserService;
 
     @GetMapping("/V1/sc/api/getUserInformation")
-    public AppUser getUserInformation(@RequestBody AppUserRequest appUserRequest){
+    public AppUserRequest getUserInformation(@RequestBody AppUserRequest appUserRequest){
         return appUserService.getFamilyInfoInHomePage(appUserRequest);
     }
 }

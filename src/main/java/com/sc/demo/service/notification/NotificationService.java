@@ -3,10 +3,10 @@ package com.sc.demo.service.notification;
 import com.google.firebase.messaging.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
-import com.sc.demo.model.dto.AllNotificationFamily;
+import com.sc.demo.model.dto.AllNotificationFamilyRequest;
 import com.sc.demo.model.dto.NotificationRequest;
 import com.sc.demo.model.dto.NotificationByType;
-import com.sc.demo.model.dto.PHoneNotification;
+import com.sc.demo.model.dto.PHoneNotificationRequest;
 import com.sc.demo.repository.NotificationDetailsRepo;
 import com.sc.demo.repository.NotificationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,13 +75,13 @@ public class NotificationService {
     }
 
     // اشعارات التطيق لكل يززر
-    public PHoneNotification PHoneNotification(long user_id) {
-        Optional <PHoneNotification>  pNote = jdbcClient.sql("""
+    public PHoneNotificationRequest PHoneNotification(long user_id) {
+        Optional <PHoneNotificationRequest>  pNote = jdbcClient.sql("""
                    select n.CREATE_DATE as createDate, n.TITLE, n.DESCRIPTION
                    from SC_NOTIFICATION n
                    join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
                    Where ND.user_id = :user_id
-                """).param("user_id",user_id).query(PHoneNotification.class).optional();
+                """).param("user_id",user_id).query(PHoneNotificationRequest.class).optional();
 
         if (pNote.isPresent())
             return pNote.get();
@@ -104,14 +104,14 @@ public class NotificationService {
     }
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
-    public AllNotificationFamily AllNotificationFamily(long user_id) {
+    public AllNotificationFamilyRequest AllNotificationFamily(long user_id) {
 
-        Optional <AllNotificationFamily>  allDNote = jdbcClient.sql("""
+        Optional <AllNotificationFamilyRequest>  allDNote = jdbcClient.sql("""
                    select n.CREATE_DATE as createDate, n.TITLE, n.DESCRIPTION, n.notification_type as NotificationType
                    from SC_NOTIFICATION n
                    join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
                    Where ND.user_id = :user_id
-                """).param("user_id",user_id).query(AllNotificationFamily.class).optional();
+                """).param("user_id",user_id).query(AllNotificationFamilyRequest.class).optional();
 
         if (allDNote.isPresent())
             return allDNote.get();

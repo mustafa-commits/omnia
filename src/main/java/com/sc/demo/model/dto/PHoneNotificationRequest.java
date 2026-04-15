@@ -1,7 +1,7 @@
 package com.sc.demo.model.dto;
 import java.time.LocalDateTime;
 
-public record PHoneNotification(
+public record PHoneNotificationRequest(
         LocalDateTime createDate,
         String title,
         String description/*,
