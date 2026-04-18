@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class NotificationToken {
 
     @Id
-    private Long notification_token_id;
+    private Long user_id;
 
     private String token;
 
@@ -32,8 +32,8 @@ public class NotificationToken {
 
     private Long lastCreateBy;
 
-    public NotificationToken(Long notification_token_id,  String token, Long tokenType, Boolean isActive) {
-        this.notification_token_id = notification_token_id;
+    public NotificationToken(Long user_id,  String token, Long tokenType, Boolean isActive) {
+        this.user_id = user_id;
         this.token = token;
         this.tokenType = tokenType;
         this.isActive = true;
