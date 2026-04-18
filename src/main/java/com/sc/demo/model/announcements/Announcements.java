@@ -20,19 +20,19 @@ public class Announcements {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long announcements_id;
+    private Long announcements_id;
 
-    Integer sendId;
+    private Integer sendId;
 
-    String title;
+    private String title;
 
-    String description;
+    private String description;
 
-    Integer isActive;
+    private Integer isActive;
 
-    LocalDateTime createDate;
+    private LocalDateTime createDate;
 
-    LocalDateTime lastUpdate;
+    private LocalDateTime lastUpdate;
 
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsDetails> announcementsDetails = new ArrayList<>();

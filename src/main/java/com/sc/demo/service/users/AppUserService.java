@@ -53,7 +53,8 @@ public class AppUserService {
                                      AND F.OLD_FAM_NO = F1.OLD_FAM_NO)
                         AND D.FOLLOW_DESCION_STATUS = 2
                         order by R.FAMILY_PERSON_ID;
-                """).param("user_id", appUserRequest.user_id())
+                """)
+                //.param("user_id", appUserRequest.user_id())
                 //AND H.IS_GUARDIAN = :P0_1
                 //AND     H.RELATION_ID != 100
                     .query(AppUserRequest.class)

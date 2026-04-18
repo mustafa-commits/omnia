@@ -33,8 +33,7 @@ public class AnnouncementsController {
         //Path filePath = Paths.get(uploadDir + file.getOriginalFilename());
         //Files.write(filePath, file.getBytes());
         return announcementsService.createAnnouncements(new AnnouncementsRequest
-                (sendId, title, description, null), file
-         , user_id);
+                (sendId, title, description, null), file, user_id);
     }
 
     // تبليغات التلفون

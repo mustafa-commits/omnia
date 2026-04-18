@@ -22,22 +22,22 @@ public class NotificationMaster {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long notification_id;
+    private Long notification_id;
 
-    Integer sendId;
+    private Integer sendId;
 
-    String title;
+    private String title;
 
-    String description;
+    private String description;
 
-    Integer isActive;
+    private Integer isActive;
 
     @Enumerated(EnumType.ORDINAL)
-    NotificationType notificationType;
+    private NotificationType notificationType;
 
-    LocalDateTime createDate;
+    private LocalDateTime createDate;
 
-    LocalDateTime lastUpdate;
+    private LocalDateTime lastUpdate;
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     private List<NotificationDetails> notificationDetails = new ArrayList<>();

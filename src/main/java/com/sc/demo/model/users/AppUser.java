@@ -16,17 +16,17 @@ public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long user_id;
+    private Long user_id;
 
-    String headFamilyName;
+    private String headFamilyName;
 
-    String mobile1;
+    private String mobile1;
 
-    String mobile2;
+    private String mobile2;
 
-    String address;
+    private String address;
 
-    Integer countryId;
+    private Integer countryId;
 
 
     public AppUser(String headFamilyName, String mobile1) {

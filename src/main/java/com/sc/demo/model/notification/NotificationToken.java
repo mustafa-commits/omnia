@@ -16,12 +16,7 @@ import java.time.LocalDateTime;
 public class NotificationToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long notification_token_id;
-
-    @OneToOne
-    @JoinColumn(name = "fk_appUser_id")
-    private NotificationMaster notificationMaster;
 
     private String token;
 

@@ -7,7 +7,6 @@ public record AllNotificationFamilyRequest(
         LocalDateTime createDate,
         String title,
         String description,
-        NotificationType NotificationType/*,
-        Long user_id*/
+        NotificationType NotificationType
 ) {
 }
