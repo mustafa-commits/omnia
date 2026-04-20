@@ -1,7 +1,5 @@
 package com.sc.demo.model.dto;
 
-import java.time.LocalDateTime;
-
 public record FamilyInfoBasicResponse(
        String FamilyNo,
        Long FamilyPersonsId,
@@ -9,6 +7,7 @@ public record FamilyInfoBasicResponse(
        String RelationshipType,
        Long PersonsAge,
        String HealthStatus,
-       String HealthConditionDetails
+       String HealthConditionDetails,
+       Long IsGuardian
 ) {
 }

@@ -21,39 +21,40 @@ public class FamilyInfoService {
     public List<FamilyInfoBasicResponse> getFamilyBasicInfo(String P_FAMILY_NO){
         return jdbcClient.sql("""
                         SELECT  F.OLD_FAMILY_NO AS FamilyNo
-                             ,H.FAMILY_PERSONS_ID AS FamilyPersonsId
-                             ,TRIM(
-                                  REGEXP_REPLACE(
-                                      COALESCE(H.PERSON_NAME_FIRST, '') || ' ' ||
-                                      COALESCE(H.PERSON_NAME_SECOND, '') || ' ' ||
-                                      COALESCE(H.PERSON_NAME_THIRD, '') || ' ' ||
-                                      COALESCE(H.PERSON_NAME_FOURTH, ''),
-                                      '\\s+', ' '
-                                  )
-                              ) AS PersonsFullName
-                             ,L3.ARABIC_VALUE AS RelationshipType
-                             ,FLOOR(MONTHS_BETWEEN(SYSDATE, H.BIRTH_DATE) / 12) AS PersonsAge
-                             ,L2.ARABIC_VALUE AS HealthStatus
-                            ,PI.ILLNESS_DESCRIPTION AS HealthConditionDetails
+                              ,H.FAMILY_PERSONS_ID AS FamilyPersonsId
+                              ,TRIM(
+                                   REGEXP_REPLACE(
+                                       COALESCE(H.PERSON_NAME_FIRST, '') || ' ' ||
+                                       COALESCE(H.PERSON_NAME_SECOND, '') || ' ' ||
+                                       COALESCE(H.PERSON_NAME_THIRD, '') || ' ' ||
+                                       COALESCE(H.PERSON_NAME_FOURTH, ''),
+                                       '\\s+', ' '
+                                   )
+                               ) AS PersonsFullName
+                              ,L3.ARABIC_VALUE AS RelationshipType
+                              ,FLOOR(MONTHS_BETWEEN(SYSDATE, H.BIRTH_DATE) / 12) AS PersonsAge
+                              ,L2.ARABIC_VALUE AS HealthStatus
+                              ,PI.ILLNESS_DESCRIPTION AS HealthConditionDetails
+                              ,H.IS_GUARDIAN AS IsGuardian
                         FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
-                             LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
-                             LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
-                             LEFT JOIN AIN_CAPPS.SC_FAMILY_PERSONS_HIST H ON (H.FOLLOW_ID = F.FOLLOW_ID)
-                             LEFT JOIN (SELECT ROW_NUMBER() OVER (PARTITION BY FOLLOW_ID ORDER BY HOUSE_FOLLOW_ID DESC) AS SN ,MN.*
-                                           FROM AIN_CAPPS.SC_CASE_HOUSE_FOLLOW MN ) HF ON HF.FOLLOW_ID = D.FOLLOW_ID AND HF.SN = 1
-                             LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES L2 ON L2.LOOKUP_CODE = H.HEALTH_STATUS_ID AND L2.LOOKUP_TYPE  = 'HEALTH_STATUS'
-                             LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES L3 ON L3.LOOKUP_CODE = H.RELATION_ID AND L3.LOOKUP_TYPE  = 'SC_RELETIVES_TYPIES'
-                             LEFT JOIN (SELECT FAMILY_PERSONS_ID ,LISTAGG(ILLNESS_DESCRIPTION, ', ') WITHIN GROUP (ORDER BY ILLNESS_DESCRIPTION) AS ILLNESS_DESCRIPTION
-                                          FROM AIN_CAPPS.SC_PERSON_ILLNESS
-                                          GROUP BY FAMILY_PERSONS_ID)PI  ON H.FAMILY_PERSONS_ID = PI.FAMILY_PERSONS_ID
+                              LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
+                              LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
+                              LEFT JOIN AIN_CAPPS.SC_FAMILY_PERSONS_HIST H ON (H.FOLLOW_ID = F.FOLLOW_ID)
+                              LEFT JOIN (SELECT ROW_NUMBER() OVER (PARTITION BY FOLLOW_ID ORDER BY HOUSE_FOLLOW_ID DESC) AS SN ,MN.*
+                                            FROM AIN_CAPPS.SC_CASE_HOUSE_FOLLOW MN ) HF ON HF.FOLLOW_ID = D.FOLLOW_ID AND HF.SN = 1
+                              LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES L2 ON L2.LOOKUP_CODE = H.HEALTH_STATUS_ID AND L2.LOOKUP_TYPE  = 'HEALTH_STATUS'
+                              LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES L3 ON L3.LOOKUP_CODE = H.RELATION_ID AND L3.LOOKUP_TYPE  = 'SC_RELETIVES_TYPIES'
+                              LEFT JOIN (SELECT FAMILY_PERSONS_ID ,LISTAGG(ILLNESS_DESCRIPTION, ', ') WITHIN GROUP (ORDER BY ILLNESS_DESCRIPTION) AS ILLNESS_DESCRIPTION
+                                           FROM AIN_CAPPS.SC_PERSON_ILLNESS\s
+                                           GROUP BY FAMILY_PERSONS_ID)PI  ON H.FAMILY_PERSONS_ID = PI.FAMILY_PERSONS_ID
                         WHERE D.FOLLOW_DESCION_DATE = (SELECT MAX (D1.FOLLOW_DESCION_DATE)
-                                                   FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D1
-                                                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F1
-                                                            ON (D1.FOLLOW_ID = F1.FOLLOW_ID)
-                                                        LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R1
-                                                             ON (F1.AID_REQUEST_ID = R1.AID_REQUEST_ID)
-                                                    WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
-                                                        AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
+                                                    FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D1
+                                                          LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F1
+                                                             ON (D1.FOLLOW_ID = F1.FOLLOW_ID)
+                                                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R1
+                                                              ON (F1.AID_REQUEST_ID = R1.AID_REQUEST_ID)
+                                                     WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
+                                                         AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
                         AND F.OLD_FAMILY_NO = :P_FAMILY_NO
                         AND D.FOLLOW_DESCION_STATUS = 2
                         AND H.RELATION_ID NOT IN (7,8)
