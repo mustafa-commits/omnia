@@ -30,12 +30,6 @@ public class FamilyInfoController {
         return familyInfoService.getFamilyHousingInfo(P_FAMILY_NO);
     }
 
-    // معلومات حالة افراد العائلة الصحية
-    @GetMapping("/V1/sc/api/getFamilyHealthStatusInfo")
-    public List<FamilyHealthStatusInfoResponse> getFamilyHealthStatusInfo(@RequestParam String P_FAMILY_NO){
-        return familyInfoService.getFamilyHealthStatusInfo(P_FAMILY_NO);
-    }
-
     // عدد افراد العائلة + عدد الايتام
     @GetMapping("/V1/sc/api/getChildrenAndMailyFamilyMambersResponse")
     public List<ChildrenAndMailyFamilyMambersResponse> getChildrenAndMailyFamilyMambersResponse(@RequestParam String P_FAMILY_NO){
