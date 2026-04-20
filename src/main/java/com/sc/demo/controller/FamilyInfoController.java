@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.model.dto.ChildrenAndMailyFamilyMambersResponse;
 import com.sc.demo.model.dto.FamilyHealthStatusInfoResponse;
 import com.sc.demo.model.dto.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.FamilyInfoHousingResponse;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 public class FamilyInfoController {
 
@@ -17,18 +20,25 @@ public class FamilyInfoController {
 
     // جلب البيانات الاساسية للعائلة مثل ال(اسم, عمر, رقم هاتف, الخ .....)
     @GetMapping("/V1/sc/api/getFamilyBasicInformation")
-    public FamilyInfoBasicResponse getFamilyBasicInformation(@RequestParam Long P_FAMILY_NO){
+    public List<FamilyInfoBasicResponse> getFamilyBasicInformation(@RequestParam String P_FAMILY_NO){
         return familyInfoService.getFamilyBasicInfo(P_FAMILY_NO);
     }
 
     // جلب بيانات سكن العائلة
     @GetMapping("/V1/sc/api/getFamilyHousingInformation")
-    public FamilyInfoHousingResponse getFamilyHousingInformation(@RequestParam Long P_FAMILY_NO){
+    public List<FamilyInfoHousingResponse> getFamilyHousingInformation(@RequestParam String P_FAMILY_NO){
         return familyInfoService.getFamilyHousingInfo(P_FAMILY_NO);
     }
 
+    // معلومات حالة افراد العائلة الصحية
     @GetMapping("/V1/sc/api/getFamilyHealthStatusInfo")
-    public FamilyHealthStatusInfoResponse getFamilyHealthStatusInfo(@RequestParam Long P_FAMILY_NO){
+    public List<FamilyHealthStatusInfoResponse> getFamilyHealthStatusInfo(@RequestParam String P_FAMILY_NO){
         return familyInfoService.getFamilyHealthStatusInfo(P_FAMILY_NO);
+    }
+
+    // عدد افراد العائلة + عدد الايتام
+    @GetMapping("/V1/sc/api/getChildrenAndMailyFamilyMambersResponse")
+    public List<ChildrenAndMailyFamilyMambersResponse> getChildrenAndMailyFamilyMambersResponse(@RequestParam String P_FAMILY_NO){
+        return familyInfoService.getChildrenAndMailyFamilyMambersResponse(P_FAMILY_NO);
     }
 }

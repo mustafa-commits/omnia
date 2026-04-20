@@ -4,13 +4,15 @@ import java.time.LocalDateTime;
 
 public record FamilyInfoBasicResponse(
        String FamilyNo,
-       Long FollowId,
-       Long FamilyPersonId,
-       String PersonFullName,
-       String RelationId,
-       LocalDateTime Age,
+       Long FamilyPersonsId,
+       String PersonsFullName,
+       String RelationshipType,
+       Long PersonsAge,
        String Phone1,
        String Phone2,
-       String Phone3
+       String Phone3,
+       String HousingType,
+       String HealthStatus,
+       String HealthConditionDetails
 ) {
 }
