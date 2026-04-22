@@ -1,18 +1,18 @@
 package com.sc.demo.service.notification;
 
 import com.google.firebase.messaging.*;
+import com.sc.demo.model.dto.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
-import com.sc.demo.model.dto.AllNotificationFamilyRequest;
-import com.sc.demo.model.dto.NotificationRequest;
-import com.sc.demo.model.dto.NotificationByType;
-import com.sc.demo.model.dto.PHoneNotificationRequest;
+import com.sc.demo.model.notification.NotificationToken;
 import com.sc.demo.repository.NotificationDetailsRepo;
 import com.sc.demo.repository.NotificationRepo;
+import com.sc.demo.repository.NotificationTokenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,9 +30,11 @@ public class NotificationService {
     @Autowired
     private NotificationDetailsRepo notificationDetailsRepo;
 
-
     @Autowired
     private FirebaseMessaging firebaseMessaging;
+
+    @Autowired
+    private NotificationTokenRepo notificationTokenRepo;
 
     // انشاء اشعار
     public NotificationMaster createNotification(NotificationRequest notificationRequest){
@@ -59,20 +61,44 @@ public class NotificationService {
         for (NotificationDetails n :notificationRequest.notificationDetails()){
             notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
 
+       Optional<NotificationToken> byToken = notificationTokenRepo.findById(n.getUser_id());
 
+        if (byToken.isPresent()){
             messageList.add(Message.builder()
-                    .setToken("")
+                    .setToken(byToken.get().getToken())
                     .putAllData(map)
                     .setNotification(firebaseNotification)
                     .setApnsConfig(apnsConfig)
                     .build()
             );
-
+            notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
 
         }
-        firebaseMessaging.sendEachAsync(messageList);
+
+        }
+        if (messageList.size() >= 1) {
+            firebaseMessaging.sendEachAsync(messageList);
+        }
         return notificationMaster;
     }
+
+    // حفظ Token القادم من firebase في قاعدة البيانات
+    public long saveToken(NotificationTokenRequest notificationTokenRequest) {
+        Optional<NotificationToken> byToken = notificationTokenRepo.findById(notificationTokenRequest.userId());
+
+        if (byToken.isPresent()){
+            NotificationToken notificationToken = byToken.get();
+            notificationToken.setLastUpdate(LocalDateTime.now());
+            notificationToken.setToken(notificationTokenRequest.Token());
+            return notificationTokenRepo.save(notificationToken).getUser_id();
+        } else {
+            NotificationToken notificationToken = byToken.get();
+            notificationToken.setToken(notificationTokenRequest.Token());
+            notificationToken.setUser_id(notificationTokenRequest.userId());
+            return notificationTokenRepo.save(notificationToken).getUser_id();
+        }
+    }
+
 
     // اشعارات التطيق لكل يززر
     public PHoneNotificationRequest PHoneNotification(long user_id) {

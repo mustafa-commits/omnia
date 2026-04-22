@@ -1,10 +1,7 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.model.dto.*;
 import com.sc.demo.model.notification.NotificationMaster;
-import com.sc.demo.model.dto.AllNotificationFamilyRequest;
-import com.sc.demo.model.dto.NotificationRequest;
-import com.sc.demo.model.dto.NotificationByType;
-import com.sc.demo.model.dto.PHoneNotificationRequest;
 import com.sc.demo.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +16,12 @@ public class NotificationController {
     @PostMapping("/V1/api/sc/createNotification")
     public NotificationMaster createNotification(@RequestBody NotificationRequest notificationRequest){
         return notificationService.createNotification(notificationRequest);
+    }
+
+    // تخزين Token
+    @PostMapping("/V1/api/sc/setNotificationToken")
+    public long setNotificationToken(@RequestBody NotificationTokenRequest notificationTokenRequest){
+        return notificationService.saveToken(notificationTokenRequest);
     }
 
     // اشعارات التلفون
