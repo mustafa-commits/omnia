@@ -13,11 +13,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FamilyInfo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long FamilyInfoId;
+    private Long UserId;
 
-    private String FamilyNameMambers;
+    private String HeadFamilyName;
+
+    private Long OldFamilyNumber;
 
     private String mobile1;
 
@@ -31,9 +34,10 @@ public class FamilyInfo {
 
     private Long activeMobile3;
 
-    public FamilyInfo(String familyNameMambers, String mobile1, Long activeMobile1,
+    public FamilyInfo(String HeadFamilyName, Long OldFamilyNumber, String mobile1, Long activeMobile1,
                       String mobile2, Long activeMobile2, String mobile3, Long activeMobile3) {
-        FamilyNameMambers = familyNameMambers;
+        HeadFamilyName = HeadFamilyName;
+        this.OldFamilyNumber = OldFamilyNumber;
         this.mobile1 = mobile1;
         this.activeMobile1 = activeMobile1;
         this.mobile2 = mobile2;

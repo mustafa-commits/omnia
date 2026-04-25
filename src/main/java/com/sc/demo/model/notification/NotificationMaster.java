@@ -37,7 +37,11 @@ public class NotificationMaster {
 
     private LocalDateTime createDate;
 
+    private Long createBy;
+
     private LocalDateTime lastUpdate;
+
+    private Long lastCreateBy;
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     private List<NotificationDetails> notificationDetails = new ArrayList<>();

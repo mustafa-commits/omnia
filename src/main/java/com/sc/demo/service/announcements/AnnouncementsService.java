@@ -57,8 +57,8 @@ public class AnnouncementsService {
     }
 
     // اشعارات التطيق لكل يززر
-    public PHoneAnnouncementsRequest PHoneAnnouncements(long user_id) {
-        Optional<PHoneAnnouncementsRequest> pNote = jdbcClient.sql("""
+    public List<PHoneAnnouncementsRequest> PHoneAnnouncements(long user_id) {
+        return jdbcClient.sql("""
                    select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION, 
                    ad.user_id, at.FILE_NAME
                    from SC_ANNOUNCEMENTS a
@@ -66,12 +66,8 @@ public class AnnouncementsService {
                    Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
                    Where ad.user_id = :user_id
                 """).param("user_id",user_id)
-                .query(PHoneAnnouncementsRequest.class).optional();
+                .query(PHoneAnnouncementsRequest.class).list();
 
-        if (pNote.isPresent())
-            return pNote.get();
-        else
-            return null;
     }
     /*(  select json_arrayagg(
                 json_object('img_name' is 'http://10.76.232.55:8090/i/ayn_hc/ayn_hic/hic_pharmacy_supply_order_files/' || pharmacy_supplier_files_id

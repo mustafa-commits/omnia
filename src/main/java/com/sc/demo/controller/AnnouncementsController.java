@@ -39,7 +39,7 @@ public class AnnouncementsController {
 
     // تبليغات التلفون
     @GetMapping("/V1/api/sc/getPHoneAnnouncements")
-    public PHoneAnnouncementsRequest getPHoneAnnouncements(@RequestParam long user_id){
+    public List<PHoneAnnouncementsRequest> getPHoneAnnouncements(@RequestParam long user_id){
         return announcementsService.PHoneAnnouncements(user_id);
     }
 

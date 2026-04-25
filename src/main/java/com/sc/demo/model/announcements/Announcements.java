@@ -34,6 +34,10 @@ public class Announcements {
 
     private LocalDateTime lastUpdate;
 
+    private Long createBy;
+
+    private Long lastCreateBy;
+
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsDetails> announcementsDetails = new ArrayList<>();
 
