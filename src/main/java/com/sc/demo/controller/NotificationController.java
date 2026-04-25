@@ -6,6 +6,7 @@ import com.sc.demo.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class NotificationController {
 
