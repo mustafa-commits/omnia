@@ -6,6 +6,8 @@ import com.sc.demo.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "*")
 @RestController
 public class NotificationController {
@@ -27,7 +29,7 @@ public class NotificationController {
 
     // اشعارات التلفون
     @GetMapping("/V1/api/sc/getPHoneNotification")
-    public PHoneNotificationRequest getPHoneNotification(@RequestParam long user_id){
+    public List<PHoneNotificationRequest> getPHoneNotification(@RequestParam long user_id){
         return notificationService.PHoneNotification(user_id);
     }
 

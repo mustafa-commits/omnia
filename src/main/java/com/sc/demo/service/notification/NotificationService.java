@@ -101,18 +101,14 @@ public class NotificationService {
 
 
     // اشعارات التطيق لكل يززر
-    public PHoneNotificationRequest PHoneNotification(long user_id) {
-        Optional <PHoneNotificationRequest>  pNote = jdbcClient.sql("""
+    public List<PHoneNotificationRequest> PHoneNotification(long user_id) {
+        return jdbcClient.sql("""
                    select n.CREATE_DATE as createDate, n.TITLE, n.DESCRIPTION
                    from SC_NOTIFICATION n
                    join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
                    Where ND.user_id = :user_id
-                """).param("user_id",user_id).query(PHoneNotificationRequest.class).optional();
+                """).param("user_id",user_id).query(PHoneNotificationRequest.class).list();
 
-        if (pNote.isPresent())
-            return pNote.get();
-            else
-                return null;
     }
 
     // جلب اشعارات الداشبورد حسب النوع (عامة او خاصة)

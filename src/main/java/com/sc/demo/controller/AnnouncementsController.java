@@ -25,14 +25,6 @@ public class AnnouncementsController {
                                              @RequestParam String description,
                                              @RequestParam List<Long> user_id,
                                              @RequestParam MultipartFile file)  {
-//        throws IOException
-//        String uploadDir = "uploadAttachments/";
-//        File directory = new File(uploadDir);
-//        if (!directory.exists()){
-//            directory.mkdir();
-//        }
-        //Path filePath = Paths.get(uploadDir + file.getOriginalFilename());
-        //Files.write(filePath, file.getBytes());
         return announcementsService.createAnnouncements(new AnnouncementsRequest
                 (sendId, title, description, null), file, user_id);
     }

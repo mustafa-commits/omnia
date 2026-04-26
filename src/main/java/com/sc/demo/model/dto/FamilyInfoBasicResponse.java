@@ -4,10 +4,15 @@ public record FamilyInfoBasicResponse(
        String FamilyNo,
        Long FamilyPersonsId,
        String PersonsFullName,
+       Long RelationId,
        String RelationshipType,
        Long PersonsAge,
        String HealthStatus,
        String HealthConditionDetails,
-       Long IsGuardian
+       Long IsGuardian,
+       String EductionGrades,
+       String AcademicBranch,
+       String StudyStatus,
+       String SchoolName
 ) {
 }

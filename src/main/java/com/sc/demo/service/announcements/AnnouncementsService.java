@@ -59,7 +59,7 @@ public class AnnouncementsService {
     // اشعارات التطيق لكل يززر
     public List<PHoneAnnouncementsRequest> PHoneAnnouncements(long user_id) {
         return jdbcClient.sql("""
-                   select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION, 
+                   select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION,
                    ad.user_id, at.FILE_NAME
                    from SC_ANNOUNCEMENTS a
                    Left join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID

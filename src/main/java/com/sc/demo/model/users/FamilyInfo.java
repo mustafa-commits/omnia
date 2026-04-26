@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "sc_family_info")
 @Getter
@@ -16,33 +18,32 @@ public class FamilyInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long InfoId;
+
     private Long UserId;
 
     private String HeadFamilyName;
 
-    private Long OldFamilyNumber;
+    private String OldFamilyNo;
 
-    private String mobile1;
+    private String Phone;
 
-    private Long activeMobile1;
+    private Integer ActiveApp;
 
-    private String mobile2;
+    private LocalDateTime CreateDate;
 
-    private Long activeMobile2;
+    private Integer AddingBy;
 
-    private String mobile3;
-
-    private Long activeMobile3;
-
-    public FamilyInfo(String HeadFamilyName, Long OldFamilyNumber, String mobile1, Long activeMobile1,
-                      String mobile2, Long activeMobile2, String mobile3, Long activeMobile3) {
+    public FamilyInfo(String HeadFamilyName, String OldFamilyNo, String Phone, Long activeApp, Integer AddingBy) {
         HeadFamilyName = HeadFamilyName;
-        this.OldFamilyNumber = OldFamilyNumber;
-        this.mobile1 = mobile1;
-        this.activeMobile1 = activeMobile1;
-        this.mobile2 = mobile2;
-        this.activeMobile2 = activeMobile2;
-        this.mobile3 = mobile3;
-        this.activeMobile3 = activeMobile3;
+        this.OldFamilyNo = OldFamilyNo;
+        this.Phone = Phone;
+        this.ActiveApp = 1;
+        this.AddingBy = AddingBy;
+    }
+
+    @PrePersist
+    public void prePersist(){
+        this.CreateDate = LocalDateTime.now();
     }
 }

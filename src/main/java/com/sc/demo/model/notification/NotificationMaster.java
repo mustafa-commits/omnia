@@ -57,7 +57,7 @@ public class NotificationMaster {
 
     @PrePersist
     public void prePersist(){
-        this.createDate=LocalDateTime.now();
+        this.createDate = LocalDateTime.now();
     }
 }
 
