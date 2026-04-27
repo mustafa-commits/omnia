@@ -37,7 +37,7 @@ public class AnnouncementsController {
 
     // جميع تبليغات الداشبورد للعائلة
     @GetMapping("/V1/api/sc/getAllAnnouncementsFamily")
-    public AllAnnouncementsFamilyRequest getAllAnnouncementsFamily(@RequestParam long user_id){
-        return announcementsService.AllAnnouncementsFamily(user_id);
+    public List<AllAnnouncementsFamilyRequest> getAllAnnouncementsFamily(){
+        return announcementsService.AllAnnouncementsFamily();
     }
 }

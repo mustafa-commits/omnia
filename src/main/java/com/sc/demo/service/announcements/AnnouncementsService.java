@@ -81,18 +81,13 @@ public class AnnouncementsService {
                                       end) ) */
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
-    public AllAnnouncementsFamilyRequest AllAnnouncementsFamily(long user_id) {
+    public List<AllAnnouncementsFamilyRequest> AllAnnouncementsFamily() {
 
-        Optional <AllAnnouncementsFamilyRequest>  allDNote = jdbcClient.sql("""
+        return jdbcClient.sql("""
                    select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION
                    from SC_ANNOUNCEMENTS a
                    join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
-                   Where ad.user_id = :user_id
-                """).param("user_id",user_id).query(AllAnnouncementsFamilyRequest.class).optional();
+                """).query(AllAnnouncementsFamilyRequest.class).list();
 
-        if (allDNote.isPresent())
-            return allDNote.get();
-        else
-            return null;
     }
 }
