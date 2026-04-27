@@ -21,8 +21,10 @@ public class LoginController {
     }
 
     // جلب ال OTP بعد خزنه بالجدول
-    @GetMapping("/V1/api/sc/VerificationLoginApp")
-    public VerificationLoginResponse VerificationLoginApp(@RequestParam String P_Phone_Number){
-        return loginService.VerificationLoginApp(P_Phone_Number);
-    }
+//    @GetMapping("/V1/api/sc/VerificationLoginApp")
+//    public int VerificationLoginApp(@RequestParam Long UserId,
+//                                    @RequestParam Integer sendingType,
+//                                    @RequestParam String Mobile){
+//        return loginService.VerificationLoginApp(UserId, sendingType, Mobile);
+//    }
 }
