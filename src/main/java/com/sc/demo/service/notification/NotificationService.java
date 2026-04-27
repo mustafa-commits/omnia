@@ -126,19 +126,13 @@ public class NotificationService {
     }
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
-    public AllNotificationFamilyRequest AllNotificationFamily(long user_id) {
+    public List<AllNotificationFamilyRequest> AllNotificationFamily() {
 
-        Optional <AllNotificationFamilyRequest>  allDNote = jdbcClient.sql("""
+        return jdbcClient.sql("""
                    select n.CREATE_DATE as createDate, n.TITLE, n.DESCRIPTION, n.notification_type as NotificationType
                    from SC_NOTIFICATION n
                    join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
-                   Where ND.user_id = :user_id
-                """).param("user_id",user_id).query(AllNotificationFamilyRequest.class).optional();
-
-        if (allDNote.isPresent())
-            return allDNote.get();
-        else
-            return null;
+                """).query(AllNotificationFamilyRequest.class).list();
     }
 
 

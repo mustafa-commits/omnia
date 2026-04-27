@@ -41,8 +41,8 @@ public class NotificationController {
 
     // جميع اشعارات الداشبورد للعائلة
     @GetMapping("/V1/api/sc/getAllNotificationFamily")
-    public AllNotificationFamilyRequest getAllNotificationFamily(@RequestParam long user_id){
-        return notificationService.AllNotificationFamily(user_id);
+    public List<AllNotificationFamilyRequest> getAllNotificationFamily(){
+        return notificationService.AllNotificationFamily();
     }
 
 }
