@@ -13,6 +13,7 @@ public record FamilyInfoBasicResponse(
        String EductionGrades,
        String AcademicBranch,
        String StudyStatus,
-       String SchoolName
+       String SchoolName,
+       String CaseStatus
 ) {
 }

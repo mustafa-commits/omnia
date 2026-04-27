@@ -28,10 +28,13 @@ public class VerificationApp {
 
     private Integer SendingType;
 
-    public VerificationApp(Long userId, Long secretCode, Integer sendingType) {
+    private String Mobile;
+
+    public VerificationApp(Long userId, Long secretCode, Integer sendingType, String mobile) {
         UserId = userId;
         SecretCode = secretCode;
         SendingType = sendingType;
+        Mobile = mobile;
     }
 
 
