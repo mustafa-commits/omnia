@@ -1,7 +1,6 @@
 package com.sc.demo.service.users;
 
 import com.sc.demo.model.dto.ChildrenAndMailyFamilyMambersResponse;
-import com.sc.demo.model.dto.FamilyHealthStatusInfoResponse;
 import com.sc.demo.model.dto.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.FamilyInfoHousingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FamilyInfoService {

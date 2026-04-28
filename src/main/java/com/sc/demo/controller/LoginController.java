@@ -2,7 +2,6 @@ package com.sc.demo.controller;
 
 
 import com.sc.demo.model.dto.*;
-import com.sc.demo.model.users.AppUser;
 import com.sc.demo.service.users.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +21,9 @@ public class LoginController {
 
     // جلب ال OTP بعد خزنه بالجدول
 //    @GetMapping("/V1/api/sc/VerificationLoginApp")
-//    public int VerificationLoginApp(@RequestParam Long UserId,
+//    public Long VerificationLoginApp(@RequestParam Long UserId,
 //                                    @RequestParam Integer sendingType,
 //                                    @RequestParam String Mobile){
-//        return loginService.VerificationLoginApp(UserId, sendingType, Mobile);
+//        return loginService.GeneratingVerificationLogin(UserId, sendingType, Mobile);
 //    }
 }

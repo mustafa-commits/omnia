@@ -1,4 +1,4 @@
-package com.sc.demo.model.users;
+package com.sc.demo.model.FamilyInfo;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

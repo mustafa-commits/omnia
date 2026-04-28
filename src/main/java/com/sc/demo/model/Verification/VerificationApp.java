@@ -1,4 +1,4 @@
-package com.sc.demo.model.users;
+package com.sc.demo.model.Verification;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class VerificationApp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long VerificationAppId;
+    private Long Id;
 
     private Long UserId;
 

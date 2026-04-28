@@ -1,7 +1,6 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.ChildrenAndMailyFamilyMambersResponse;
-import com.sc.demo.model.dto.FamilyHealthStatusInfoResponse;
 import com.sc.demo.model.dto.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.FamilyInfoHousingResponse;
 import com.sc.demo.service.users.FamilyInfoService;
