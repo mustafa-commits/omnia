@@ -1,8 +1,10 @@
 package com.sc.demo.service.users;
 
+import com.sc.demo.model.Verification.SendingType;
 import com.sc.demo.model.dto.LogInResponse1;
 import com.sc.demo.model.Verification.VerificationApp;
 import com.sc.demo.repository.VerificationLoginRepo;
+import com.sc.demo.service.Login.WhatsAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,17 @@ public class LoginService {
     @Autowired
     private VerificationLoginRepo verificationLoginRepo;
 
+    @Autowired
+            private WhatsAppService whatsAppService;
+
+    String regex = "^(77|78|79)\\d{8}$";
+
     // تسجيل دخول من خلال رقم الهاتف
-    public LogInResponse1 logIn(String P_Phone_Number){
+    public LogInResponse1 logIn(long phone_Number, String country_code){
+
+        if (!String.valueOf(phone_Number).matches(regex)){
+            return null;
+        }
 
         Optional <LogInResponse1> logInRes = jdbcClient.sql("""
                    SELECT H.FAMILY_PERSONS_ID as UserId
@@ -37,33 +48,31 @@ public class LoginService {
                                                 WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
                                                     AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
                    AND H.IS_GUARDIAN = 1
-                   AND (F.PHONE1 LIKE '%' || :P_Phone_Number
-                   OR F.PHONE2 LIKE '%' || :P_Phone_Number
-                   OR F.PHONE3 LIKE '%' || :P_Phone_Number)
+                   AND (F.PHONE1 LIKE '%' || :phone_Number
+                   OR F.PHONE2 LIKE '%' || :phone_Number
+                   OR F.PHONE3 LIKE '%' || :phone_Number)
 
                    UNION
 
                    SELECT FI.USER_ID as UserId
                    FROM MOBAPP.SC_FAMILY_INFO FI
-                   WHERE FI.PHONE LIKE '%' || :P_Phone_Number
-                """).param("P_Phone_Number",P_Phone_Number).query(LogInResponse1.class).optional();
+                   WHERE FI.PHONE LIKE '%' || :phone_Number
+                """).param("phone_Number",phone_Number).query(LogInResponse1.class).optional();
 
         if (logInRes.isPresent()) {
-            GeneratingVerificationLogin();
+            Long code = GeneratingVerificationLogin(phone_Number + country_code, SendingType.WHATSAPP);
+            whatsAppService.sendVerificationCode(code);
             return logInRes.get();
         }else
             return null;
     }
 
     // جلب ال OTP بعد خزنه بالجدول
-    public Long GeneratingVerificationLogin(Long UserId, Integer sendingType, String Mobile) {
+    public Long GeneratingVerificationLogin(String userId, SendingType sendingType) {
         Long code;
         code = ThreadLocalRandom.current().nextLong(100000, 1_000_000);
-        verificationLoginRepo.save(new VerificationApp(UserId, code, sendingType, Mobile));
+        verificationLoginRepo.save(new VerificationApp(userId, code, sendingType));
         return code;
     }
 
-    public Long ResponseVerificationLogin(){
-        System.out.println(GeneratingVerificationLogin(code));
-    }
 }

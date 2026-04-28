@@ -15,8 +15,9 @@ public class LoginController {
 
     // تسجيل الدخول من خلال رقم الهاتف
     @GetMapping("/V1/api/sc/loginByPhone")
-    public LogInResponse1 login(@RequestParam String P_Phone_Number) {
-        return loginService.logIn(P_Phone_Number);
+    public LogInResponse1 login(@RequestParam long phone_Number,
+                                @RequestParam String country_code) {
+        return loginService.logIn(phone_Number, country_code);
     }
 
     // جلب ال OTP بعد خزنه بالجدول

@@ -20,21 +20,18 @@ public class VerificationApp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private Long UserId;
+    private String UserId;
 
     private Long SecretCode;
 
     private LocalDateTime CreateDate;
 
-    private Integer SendingType;
+    private SendingType SendingType;
 
-    private String Mobile;
-
-    public VerificationApp(Long userId, Long secretCode, Integer sendingType, String mobile) {
+    public VerificationApp(String userId, Long secretCode, SendingType sendingType) {
         UserId = userId;
         SecretCode = secretCode;
         SendingType = sendingType;
-        Mobile = mobile;
     }
 
 

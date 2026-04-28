@@ -1,10 +1,12 @@
 package com.sc.demo.service.announcements;
 
 import com.sc.demo.model.announcements.Announcements;
+import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
 import com.sc.demo.model.dto.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.AnnouncementsRequest;
 import com.sc.demo.model.dto.PHoneAnnouncementsRequest;
+import com.sc.demo.repository.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.AnnouncementsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class AnnouncementsService {
     private AnnouncementsDetailsRepo announcementsDetailsRepo;
 
     @Autowired
+    private AnnouncementsAttachmentRepo announcementsAttachmentRepo;
+
+    @Autowired
     private Environment environment;
 
     // انشاء تبليغ
@@ -48,7 +53,7 @@ public class AnnouncementsService {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
             String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
-
+            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, announcements));
             file.transferTo(new File(filePath));
         } catch (IOException e) {
             throw new RuntimeException(e);
