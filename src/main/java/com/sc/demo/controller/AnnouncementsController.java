@@ -23,8 +23,8 @@ public class AnnouncementsController {
     public Announcements createAnnouncements(@RequestParam Integer sendId,
                                              @RequestParam String title,
                                              @RequestParam String description,
-                                             @RequestParam List<Long> user_id,
-                                             @RequestParam(required = false) MultipartFile file)  {
+                                             @RequestParam (required = false) List<Long> user_id,
+                                             @RequestParam (required = false) MultipartFile file)  {
         return announcementsService.createAnnouncements(new AnnouncementsRequest
                 (sendId, title, description, null), file, user_id);
     }
