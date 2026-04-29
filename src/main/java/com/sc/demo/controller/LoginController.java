@@ -3,8 +3,11 @@ package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.*;
 import com.sc.demo.service.users.LoginService;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -21,10 +24,9 @@ public class LoginController {
     }
 
     // جلب ال OTP بعد خزنه بالجدول
-//    @GetMapping("/V1/api/sc/VerificationLoginApp")
-//    public Long VerificationLoginApp(@RequestParam Long UserId,
-//                                    @RequestParam Integer sendingType,
-//                                    @RequestParam String Mobile){
-//        return loginService.GeneratingVerificationLogin(UserId, sendingType, Mobile);
-//    }
+    @PostMapping("/V1/api/sc/ChekLogin")
+    public ChekLoginResponse ChekLogin(@RequestParam Long phone_Number,
+                                       @RequestParam Long secretCode){
+        return loginService.ChekLoginApp(phone_Number, secretCode);
+    }
 }

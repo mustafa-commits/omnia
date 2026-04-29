@@ -18,25 +18,27 @@ public class VerificationApp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
-    private String UserId;
+    private String userIdentifier;
 
-    private Long SecretCode;
+    private Long secretCode;
 
-    private LocalDateTime CreateDate;
+    private LocalDateTime createDate;
 
-    private SendingType SendingType;
+    private SendingType sendingType;
 
-    public VerificationApp(String userId, Long secretCode, SendingType sendingType) {
-        UserId = userId;
-        SecretCode = secretCode;
-        SendingType = sendingType;
+    private Integer isUsed = 0;
+
+    public VerificationApp(String userIdentifier, Long secretCode, SendingType sendingType) {
+        this.userIdentifier = userIdentifier;
+        this.secretCode = secretCode;
+        this.sendingType = sendingType;
     }
 
 
     @PrePersist
     public void prePersist(){
-        this.CreateDate = LocalDateTime.now();
+        this.createDate = LocalDateTime.now();
     }
 }

@@ -18,32 +18,34 @@ public class FamilyInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long InfoId;
+    private Long infoId;
 
-    private Long UserId;
+    private Long userId;
 
-    private String HeadFamilyName;
+    private String headFamilyName;
 
-    private String OldFamilyNo;
+    private String oldFamilyNo;
 
-    private String Phone;
+    private String phone;
 
-    private Integer ActiveApp;
+    private Integer activeApp;
 
-    private LocalDateTime CreateDate;
+    private LocalDateTime createDate;
 
-    private Integer AddingBy;
+    private Integer addingBy;
 
-    public FamilyInfo(String HeadFamilyName, String OldFamilyNo, String Phone, Long activeApp, Integer AddingBy) {
-        HeadFamilyName = HeadFamilyName;
-        this.OldFamilyNo = OldFamilyNo;
-        this.Phone = Phone;
-        this.ActiveApp = 1;
-        this.AddingBy = AddingBy;
+    private LocalDateTime birthDate;
+
+    public FamilyInfo(String headFamilyName, String oldFamilyNo, String phone, Long activeApp, Integer addingBy) {
+        this.headFamilyName = headFamilyName;
+        this.oldFamilyNo = oldFamilyNo;
+        this.phone = phone;
+        this.activeApp = 1;
+        this.addingBy = addingBy;
     }
 
     @PrePersist
     public void prePersist(){
-        this.CreateDate = LocalDateTime.now();
+        this.createDate = LocalDateTime.now();
     }
 }

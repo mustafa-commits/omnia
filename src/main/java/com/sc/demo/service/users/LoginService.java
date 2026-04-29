@@ -1,6 +1,7 @@
 package com.sc.demo.service.users;
 
 import com.sc.demo.model.Verification.SendingType;
+import com.sc.demo.model.dto.ChekLoginResponse;
 import com.sc.demo.model.dto.LogInResponse1;
 import com.sc.demo.model.Verification.VerificationApp;
 import com.sc.demo.repository.VerificationLoginRepo;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -22,9 +24,12 @@ public class LoginService {
     private VerificationLoginRepo verificationLoginRepo;
 
     @Autowired
-            private WhatsAppService whatsAppService;
+    private WhatsAppService whatsAppService;
 
     String regex = "^(77|78|79)\\d{8}$";
+
+//    private final String secretKey = "mySecretKey"; // Secret for signing JWTs
+//    private final long expirationMs = 63072000000L; // صلاحية Token سنتين
 
     // تسجيل دخول من خلال رقم الهاتف
     public LogInResponse1 logIn(long phone_Number, String country_code){
@@ -34,7 +39,7 @@ public class LoginService {
         }
 
         Optional <LogInResponse1> logInRes = jdbcClient.sql("""
-                   SELECT H.FAMILY_PERSONS_ID as UserId
+                   SELECT H.FAMILY_PERSONS_ID as userIdentifier
                    FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
                          LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
                          LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
@@ -54,7 +59,7 @@ public class LoginService {
 
                    UNION
 
-                   SELECT FI.USER_ID as UserId
+                   SELECT FI.USER_ID as userIdentifier
                    FROM MOBAPP.SC_FAMILY_INFO FI
                    WHERE FI.PHONE LIKE '%' || :phone_Number
                 """).param("phone_Number",phone_Number).query(LogInResponse1.class).optional();
@@ -68,11 +73,39 @@ public class LoginService {
     }
 
     // جلب ال OTP بعد خزنه بالجدول
-    public Long GeneratingVerificationLogin(String userId, SendingType sendingType) {
+    public Long GeneratingVerificationLogin(String userIdentifier, SendingType sendingType) {
         Long code;
         code = ThreadLocalRandom.current().nextLong(100000, 1_000_000);
-        verificationLoginRepo.save(new VerificationApp(userId, code, sendingType));
+        verificationLoginRepo.save(new VerificationApp(userIdentifier, code, sendingType));
         return code;
     }
 
+    // التحقق من تاريخ الميلاد وارسال رقم الحاتف
+    public ChekLoginResponse ChekLoginApp(Long phone_Number, Long secretCode){
+        Optional <ChekLoginResponse> logInChek = jdbcClient.sql("""
+                SELECT 1
+                FROM MOBAPP.SC_VERIFICATION_APP V
+                WHERE V.USER_ID LIKE '%' || :phone_Number
+                AND V.SECRET_CODE = :secretCode
+                """)
+                .param("phone_Number",phone_Number)
+                .param("secretCode", secretCode)
+                .query(ChekLoginResponse.class).optional();
+
+        if (logInChek.isPresent()) {
+//            GenerateToken();
+            return logInChek.get();
+        }else
+            return null;
+    }
+
+    // توليد token
+//    public String GenerateToken(String userIdentifier) {
+//        return Jwts.builder()
+//                .setSubject(userIdentifier)
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
+//                .signWith(SignatureAlgorithm.HS256, secretKey)
+//                .compact(); // Creates the token
+//    }
 }

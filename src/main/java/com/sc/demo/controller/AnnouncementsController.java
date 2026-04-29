@@ -24,7 +24,7 @@ public class AnnouncementsController {
                                              @RequestParam String title,
                                              @RequestParam String description,
                                              @RequestParam List<Long> user_id,
-                                             @RequestParam MultipartFile file)  {
+                                             @RequestParam(required = false) MultipartFile file)  {
         return announcementsService.createAnnouncements(new AnnouncementsRequest
                 (sendId, title, description, null), file, user_id);
     }
