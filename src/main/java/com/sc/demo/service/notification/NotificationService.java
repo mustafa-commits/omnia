@@ -5,6 +5,7 @@ import com.sc.demo.model.dto.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.notification.NotificationToken;
+import com.sc.demo.model.notification.NotificationType;
 import com.sc.demo.repository.NotificationDetailsRepo;
 import com.sc.demo.repository.NotificationRepo;
 import com.sc.demo.repository.NotificationTokenRepo;
@@ -37,7 +38,7 @@ public class NotificationService {
     private NotificationTokenRepo notificationTokenRepo;
 
     // انشاء اشعار
-    public NotificationMaster createNotification(NotificationRequest notificationRequest){
+    public NotificationMaster createNotification(NotificationRequest notificationRequest) {
 
         Map<String, String> map = new HashMap<>();
         map.put("notification_type", "3");
@@ -45,7 +46,7 @@ public class NotificationService {
 
         NotificationMaster notificationMaster = new NotificationMaster(notificationRequest.sendId(),
                 notificationRequest.title(), notificationRequest.description(),
-                 notificationRequest.notificationType()
+                notificationRequest.notificationType()
         );
 
         Notification firebaseNotification = Notification
@@ -58,27 +59,39 @@ public class NotificationService {
         ApnsConfig apnsConfig = getApnsConfig();
 
         notificationMaster = notificationRepo.save(notificationMaster);
-        for (NotificationDetails n :notificationRequest.notificationDetails()){
-            notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
+        if (notificationRequest.notificationType().equals(NotificationType.PRIVATE)) {
+            for (NotificationDetails n : notificationRequest.notificationDetails()) {
+                notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
 
-       Optional<NotificationToken> byToken = notificationTokenRepo.findById(n.getUser_id());
+                Optional<NotificationToken> byToken = notificationTokenRepo.findById(n.getUser_id());
 
-        if (byToken.isPresent()){
-            messageList.add(Message.builder()
-                    .setToken(byToken.get().getToken())
-                    .putAllData(map)
-                    .setNotification(firebaseNotification)
-                    .setApnsConfig(apnsConfig)
-                    .build()
-            );
-            notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
+                if (byToken.isPresent()) {
+                    messageList.add(Message.builder()
+                            .setToken(byToken.get().getToken())
+                            .putAllData(map)
+                            .setNotification(firebaseNotification)
+                            .setApnsConfig(apnsConfig)
+                            .build()
+                    );
+                    notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
 
+                }
+
+            }
+            if (messageList.size() >= 1) {
+                firebaseMessaging.sendEachAsync(messageList);
+            }
+            return notificationMaster;
         }
 
-        }
-        if (messageList.size() >= 1) {
-            firebaseMessaging.sendEachAsync(messageList);
-        }
+        Message message = Message.builder()
+                .setTopic("all")
+                .putAllData(map)
+                .setNotification(firebaseNotification)
+                .setApnsConfig(apnsConfig)
+                .build();
+        firebaseMessaging.sendAsync(message);
+
         return notificationMaster;
     }
 
