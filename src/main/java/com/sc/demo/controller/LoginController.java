@@ -7,6 +7,7 @@ import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -19,8 +20,9 @@ public class LoginController {
     // تسجيل الدخول من خلال رقم الهاتف
     @GetMapping("/V1/api/sc/loginByPhone")
     public LogInResponse1 login(@RequestParam long phone_Number,
-                                @RequestParam String country_code) {
-        return loginService.logIn(phone_Number, country_code);
+                                @RequestParam String country_code,
+                                @RequestParam LocalDateTime birthDate) {
+        return loginService.logIn(phone_Number, country_code, birthDate);
     }
 
     // جلب ال OTP بعد خزنه بالجدول

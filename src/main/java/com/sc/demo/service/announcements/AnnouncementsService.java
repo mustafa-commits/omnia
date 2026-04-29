@@ -74,7 +74,12 @@ public class AnnouncementsService {
                 .query(PHoneAnnouncementsRequest.class).list();
 
     }
-    /*(  select json_arrayagg(
+    /*
+                       Where (ad.user_id = :user_id or  :user_id = 0 )
+                   Where (ad.user_id = nvl(:user_id,ad.user_id)
+
+
+    (  select json_arrayagg(
                 json_object('img_name' is 'http://10.76.232.55:8090/i/ayn_hc/ayn_hic/hic_pharmacy_supply_order_files/' || pharmacy_supplier_files_id
                                           || '.' || substr (file_type, instr (file_type, '/', 1) + 1)
                            ,'full_img' is case when upper (substr (file_type, instr (file_type, '/', 1) + 1)) = 'pdf'
