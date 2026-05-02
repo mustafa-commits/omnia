@@ -69,16 +69,12 @@ public class AnnouncementsService {
                    from SC_ANNOUNCEMENTS a
                    Left join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
                    Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
-                   Where ad.user_id = :user_id
+                   Where ad.user_id = :user_id OR ad.USER_ID = 0
                 """).param("user_id",user_id)
                 .query(PHoneAnnouncementsRequest.class).list();
 
     }
     /*
-                       Where (ad.user_id = :user_id or  :user_id = 0 )
-                   Where (ad.user_id = nvl(:user_id,ad.user_id)
-
-
     (  select json_arrayagg(
                 json_object('img_name' is 'http://10.76.232.55:8090/i/ayn_hc/ayn_hic/hic_pharmacy_supply_order_files/' || pharmacy_supplier_files_id
                                           || '.' || substr (file_type, instr (file_type, '/', 1) + 1)

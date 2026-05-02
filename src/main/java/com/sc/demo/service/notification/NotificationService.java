@@ -119,7 +119,7 @@ public class NotificationService {
                    select n.CREATE_DATE as createDate, n.TITLE, n.DESCRIPTION
                    from SC_NOTIFICATION n
                    join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
-                   Where ND.user_id = :user_id
+                   Where ND.user_id = :user_id OR ND.USER_ID = 0
                 """).param("user_id",user_id).query(PHoneNotificationRequest.class).list();
 
     }
