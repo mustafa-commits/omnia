@@ -6,7 +6,7 @@ import com.sc.demo.model.notification.NotificationType;
 
 import java.util.List;
 
-public record NotificationRequest(
+public record  NotificationRequest(
         Integer sendId,
         String title,
         String description,

@@ -3,12 +3,10 @@ package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.*;
 import com.sc.demo.service.users.LoginService;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
