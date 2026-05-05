@@ -19,7 +19,8 @@ public class InquiryController {
 
     // استعلام بأسم الوصي
     @GetMapping("/V1/api/sc/inquiryByName")
-    public List<InquiryRequest> inquiryByName(@RequestParam String GuardianName){
-        return inquiryService.inquiryByName(GuardianName);
+    public List<InquiryRequest> inquiryByName(@RequestParam String GuardianName,
+                                              @RequestParam Long GuardianId){
+        return inquiryService.inquiryByNameOrId(GuardianName, GuardianId);
     }
 }
