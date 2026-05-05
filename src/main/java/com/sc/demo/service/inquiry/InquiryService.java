@@ -16,7 +16,8 @@ public class InquiryService {
     // استعلام بأسم الوصي او رمز الوصي
     public List<InquiryRequest> inquiryByNameOrId(String GuardianName, long GuardianId){
         return jdbcClient.sql("""
-                    SELECT (H.PERSON_NAME_FIRST || ' ' ||
+                    SELECT H.FAMILY_PERSONS_ID
+                           ,(H.PERSON_NAME_FIRST || ' ' ||
                            H.PERSON_NAME_SECOND || ' ' ||
                            H.PERSON_NAME_THIRD || ' ' ||
                            H.PERSON_NAME_FOURTH) AS GuardianFullName

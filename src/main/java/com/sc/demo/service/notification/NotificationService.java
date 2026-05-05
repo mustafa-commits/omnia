@@ -116,10 +116,11 @@ public class NotificationService {
     // اشعارات التطيق لكل يززر
     public List<PHoneNotificationRequest> PHoneNotification(long user_id) {
         return jdbcClient.sql("""
-                   select n.CREATE_DATE as createDate, n.TITLE, n.DESCRIPTION
-                   from SC_NOTIFICATION n
-                   join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
-                   Where ND.user_id = :user_id OR ND.USER_ID = 0
+                   SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION
+                   FROM SC_NOTIFICATION N
+                   JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
+                   WHERE ND.USER_ID = :USER_ID
+                   OR N.NOTIFICATION_ID = 0
                 """).param("user_id",user_id).query(PHoneNotificationRequest.class).list();
 
     }
@@ -142,9 +143,9 @@ public class NotificationService {
     public List<AllNotificationFamilyRequest> AllNotificationFamily() {
 
         return jdbcClient.sql("""
-                   select n.CREATE_DATE as createDate, n.TITLE, n.DESCRIPTION, n.notification_type as NotificationType
-                   from SC_NOTIFICATION n
-                   join SC_NOTIFICATION_DETAILS nd on n.NOTIFICATION_ID = nd.NOTIFICATION_ID
+                   SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION, N.NOTIFICATION_TYPE AS NotificationType
+                   FROM SC_NOTIFICATION N
+                   LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
                 """).query(AllNotificationFamilyRequest.class).list();
     }
 

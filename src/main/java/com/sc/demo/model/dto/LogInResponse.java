@@ -1,6 +1,6 @@
 package com.sc.demo.model.dto;
 
-public record LogInResponse1(
+public record LogInResponse(
         Long userIdentifier
 ) {
 }

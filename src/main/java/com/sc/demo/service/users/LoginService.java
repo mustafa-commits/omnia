@@ -2,7 +2,7 @@ package com.sc.demo.service.users;
 
 import com.sc.demo.model.Verification.SendingType;
 import com.sc.demo.model.dto.ChekLoginResponse;
-import com.sc.demo.model.dto.LogInResponse1;
+import com.sc.demo.model.dto.LogInResponse;
 import com.sc.demo.model.Verification.VerificationApp;
 import com.sc.demo.repository.VerificationLoginRepo;
 import com.sc.demo.service.Login.WhatsAppService;
@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -33,13 +32,13 @@ public class LoginService {
 //    private final long expirationMs = 63072000000L; // صلاحية Token سنتين
 
     // تسجيل دخول من خلال رقم الهاتف
-    public LogInResponse1 logIn(long phone_Number, String country_code, LocalDateTime birthDate){
+    public LogInResponse logIn(long phone_Number, String country_code, LocalDateTime birthDate){
 
         if (!String.valueOf(phone_Number).matches(regex)){
             return null;
         }
 
-        Optional <LogInResponse1> logInRes = jdbcClient.sql("""
+        Optional <LogInResponse> logInRes = jdbcClient.sql("""
                    SELECT H.FAMILY_PERSONS_ID as UserId
                    FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
                        LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
@@ -67,7 +66,7 @@ public class LoginService {
                 """)
                 .param("phone_Number",phone_Number)
                 .param("birthDate", birthDate)
-                .query(LogInResponse1.class)
+                .query(LogInResponse.class)
                 .optional();
 
         if (logInRes.isPresent()) {
