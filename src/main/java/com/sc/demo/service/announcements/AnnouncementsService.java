@@ -3,9 +3,9 @@ package com.sc.demo.service.announcements;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
-import com.sc.demo.model.dto.AllAnnouncementsFamilyRequest;
-import com.sc.demo.model.dto.AnnouncementsRequest;
-import com.sc.demo.model.dto.PHoneAnnouncementsRequest;
+import com.sc.demo.model.dto.Announcements.AllAnnouncementsFamilyRequest;
+import com.sc.demo.model.dto.Announcements.AnnouncementsRequest;
+import com.sc.demo.model.dto.Announcements.PHoneAnnouncementsRequest;
 import com.sc.demo.repository.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.AnnouncementsRepo;
@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AnnouncementsService {

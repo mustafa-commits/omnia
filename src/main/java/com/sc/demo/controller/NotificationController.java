@@ -1,6 +1,6 @@
 package com.sc.demo.controller;
 
-import com.sc.demo.model.dto.*;
+import com.sc.demo.model.dto.Notification.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;

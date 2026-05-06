@@ -1,8 +1,8 @@
 package com.sc.demo.service.users;
 
 import com.sc.demo.model.Verification.SendingType;
-import com.sc.demo.model.dto.ChekLoginResponse;
-import com.sc.demo.model.dto.LogInResponse;
+import com.sc.demo.model.dto.Login.ChekLoginResponse;
+import com.sc.demo.model.dto.Login.LogInResponse;
 import com.sc.demo.model.Verification.VerificationApp;
 import com.sc.demo.repository.VerificationLoginRepo;
 import com.sc.demo.service.Login.WhatsAppService;

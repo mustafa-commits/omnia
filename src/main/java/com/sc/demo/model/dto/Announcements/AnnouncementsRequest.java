@@ -1,4 +1,4 @@
-package com.sc.demo.model.dto;
+package com.sc.demo.model.dto.Announcements;
 
 import com.sc.demo.model.announcements.AnnouncementsDetails;
 import java.util.List;

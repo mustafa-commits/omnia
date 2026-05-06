@@ -1,4 +1,4 @@
-package com.sc.demo.model.dto;
+package com.sc.demo.model.dto.FamilyInfo;
 
 public record ChildrenAndMailyFamilyMambersResponse(
         Long MailyMambers,

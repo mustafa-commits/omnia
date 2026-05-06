@@ -1,4 +1,4 @@
-package com.sc.demo.model.dto;
+package com.sc.demo.model.dto.Notification;
 import java.time.LocalDateTime;
 
 public record PHoneNotificationRequest(

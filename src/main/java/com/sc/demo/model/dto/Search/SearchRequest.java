@@ -1,6 +1,6 @@
-package com.sc.demo.model.dto;
+package com.sc.demo.model.dto.Search;
 
-public record InquiryRequest(
+public record SearchRequest(
          String HeadFamilyFullName,
          String GuardianFullName
 ) {

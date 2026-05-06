@@ -1,4 +1,4 @@
-package com.sc.demo.model.dto;
+package com.sc.demo.model.dto.Announcements;
 
 import java.time.LocalDateTime;
 

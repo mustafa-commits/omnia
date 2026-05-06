@@ -1,4 +1,4 @@
-package com.sc.demo.model.dto;
+package com.sc.demo.model.dto.Notification;
 
 import com.sc.demo.model.notification.NotificationType;
 import java.time.LocalDateTime;

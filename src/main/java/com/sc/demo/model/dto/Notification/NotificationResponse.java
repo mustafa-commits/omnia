@@ -1,4 +1,4 @@
-package com.sc.demo.model.dto;
+package com.sc.demo.model.dto.Notification;
 
 public record NotificationResponse(
         long notification_details_id,

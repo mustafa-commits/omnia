@@ -1,6 +1,6 @@
-package com.sc.demo.service.inquiry;
+package com.sc.demo.service.Search;
 
-import com.sc.demo.model.dto.InquiryRequest;
+import com.sc.demo.model.dto.Search.SearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class InquiryService {
+public class SearchService {
 
     @Autowired
     private JdbcClient jdbcClient;
 
     // استعلام بأسم الوصي او رمز الوصي
-    public List<InquiryRequest> inquiryByNameOrId(String GuardianName, long GuardianId){
+    public List<SearchRequest> SearchByNameOrId(String GuardianName, long GuardianId){
         return jdbcClient.sql("""
                     SELECT H.FAMILY_PERSONS_ID
                            ,(H.PERSON_NAME_FIRST || ' ' ||
@@ -46,7 +46,7 @@ public class InquiryService {
                 """)
                 .param("GuardianName", GuardianName)
                 .param("GuardianId", GuardianId)
-                .query(InquiryRequest.class)
+                .query(SearchRequest.class)
                 .list();
     }
 }

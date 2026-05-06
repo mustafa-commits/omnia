@@ -1,7 +1,7 @@
 package com.sc.demo.service.notification;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.dto.*;
+import com.sc.demo.model.dto.Notification.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.notification.NotificationToken;
