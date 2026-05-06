@@ -20,7 +20,7 @@ public class SearchController {
     // استعلام بأسم الوصي
     @GetMapping("/V1/api/sc/SearchByName")
     public List<SearchRequest> SearchByName(@RequestParam (required = false) String GuardianName,
-                                            @RequestParam (required = false) long GuardianId){
+                                            @RequestParam (required = false) Long GuardianId){
         return searchService.SearchByNameOrId(GuardianName, GuardianId);
     }
 }

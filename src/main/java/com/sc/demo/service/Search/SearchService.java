@@ -1,6 +1,7 @@
 package com.sc.demo.service.Search;
 
 import com.sc.demo.model.dto.Search.SearchRequest;
+import org.hibernate.type.SqlTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class SearchService {
     private JdbcClient jdbcClient;
 
     // استعلام بأسم الوصي او رمز الوصي
-    public List<SearchRequest> SearchByNameOrId(String GuardianName, long GuardianId){
+    public List<SearchRequest> SearchByNameOrId(String GuardianName, Long GuardianId){
         return jdbcClient.sql("""
                     SELECT H.FAMILY_PERSONS_ID
                            ,(H.PERSON_NAME_FIRST || ' ' ||
@@ -44,8 +45,8 @@ public class SearchService {
                         JOIN AIN_CAPPS.SC_AID_REQUESTS R2 ON F2.AID_REQUEST_ID = R2.AID_REQUEST_ID
                         WHERE R2.WIFE_ID = R.WIFE_ID)
                 """)
-                .param("GuardianName", GuardianName)
-                .param("GuardianId", GuardianId)
+                .param("GuardianName", GuardianName, SqlTypes.VARCHAR)
+                .param("GuardianId", GuardianId, SqlTypes.NUMERIC)
                 .query(SearchRequest.class)
                 .list();
     }
