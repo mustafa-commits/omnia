@@ -119,10 +119,9 @@ public class NotificationService {
                    SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION
                    FROM SC_NOTIFICATION N
                    JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
-                   WHERE ND.USER_ID = :USER_ID
+                   WHERE ND.USER_ID = :user_id
                    OR N.NOTIFICATION_ID = 0
                 """).param("user_id",user_id).query(PHoneNotificationRequest.class).list();
-
     }
 
     // جلب اشعارات الداشبورد حسب النوع (عامة او خاصة)

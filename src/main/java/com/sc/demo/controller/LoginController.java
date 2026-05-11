@@ -3,7 +3,7 @@ package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.Login.ChekLoginResponse;
 import com.sc.demo.model.dto.Login.LogInResponse;
-import com.sc.demo.service.users.LoginService;
+import com.sc.demo.service.Login.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

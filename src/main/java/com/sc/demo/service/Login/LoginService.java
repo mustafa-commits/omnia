@@ -1,11 +1,10 @@
-package com.sc.demo.service.users;
+package com.sc.demo.service.Login;
 
 import com.sc.demo.model.Verification.SendingType;
 import com.sc.demo.model.dto.Login.ChekLoginResponse;
 import com.sc.demo.model.dto.Login.LogInResponse;
 import com.sc.demo.model.Verification.VerificationApp;
 import com.sc.demo.repository.VerificationLoginRepo;
-import com.sc.demo.service.Login.WhatsAppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;

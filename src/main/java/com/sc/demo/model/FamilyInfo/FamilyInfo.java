@@ -22,6 +22,9 @@ public class FamilyInfo {
 
     private Long userId;
 
+    @Column(unique=true)
+    private Long HeadFamilyId;
+
     private String headFamilyName;
 
     private String oldFamilyNo;
@@ -36,7 +39,7 @@ public class FamilyInfo {
 
     private LocalDateTime birthDate;
 
-    public FamilyInfo(String headFamilyName, String oldFamilyNo, String phone, Long activeApp, Integer addingBy) {
+    public FamilyInfo(String headFamilyName, String oldFamilyNo, String phone, Integer addingBy) {
         this.headFamilyName = headFamilyName;
         this.oldFamilyNo = oldFamilyNo;
         this.phone = phone;
