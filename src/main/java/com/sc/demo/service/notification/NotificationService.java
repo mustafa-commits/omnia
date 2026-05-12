@@ -113,14 +113,14 @@ public class NotificationService {
     }
 
 
-    // اشعارات التطيق لكل يزر
+    // اشعارات التطيق لكل يوزر
     public List<PHoneNotificationRequest> PHoneNotification(long user_id) {
         return jdbcClient.sql("""
                    SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION
                    FROM SC_NOTIFICATION N
-                   JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
+                   LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
                    WHERE ND.USER_ID = :user_id
-                   OR N.NOTIFICATION_ID = 0
+                   OR N.NOTIFICATION_TYPE = 0
                 """).param("user_id",user_id).query(PHoneNotificationRequest.class).list();
     }
 

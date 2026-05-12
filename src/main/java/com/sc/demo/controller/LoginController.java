@@ -20,7 +20,7 @@ public class LoginController {
     @GetMapping("/V1/api/sc/loginByPhone")
     public LogInResponse login(@RequestParam long phone_Number,
                                @RequestParam String country_code,
-                               @RequestParam LocalDateTime birthDate) {
+                               @RequestParam String birthDate) {
         return loginService.logIn(phone_Number, country_code, birthDate);
     }
 
