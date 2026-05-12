@@ -113,7 +113,7 @@ public class NotificationService {
     }
 
 
-    // اشعارات التطيق لكل يززر
+    // اشعارات التطيق لكل يزر
     public List<PHoneNotificationRequest> PHoneNotification(long user_id) {
         return jdbcClient.sql("""
                    SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION

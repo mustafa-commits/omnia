@@ -20,8 +20,6 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userid;
 
-    private Long guardianId;
-
     private Long headFamilyId;
 
     private Long requestId;
@@ -32,10 +30,9 @@ public class AppUser {
 
     private String Phone;
 
-    public AppUser(String phone, Long requestId, Long guardianId, Long headFamilyId) {
+    public AppUser(String phone, Long requestId, Long headFamilyId) {
         Phone = phone;
         this.requestId = requestId;
-        this.guardianId = guardianId;
         this.headFamilyId = headFamilyId;
     }
 

@@ -20,31 +20,31 @@ public class FamilyInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long infoId;
 
-    private Long userId;
-
     @Column(unique=true)
-    private Long HeadFamilyId;
+    private Long headFamilyId;
+
+    private Long requestId;
 
     private String headFamilyName;
 
-    private String oldFamilyNo;
-
-    private String phone;
-
-    private Integer activeApp;
-
     private LocalDateTime createDate;
 
-    private Integer addingBy;
+    private Integer createBy;
 
     private LocalDateTime birthDate;
 
-    public FamilyInfo(String headFamilyName, String oldFamilyNo, String phone, Integer addingBy) {
+    private String Phone;
+
+    private Long oldFamilyNo;
+
+    public FamilyInfo(Long headFamilyId, Long requestId, String headFamilyName, Integer createBy, LocalDateTime birthDate, String phone, Long oldFamilyNo) {
+        this.headFamilyId = headFamilyId;
+        this.requestId = requestId;
         this.headFamilyName = headFamilyName;
+        this.createBy = createBy;
+        this.birthDate = birthDate;
+        Phone = phone;
         this.oldFamilyNo = oldFamilyNo;
-        this.phone = phone;
-        this.activeApp = 1;
-        this.addingBy = addingBy;
     }
 
     @PrePersist
