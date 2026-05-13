@@ -35,7 +35,7 @@ public class NotificationController {
 
     // اشعارات الداشبورد حسب النوع الاشعار خاص او عام
     @GetMapping("/V1/api/sc/getNotificationByType")
-    public NotificationByType getPNotificationByType(@RequestParam long notification_type){
+    public List<NotificationByType> getPNotificationByType(@RequestParam long notification_type){
         return notificationService.NotificationByType(notification_type);
     }
 

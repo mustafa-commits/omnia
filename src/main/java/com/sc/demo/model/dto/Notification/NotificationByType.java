@@ -6,6 +6,7 @@ public record NotificationByType(
         Integer sendId,
         LocalDateTime createDate,
         String title,
-        String description
+        String description,
+        String UserListing
 ) {
 }

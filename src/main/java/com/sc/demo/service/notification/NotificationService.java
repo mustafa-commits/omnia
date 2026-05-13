@@ -74,9 +74,7 @@ public class NotificationService {
                             .build()
                     );
                     notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
-
                 }
-
             }
             if (messageList.size() >= 1) {
                 firebaseMessaging.sendEachAsync(messageList);
@@ -125,17 +123,21 @@ public class NotificationService {
     }
 
     // جلب اشعارات الداشبورد حسب النوع (عامة او خاصة)
-    public NotificationByType NotificationByType(long notification_type) {
-        Optional <NotificationByType> dNote = jdbcClient.sql("""
-                   SELECT SEND_ID as sendId, TITLE, DESCRIPTION, CREATE_DATE as createDate
-                   FROM SC_NOTIFICATION
-                   where notification_type = :notification_type;
-                """).param("notification_type",notification_type).query(NotificationByType.class).optional();
-
-        if (dNote.isPresent())
-            return dNote.get();
-        else
-            return null;
+    public List<NotificationByType> NotificationByType(long notification_type) {
+        return jdbcClient.sql("""
+                   SELECT SEND_ID as sendId
+                          ,TITLE
+                          ,DESCRIPTION
+                          ,CREATE_DATE as createDate
+                          ,(SELECT LISTAGG(USER_ID, ', ') WITHIN GROUP (ORDER BY NOTIFICATION_ID) as UserListing
+                   FROM MOBAPP.SC_NOTIFICATION_DETAILS ND
+                   WHERE ND.NOTIFICATION_ID = N.NOTIFICATION_ID) AS USER_ID
+                   FROM SC_NOTIFICATION N
+                   where notification_type = :notification_type
+                """)
+                .param("notification_type",notification_type)
+                .query(NotificationByType.class)
+                .list();
     }
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
