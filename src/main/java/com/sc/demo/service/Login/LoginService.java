@@ -8,8 +8,6 @@ import com.sc.demo.repository.VerificationLoginRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -27,8 +25,6 @@ public class LoginService {
 
     String regex = "^(77|78|79)\\d{8}$";
 
-//    private final String secretKey = "mySecretKey"; // Secret for signing JWTs
-//    private final long expirationMs = 63072000000L; // صلاحية Token سنتين
 
     // تسجيل دخول من خلال رقم الهاتف
     public LogInResponse logIn(long phone_Number, String country_code, String birthDate){
@@ -90,29 +86,20 @@ public class LoginService {
     // التحقق من تاريخ الميلاد وارسال رقم الحاتف
     public ChekLoginResponse ChekLoginApp(Long phone_Number, Long secretCode){
         Optional <ChekLoginResponse> logInChek = jdbcClient.sql("""
-                SELECT 1
-                FROM MOBAPP.SC_VERIFICATION_APP V
-                WHERE V.USER_ID LIKE '%' || :phone_Number
-                AND V.SECRET_CODE = :secretCode
+                        SELECT USER_ID
+                        FROM MOBAPP.SC_VERIFICATION_APP V
+                        WHERE V.USER_ID LIKE '%' || :phone_Number
+                        AND V.SECRET_CODE = :secretCode
+                        and Sysdate = CREATE_DATE + interval '10' minute
                 """)
                 .param("phone_Number",phone_Number)
                 .param("secretCode", secretCode)
                 .query(ChekLoginResponse.class).optional();
 
         if (logInChek.isPresent()) {
-//            GenerateToken();
             return logInChek.get();
         }else
             return null;
     }
 
-    // توليد token
-//    public String GenerateToken(String userIdentifier) {
-//        return Jwts.builder()
-//                .setSubject(userIdentifier)
-//                .setIssuedAt(new Date())
-//                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-//                .signWith(SignatureAlgorithm.HS256, secretKey)
-//                .compact(); // Creates the token
-//    }
 }
