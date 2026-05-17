@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class LoginService {
+public class LoginService implements  {
 
     @Autowired
     private JdbcClient jdbcClient;
@@ -22,6 +22,9 @@ public class LoginService {
 
     @Autowired
     private WhatsAppService whatsAppService;
+
+    @Autowired
+    private TokenService tokenService;
 
     String regex = "^(77|78|79)\\d{8}$";
 
