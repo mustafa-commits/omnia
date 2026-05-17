@@ -36,7 +36,6 @@ public class Demo1Application {
 		return  FirebaseMessaging.getInstance(app);
 	}
 
-	@Component
 	@ConfigurationProperties(prefix = "rsa")
 	public static record KeyProperties(
 			RSAPublicKey publicKey,
