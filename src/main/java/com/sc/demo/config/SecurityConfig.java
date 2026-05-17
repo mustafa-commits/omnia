@@ -28,7 +28,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class Config {
+public class SecurityConfig {
 
     @Autowired
     private Demo1Application.KeyProperties keyProperties;
@@ -43,7 +43,6 @@ public class Config {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{

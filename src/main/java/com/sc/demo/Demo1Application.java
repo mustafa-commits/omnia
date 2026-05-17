@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.security.interfaces.RSAPrivateKey;
@@ -23,9 +24,6 @@ public class Demo1Application {
 		SpringApplication.run(Demo1Application.class, args);
 	}
 
-
-
-
 	@Bean
 	FirebaseMessaging firebaseMessaging() throws IOException {
 
@@ -38,8 +36,11 @@ public class Demo1Application {
 		return  FirebaseMessaging.getInstance(app);
 	}
 
-
+	@Component
 	@ConfigurationProperties(prefix = "rsa")
-	public static record KeyProperties(RSAPublicKey publicKey, RSAPrivateKey privateKey) {
-	}
+	public static record KeyProperties(
+			RSAPublicKey publicKey,
+			RSAPrivateKey privateKey
+		)
+	{ }
 }
