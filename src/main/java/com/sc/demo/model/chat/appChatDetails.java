@@ -1,4 +1,4 @@
 package com.sc.demo.model.chat;
 
-public class appUserChat {
+public class appChatDetails {
 }
