@@ -6,13 +6,14 @@ import com.sc.demo.model.dto.Login.LogInResponse;
 import com.sc.demo.model.Verification.VerificationApp;
 import com.sc.demo.repository.VerificationLoginRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Service
-public class LoginService implements  {
+public class LoginService implements CommandLineRunner {
 
     @Autowired
     private JdbcClient jdbcClient;
@@ -105,4 +106,8 @@ public class LoginService implements  {
             return null;
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println(tokenService);
+    }
 }

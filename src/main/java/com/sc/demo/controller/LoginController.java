@@ -22,13 +22,11 @@ public class LoginController {
     @Autowired
     private LoginService loginService;
 
-
     private final TokenService tokenService;
 
     public LoginController(TokenService tokenService) {
         this.tokenService = tokenService;
     }
-
 
     // تسجيل الدخول من خلال رقم الهاتف
     @GetMapping("/V1/api/sc/loginByPhone")
