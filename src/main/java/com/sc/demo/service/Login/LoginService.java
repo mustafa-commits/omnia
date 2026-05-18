@@ -1,14 +1,18 @@
 package com.sc.demo.service.Login;
 
 import com.sc.demo.model.Verification.SendingType;
-import com.sc.demo.model.dto.Login.ChekLoginResponse;
+import com.sc.demo.model.dto.Login.ChekLoginRequest;
 import com.sc.demo.model.dto.Login.LogInResponse;
 import com.sc.demo.model.Verification.VerificationApp;
 import com.sc.demo.repository.VerificationLoginRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -72,7 +76,7 @@ public class LoginService implements CommandLineRunner {
                 .optional();
 
         if (logInRes.isPresent()) {
-            Long code = GeneratingVerificationLogin(phone_Number + country_code, SendingType.WHATSAPP);
+            Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), SendingType.WHATSAPP);
             whatsAppService.sendVerificationCode(code);
             return logInRes.get();
         }else
@@ -88,26 +92,27 @@ public class LoginService implements CommandLineRunner {
     }
 
     // التحقق من تاريخ الميلاد وارسال رقم الحاتف
-    public ChekLoginResponse ChekLoginApp(Long phone_Number, Long secretCode){
-        Optional <ChekLoginResponse> logInChek = jdbcClient.sql("""
-                        SELECT USER_ID
+    public ResponseEntity<?> ChekLoginApp(Long phone_Number, Long secretCode){
+        Optional <ChekLoginRequest> logInChek = jdbcClient.sql("""
+                        SELECT USER_IDENTIFIER AS userIdentifier
                         FROM MOBAPP.SC_VERIFICATION_APP V
-                        WHERE V.USER_ID LIKE '%' || :phone_Number
+                        WHERE V.USER_IDENTIFIER = :phone_Number
                         AND V.SECRET_CODE = :secretCode
-                        and Sysdate = CREATE_DATE + interval '10' minute
+                        and Sysdate <= CREATE_DATE + interval '10' minute
                 """)
                 .param("phone_Number",phone_Number)
                 .param("secretCode", secretCode)
-                .query(ChekLoginResponse.class).optional();
+                .query(ChekLoginRequest.class).optional();
 
         if (logInChek.isPresent()) {
-            return logInChek.get();
+            return ResponseEntity.ok(tokenService.generateToken("123"));
+
         }else
-            return null;
+            return ResponseEntity.badRequest().body("WRONG CRED");
     }
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(tokenService);
+        System.out.println(tokenService.generateToken("123"));
     }
 }
