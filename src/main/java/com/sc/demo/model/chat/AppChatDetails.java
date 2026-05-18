@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class appChatDetails {
+public class AppChatDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +35,7 @@ public class appChatDetails {
 
     private String lastUpdateBy;
 
-    public appChatDetails(Long sender, Long receiver, Long msgType, LocalDateTime seenAt, String createBy) {
+    public AppChatDetails(Long sender, Long receiver, Long msgType, LocalDateTime seenAt, String createBy) {
         this.sender = sender;
         this.receiver = receiver;
         this.msgType = msgType;

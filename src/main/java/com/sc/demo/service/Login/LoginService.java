@@ -10,9 +10,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -32,7 +29,6 @@ public class LoginService implements CommandLineRunner {
     private TokenService tokenService;
 
     String regex = "^(77|78|79)\\d{8}$";
-
 
     // تسجيل دخول من خلال رقم الهاتف
     public LogInResponse logIn(long phone_Number, String country_code, String birthDate){

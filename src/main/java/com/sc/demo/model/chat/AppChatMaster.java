@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class appChatMaster {
+public class AppChatMaster {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class appChatMaster {
 
     private LocalDateTime createDate;
 
-    public appChatMaster(Long userId, String chatTitle, String chatDescription) {
+    public AppChatMaster(Long userId, String chatTitle, String chatDescription) {
         this.userId = userId;
         this.chatTitle = chatTitle;
         this.chatDescription = chatDescription;
