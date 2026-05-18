@@ -6,7 +6,6 @@ import com.sc.demo.model.dto.FamilyInfo.FamilyInfoHousingResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service

@@ -5,7 +5,6 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
