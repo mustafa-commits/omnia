@@ -1,4 +1,4 @@
-package com.sc.demo.service.Login;
+package com.sc.demo.service.token;
 
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;

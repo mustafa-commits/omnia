@@ -1,4 +1,4 @@
-package com.sc.demo.model.Employees;
+package com.sc.demo.model.employees;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

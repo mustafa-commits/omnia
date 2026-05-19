@@ -111,14 +111,17 @@ public class NotificationService {
 
 
     // اشعارات التطيق لكل يوزر
-    public List<PHoneNotificationRequest> PHoneNotification(long user_id) {
+    public List<PHoneNotificationRequest> phoneNotification(long user_id) {
         return jdbcClient.sql("""
                    SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION
                    FROM SC_NOTIFICATION N
                    LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
                    WHERE ND.USER_ID = :user_id
                    OR N.NOTIFICATION_TYPE = 0
-                """).param("user_id",user_id).query(PHoneNotificationRequest.class).list();
+                """)
+                .param("user_id",user_id)
+                .query(PHoneNotificationRequest.class)
+                .list();
     }
 
     // جلب اشعارات الداشبورد حسب النوع (عامة او خاصة)

@@ -1,10 +1,11 @@
 package com.sc.demo.service.Login;
 
-import com.sc.demo.model.Verification.SendingType;
+import com.sc.demo.model.verification.SendingType;
 import com.sc.demo.model.dto.Login.ChekLoginRequest;
 import com.sc.demo.model.dto.Login.LogInResponse;
-import com.sc.demo.model.Verification.VerificationApp;
+import com.sc.demo.model.verification.VerificationApp;
 import com.sc.demo.repository.VerificationLoginRepo;
+import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.ResponseEntity;

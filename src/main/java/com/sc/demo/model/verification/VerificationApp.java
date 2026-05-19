@@ -1,4 +1,4 @@
-package com.sc.demo.model.Verification;
+package com.sc.demo.model.verification;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -2,7 +2,7 @@ package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.Login.LogInResponse;
 import com.sc.demo.service.Login.LoginService;
-import com.sc.demo.service.Login.TokenService;
+import com.sc.demo.service.token.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
