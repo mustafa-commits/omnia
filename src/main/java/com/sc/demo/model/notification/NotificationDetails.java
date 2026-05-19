@@ -25,9 +25,9 @@ public class NotificationDetails {
     private NotificationMaster notification;
 
 
-    public NotificationDetails(Long user_id) {
-        this.user_id = user_id;
-    }
+//    public NotificationDetails(Long user_id) {
+//        this.user_id = user_id;
+//    }
 
     public NotificationDetails(Long user_id, NotificationMaster notificationMaster) {
         this.user_id = user_id;

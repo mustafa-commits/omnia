@@ -52,6 +52,7 @@ public class SecurityConfig {
                         .requestMatchers("/v3/api-docs/**","/swagger-ui","/swagger-ui/**").permitAll()
                         .requestMatchers("/V1/api/sc/loginByPhone/**","/loginByPhone/**").permitAll()
                         .requestMatchers("/V1/api/sc/ChekLogin/**").permitAll()
+                        .requestMatchers("/V1/api/sc/createChat/**","/createChat","/createChat/**").permitAll()
                  .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2

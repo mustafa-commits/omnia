@@ -1,5 +1,6 @@
 package com.sc.demo.model.chat;
 
+import com.sc.demo.model.notification.NotificationMaster;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,12 +36,18 @@ public class AppChatDetails {
 
     private String lastUpdateBy;
 
-    public AppChatDetails(Long sender, Long receiver, Long msgType, LocalDateTime seenAt, String createBy) {
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppChatMaster chatApp;
+
+    public AppChatDetails(Long sender, Long receiver, Long msgType, LocalDateTime seenAt,
+                          String createBy, AppChatMaster appChatMaster) {
         this.sender = sender;
         this.receiver = receiver;
         this.msgType = msgType;
         this.seenAt = seenAt;
         this.createBy = createBy;
+        this.chatApp = appChatMaster;
     }
 
     @PrePersist

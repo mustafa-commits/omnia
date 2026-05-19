@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "sc_chat_master")
@@ -26,6 +28,9 @@ public class AppChatMaster {
     private String chatDescription;
 
     private LocalDateTime createDate;
+
+    @OneToMany(mappedBy = "chatApp", cascade = CascadeType.ALL)
+    private List<AppChatDetails> appChatDetails = new ArrayList<>();
 
     public AppChatMaster(Long userId, String chatTitle, String chatDescription) {
         this.userId = userId;

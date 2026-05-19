@@ -1,4 +1,4 @@
-package com.sc.demo;
+package com.sc.demo.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

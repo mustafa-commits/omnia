@@ -17,8 +17,8 @@ public class AppChatController {
     private AppChatService appChatService;
 
     // انشاء محادثة
-    @PostMapping("/V1/api/sc/createNotification")
-    public AppChatMaster createNotification(@RequestBody AppChatRequest appChatRequest){
+    @PostMapping("/V1/api/sc/createChat")
+    public AppChatMaster createChat(@RequestBody AppChatRequest appChatRequest){
         return appChatService.createChat(appChatRequest);
     }
 }
