@@ -6,14 +6,10 @@ import com.sc.demo.model.dto.Chat.AppChatRequest;
 import com.sc.demo.repository.ChatDetailsRepo;
 import com.sc.demo.repository.ChatRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AppChatService {
-
-    @Autowired
-    private JdbcClient jdbcClient;
 
     @Autowired
     private ChatRepo chatRepo;
@@ -29,7 +25,7 @@ public class AppChatService {
 
         for (AppChatDetails a : appChatRequest.appChatDetails()){
                 chatDetailsRepo.save(new AppChatDetails(a.getSender(),a.getReceiver(),
-                        a.getMsgType(), a.getSeenAt(), a.getCreateBy(), appChatMaster));
+                        a.getMsgType(), a.getMessages(), appChatMaster));
         }
         return appChatMaster;
     }

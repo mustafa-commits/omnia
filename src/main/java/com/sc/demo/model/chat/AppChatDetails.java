@@ -26,27 +26,25 @@ public class AppChatDetails {
 
     private Long msgType;
 
+    private String messages;
+
     private LocalDateTime seenAt;
 
     private LocalDateTime createDate;
-
-    private String createBy;
 
     private LocalDateTime lastUpdate;
 
     private String lastUpdateBy;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "chat_id")
     private AppChatMaster chatApp;
 
-    public AppChatDetails(Long sender, Long receiver, Long msgType, LocalDateTime seenAt,
-                          String createBy, AppChatMaster appChatMaster) {
+    public AppChatDetails(Long sender, Long receiver, Long msgTyp, String messages, AppChatMaster appChatMaster) {
         this.sender = sender;
         this.receiver = receiver;
         this.msgType = msgType;
-        this.seenAt = seenAt;
-        this.createBy = createBy;
+        this.messages = messages;
         this.chatApp = appChatMaster;
     }
 
