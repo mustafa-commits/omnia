@@ -30,10 +30,10 @@ public class AppChatService {
 
         appChatMaster = chatRepo.save(appChatMaster);
 
-        for (AppChatDetails a : appChatRequest.appChatDetails()){
-                chatDetailsRepo.save(new AppChatDetails(a.getSender(),a.getReceiver(),
-                        a.getMsgType(), a.getMessages(), appChatMaster));
-        }
+//        for (AppChatDetails a : appChatRequest.appChatDetails()){
+//                chatDetailsRepo.save(new AppChatDetails(a.getSender(),a.getReceiver(),
+//                        a.getMsgType(), a.getMessages(), appChatMaster));
+//        }
         return appChatMaster;
     }
 
