@@ -50,4 +50,5 @@ public class AppChatService {
                 .query(AppChatResponse.class)
                 .list();
     }
+
 }
