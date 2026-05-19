@@ -39,12 +39,12 @@ public class AppChatService {
 
     public List<AppChatResponse> phoneChats(long user_id){
         return jdbcClient.sql("""
-                SELECT CHAT_DESCRIPTION AS chatDescription,
-                       CHAT_TITLE AS chatTitle,
-                       CREATE_DATE AS createDate,
-                       USER_ID AS userId
-                FROM MOBAPP.SC_CHAT_MASTER
-                WHERE USER_ID = :user_id
+                SELECT M.CHAT_TITLE AS chatTitle,
+                       D.MESSAGES AS messages,
+                       M.CREATE_DATE AS createDate
+                FROM MOBAPP.SC_CHAT_MASTER M
+                LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON M.CHAT_ID = D.CHAT_ID
+                WHERE M.USER_ID = :user_id
                 """)
                 .param("user_id", user_id)
                 .query(AppChatResponse.class)

@@ -58,7 +58,7 @@ public class SecurityConfig {
                         .requestMatchers("/V1/sc/api/getFamilyBasicInformation/**","/getFamilyBasicInformation","/getFamilyBasicInformation/**").permitAll()
                         .requestMatchers("/V1/sc/api/getFamilyHousingInformation/**","/getFamilyHousingInformation","/getFamilyHousingInformation/**").permitAll()
                         .requestMatchers("/V1/sc/api/getChildrenAndMailyFamilyMambersResponse/**","/getChildrenAndMailyFamilyMambersResponse","/getChildrenAndMailyFamilyMambersResponse/**").permitAll()
-                        .requestMatchers("/V1/api/sc/getPhoneChat/**","/getPhoneChat","/getPhoneChat/**").permitAll()
+                        .requestMatchers("/V1/api/sc/getPhoneChats/**","/getPhoneChats","/getPhoneChats/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2
