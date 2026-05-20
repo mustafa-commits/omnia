@@ -1,4 +1,4 @@
-package com.sc.demo.repository;
+package com.sc.demo.repository.Login;
 
 import com.sc.demo.model.users.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;

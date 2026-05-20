@@ -1,4 +1,4 @@
-package com.sc.demo.repository;
+package com.sc.demo.repository.Notifications;
 
 import com.sc.demo.model.notification.NotificationToken;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,12 +1,12 @@
 package com.sc.demo.model.chat;
 
-import com.sc.demo.model.notification.NotificationMaster;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "sc_chat_details")
@@ -22,15 +22,21 @@ public class AppChatDetails {
 
     private Long sender;
 
-    private Long receiver;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "RECEIVER")
+    private Receiver receiver = Receiver.APP;
 
-    private Long msgType;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "MSG_TYPE")
+    private MsgType msgType = MsgType.ACTIVE;
 
     private String messages;
 
     private LocalDateTime seenAt;
 
     private LocalDateTime createDate;
+
+    private String createBy;
 
     private LocalDateTime lastUpdate;
 
@@ -40,12 +46,18 @@ public class AppChatDetails {
     @JoinColumn(name = "chat_id")
     private AppChatMaster chatApp;
 
-    public AppChatDetails(Long sender, Long receiver, Long msgTyp, String messages, AppChatMaster appChatMaster) {
+    public AppChatDetails(Long sender, Receiver receiver, String messages, AppChatMaster appChatMaster) {
         this.sender = sender;
         this.receiver = receiver;
-        this.msgType = msgType;
         this.messages = messages;
         this.chatApp = appChatMaster;
+    }
+
+    public AppChatMessages(Long chatId, Long sender, Receiver receiver, String messages) {
+        this.detailsChatId = chatId;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.messages = messages;
     }
 
     @PrePersist

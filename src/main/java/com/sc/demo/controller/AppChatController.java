@@ -5,6 +5,7 @@ import com.sc.demo.model.chat.AppChatDetails;
 import com.sc.demo.model.chat.AppChatMaster;
 import com.sc.demo.model.dto.Chat.AppChatRequest;
 import com.sc.demo.model.dto.Chat.AppChatResponse;
+import com.sc.demo.model.dto.Chat.MessagesRequest;
 import com.sc.demo.service.chat.AppChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +22,8 @@ public class AppChatController {
 
     // انشاء محادثة
     @PostMapping("/V1/api/sc/createChat")
-    public AppChatMaster createChat(@RequestParam long userId,
-                                    @RequestParam String chatTitle,
-                                    @RequestParam String chatDescription){
-        return appChatService.createChat(new AppChatRequest(userId, chatTitle, chatDescription));
+    public AppChatMaster createChat(@RequestBody AppChatRequest appChatRequest){
+        return appChatService.createChat(appChatRequest);
     }
 
     // اظهار المحادثات
@@ -34,8 +33,10 @@ public class AppChatController {
     }
 
     // ارسال رسالة
-//    @PostMapping("/V1/api/sc/writeMessages")
-//    public AppChatDetails writeMessages(@RequestBody AppChatRequest appChatRequest){
-//        return appChatService.writeMessages(appChatRequest);
-//    }
+    @PostMapping("/V1/api/sc/writeMessages")
+    public AppChatDetails writeMessages(@RequestParam Long sender,
+                                        @RequestParam Long receiver,
+                                        @RequestParam String messages){
+        return appChatService.writeMessages(new MessagesRequest(sender, receiver, messages));
+    }
 }

@@ -4,13 +4,15 @@ import com.sc.demo.model.chat.AppChatDetails;
 import com.sc.demo.model.chat.AppChatMaster;
 import com.sc.demo.model.dto.Chat.AppChatRequest;
 import com.sc.demo.model.dto.Chat.AppChatResponse;
-import com.sc.demo.repository.ChatDetailsRepo;
-import com.sc.demo.repository.ChatRepo;
+import com.sc.demo.model.dto.Chat.MessagesRequest;
+import com.sc.demo.repository.Chat.MessagesRepo;
+import com.sc.demo.repository.Chat.ChatRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppChatService {
@@ -22,7 +24,7 @@ public class AppChatService {
     private ChatRepo chatRepo;
 
     @Autowired
-    private ChatDetailsRepo chatDetailsRepo;
+    private MessagesRepo messagesRepo;
 
     public AppChatMaster createChat(AppChatRequest appChatRequest){
         AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(),
@@ -30,10 +32,9 @@ public class AppChatService {
 
         appChatMaster = chatRepo.save(appChatMaster);
 
-//        for (AppChatDetails a : appChatRequest.appChatDetails()){
-//                chatDetailsRepo.save(new AppChatDetails(a.getSender(),a.getReceiver(),
-//                        a.getMsgType(), a.getMessages(), appChatMaster));
-//        }
+        for (AppChatDetails a : appChatRequest.appChatDetails()){
+                messagesRepo.save(new AppChatDetails(a.getSender(),a.getReceiver(), a.getMessages(), appChatMaster));
+        }
         return appChatMaster;
     }
 
@@ -51,4 +52,14 @@ public class AppChatService {
                 .list();
     }
 
+    public AppChatDetails writeMessages(MessagesRequest messagesRequest){
+        Optional<AppChatDetails> byChatId = messagesRepo.findById(messagesRequest.receiver());
+
+        AppChatDetails appChatDetails = new AppChatDetails(messagesRequest.sender(),
+                messagesRequest.receiver(), messagesRequest.messages());
+
+        appChatDetails = messagesRepo.save(appChatDetails);
+
+        return appChatDetails;
+    }
 }
