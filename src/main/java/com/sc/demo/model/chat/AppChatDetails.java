@@ -22,9 +22,11 @@ public class AppChatDetails {
 
     private Long sender;
 
+    private Long receiver;
+
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "RECEIVER")
-    private Receiver receiver = Receiver.APP;
+    @Column(name = "RECEIVER_FROM")
+    private ReceiverFrom receiverFrom = ReceiverFrom.APP;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "MSG_TYPE")
@@ -46,17 +48,19 @@ public class AppChatDetails {
     @JoinColumn(name = "chat_id")
     private AppChatMaster chatApp;
 
-    public AppChatDetails(Long sender, Receiver receiver, String messages, AppChatMaster appChatMaster) {
+    public AppChatDetails(Long sender, Long receiver, ReceiverFrom receiverFrom, String messages, AppChatMaster appChatMaster) {
         this.sender = sender;
         this.receiver = receiver;
+        this.receiverFrom = receiverFrom;
         this.messages = messages;
         this.chatApp = appChatMaster;
     }
 
-    public AppChatMessages(Long chatId, Long sender, Receiver receiver, String messages) {
+    public AppChatDetails(Long chatId, Long sender, Long receiver, ReceiverFrom receiverFrom, String messages) {
         this.detailsChatId = chatId;
         this.sender = sender;
         this.receiver = receiver;
+        this.receiverFrom = receiverFrom;
         this.messages = messages;
     }
 

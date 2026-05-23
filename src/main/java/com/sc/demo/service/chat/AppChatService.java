@@ -5,6 +5,7 @@ import com.sc.demo.model.chat.AppChatMaster;
 import com.sc.demo.model.dto.Chat.AppChatRequest;
 import com.sc.demo.model.dto.Chat.AppChatResponse;
 import com.sc.demo.model.dto.Chat.MessagesRequest;
+import com.sc.demo.model.dto.Chat.MessagesResponse;
 import com.sc.demo.repository.Chat.MessagesRepo;
 import com.sc.demo.repository.Chat.ChatRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AppChatService {
@@ -33,7 +33,8 @@ public class AppChatService {
         appChatMaster = chatRepo.save(appChatMaster);
 
         for (AppChatDetails a : appChatRequest.appChatDetails()){
-                messagesRepo.save(new AppChatDetails(a.getSender(),a.getReceiver(), a.getMessages(), appChatMaster));
+                messagesRepo.save(new AppChatDetails(a.getSender(), a.getReceiver(),
+                        a.getReceiverFrom(), a.getMessages(), appChatMaster));
         }
         return appChatMaster;
     }
@@ -53,13 +54,29 @@ public class AppChatService {
     }
 
     public AppChatDetails writeMessages(MessagesRequest messagesRequest){
-        Optional<AppChatDetails> byChatId = messagesRepo.findById(messagesRequest.receiver());
+        //Optional<AppChatDetails> byChatId = messagesRepo.findById(messagesRequest.chatId());
 
-        AppChatDetails appChatDetails = new AppChatDetails(messagesRequest.sender(),
-                messagesRequest.receiver(), messagesRequest.messages());
+        AppChatDetails appChatDetails = new AppChatDetails(messagesRequest.chatId(),
+                messagesRequest.sender(), messagesRequest.receiver(),
+                messagesRequest.receiverFrom(), messagesRequest.messages());
 
         appChatDetails = messagesRepo.save(appChatDetails);
 
         return appChatDetails;
+    }
+
+
+    public List<MessagesResponse> getMessages(long chat_id){
+        return jdbcClient.sql("""
+                SELECT MESSAGES,
+                       RECEIVER,
+                       SENDER,
+                       CREATE_DATE AS createDate
+                FROM MOBAPP.SC_CHAT_DETAILS
+                WHERE CHAT_ID = :chat_id
+                """)
+                .param("chat_id", chat_id)
+                .query(MessagesResponse.class)
+                .list();
     }
 }

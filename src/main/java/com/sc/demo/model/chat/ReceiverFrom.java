@@ -1,6 +1,6 @@
 package com.sc.demo.model.chat;
 
-public enum Receiver {
+public enum ReceiverFrom {
     APP,
     DASHBOARD
 }

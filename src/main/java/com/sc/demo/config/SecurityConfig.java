@@ -60,6 +60,7 @@ public class SecurityConfig {
                         .requestMatchers("/V1/sc/api/getChildrenAndMailyFamilyMambersResponse/**","/getChildrenAndMailyFamilyMambersResponse","/getChildrenAndMailyFamilyMambersResponse/**").permitAll()
                         .requestMatchers("/V1/api/sc/getPhoneChats/**","/getPhoneChats","/getPhoneChats/**").permitAll()
                         .requestMatchers("/V1/api/sc/writeMessages/**","/writeMessages","/writeMessages/**").permitAll()
+                        .requestMatchers("/V1/api/sc/getMessagesChat/**","/getMessagesChat","/getMessagesChat/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2
