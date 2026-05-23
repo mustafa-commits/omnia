@@ -25,17 +25,14 @@ public class AppChatMaster {
 
     private String chatTitle;
 
-    private String chatDescription;
-
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "chatApp", cascade = CascadeType.ALL)
     private List<AppChatDetails> appChatDetails = new ArrayList<>();
 
-    public AppChatMaster(Long userId, String chatTitle, String chatDescription) {
+    public AppChatMaster(Long userId, String chatTitle) {
         this.userId = userId;
         this.chatTitle = chatTitle;
-        this.chatDescription = chatDescription;
     }
 
     @PrePersist

@@ -27,8 +27,7 @@ public class AppChatService {
     private MessagesRepo messagesRepo;
 
     public AppChatMaster createChat(AppChatRequest appChatRequest){
-        AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(),
-                appChatRequest.chatTitle(), appChatRequest.chatDescription());
+        AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(), appChatRequest.chatTitle());
 
         appChatMaster = chatRepo.save(appChatMaster);
 
