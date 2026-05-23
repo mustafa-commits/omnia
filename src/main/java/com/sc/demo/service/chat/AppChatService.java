@@ -56,7 +56,7 @@ public class AppChatService {
     public AppChatDetails writeMessages(MessagesRequest messagesRequest){
         //Optional<AppChatDetails> byChatId = messagesRepo.findById(messagesRequest.chatId());
 
-        AppChatDetails appChatDetails = new AppChatDetails(messagesRequest.chatId(),
+        AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 messagesRequest.sender(), messagesRequest.receiver(),
                 messagesRequest.receiverFrom(), messagesRequest.messages());
 

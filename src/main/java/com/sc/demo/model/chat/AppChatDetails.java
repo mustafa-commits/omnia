@@ -56,8 +56,8 @@ public class AppChatDetails {
         this.chatApp = appChatMaster;
     }
 
-    public AppChatDetails(Long chatId, Long sender, Long receiver, ReceiverFrom receiverFrom, String messages) {
-        this.detailsChatId = chatId;
+    public AppChatDetails(AppChatMaster chatApp, Long sender, Long receiver, ReceiverFrom receiverFrom, String messages) {
+        this.chatApp = chatApp;
         this.sender = sender;
         this.receiver = receiver;
         this.receiverFrom = receiverFrom;

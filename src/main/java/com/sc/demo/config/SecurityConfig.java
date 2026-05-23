@@ -63,6 +63,7 @@ public class SecurityConfig {
                         .requestMatchers("/V1/api/sc/getMessagesChat/**","/getMessagesChat","/getMessagesChat/**").permitAll()
                         .requestMatchers("/V1/api/sc/SearchByName/**","/SearchByName","/SearchByName/**").permitAll()
                         .requestMatchers("/V2/api/sc/SearchByNameV2/**","/SearchByNameV2","/SearchByNameV2/**").permitAll()
+                        .requestMatchers("/V1/sc/api/checkNumber/**","/checkNumber","/checkNumber/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2
