@@ -73,6 +73,7 @@ public class AppChatService {
                        CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chat_id
+                order by CREATE_DATE
                 """)
                 .param("chat_id", chat_id)
                 .query(MessagesResponse.class)
