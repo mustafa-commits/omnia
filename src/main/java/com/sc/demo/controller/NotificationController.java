@@ -29,8 +29,8 @@ public class NotificationController {
 
     // اشعارات التلفون
     @GetMapping("/V1/api/sc/getPHoneNotification")
-    public List<PHoneNotificationRequest> getPHoneNotification(@RequestParam long user_id){
-        return notificationService.phoneNotification(user_id);
+    public List<PHoneNotificationRequest> getPHoneNotification(String token){
+        return notificationService.phoneNotification(token);
     }
 
     // اشعارات الداشبورد حسب النوع الاشعار خاص او عام

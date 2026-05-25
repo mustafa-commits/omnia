@@ -23,16 +23,16 @@ public class AnnouncementsController {
     public Announcements createAnnouncements(@RequestParam Integer sendId,
                                              @RequestParam String title,
                                              @RequestParam String description,
-                                             @RequestParam (required = false) List<Long> user_id,
+                                             @RequestHeader(name = "authorization", required = false) String token,
                                              @RequestParam (required = false) MultipartFile file)  {
         return announcementsService.createAnnouncements(new AnnouncementsRequest
-                (sendId, title, description, null), file, user_id);
+                (sendId, title, description, null), file, token);
     }
 
     // تبليغات التلفون
     @GetMapping("/V1/api/sc/getPHoneAnnouncements")
-    public List<PHoneAnnouncementsRequest> getPHoneAnnouncements(@RequestParam long user_id){
-        return announcementsService.PHoneAnnouncements(user_id);
+    public List<PHoneAnnouncementsRequest> getPHoneAnnouncements(String token){
+        return announcementsService.PHoneAnnouncements(token);
     }
 
     // جميع تبليغات الداشبورد للعائلة

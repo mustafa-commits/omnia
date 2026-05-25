@@ -21,8 +21,8 @@ public class FamilyInfoController {
 
     // جلب البيانات الاساسية للعائلة مثل ال(اسم, عمر, رقم هاتف, الخ .....)
     @GetMapping("/V1/sc/api/getFamilyBasicInformation")
-    public List<FamilyInfoBasicResponse> getFamilyBasicInformation(@RequestParam String P_FAMILY_NO){
-        return familyInfoService.getFamilyBasicInfo(P_FAMILY_NO);
+    public List<FamilyInfoBasicResponse> getFamilyBasicInformation(String token){
+        return familyInfoService.getFamilyBasicInfo(token);
     }
 
     // جلب بيانات سكن العائلة

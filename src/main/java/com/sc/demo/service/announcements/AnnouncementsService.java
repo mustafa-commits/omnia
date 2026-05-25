@@ -9,6 +9,7 @@ import com.sc.demo.model.dto.Announcements.PHoneAnnouncementsRequest;
 import com.sc.demo.repository.Announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.Announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.Announcements.AnnouncementsRepo;
+import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -36,16 +37,19 @@ public class AnnouncementsService {
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private TokenService tokenService;
+
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
-                                             MultipartFile file, List<Long> user_id){
+                                             MultipartFile file, String token){
+        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+
         Announcements announcements = new Announcements(announcementsRequest.sendId(),
                 announcementsRequest.title(), announcementsRequest.description());
         announcements = announcementsRepo.save(announcements);
-        if (user_id != null)
-        for (Long a : user_id){
-            announcementsDetailsRepo.save(new AnnouncementsDetails(a, announcements));
-        }
+        if (userId != null)
+            announcementsDetailsRepo.save(new AnnouncementsDetails(Long.parseLong(userId), announcements));
         if (file != null)
         try {
             String originalFilename = file.getOriginalFilename();
@@ -60,7 +64,9 @@ public class AnnouncementsService {
     }
 
     // اشعارات التطيق لكل يززر
-    public List<PHoneAnnouncementsRequest> PHoneAnnouncements(long user_id) {
+    public List<PHoneAnnouncementsRequest> PHoneAnnouncements(String token) {
+        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+
         return jdbcClient.sql("""
                    select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION,
                    ad.user_id, at.FILE_NAME
@@ -68,7 +74,7 @@ public class AnnouncementsService {
                    Left join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
                    Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
                    Where ad.user_id = :user_id OR ad.USER_ID = 0
-                """).param("user_id",user_id)
+                """).param("user_id",userId)
                 .query(PHoneAnnouncementsRequest.class).list();
 
     }

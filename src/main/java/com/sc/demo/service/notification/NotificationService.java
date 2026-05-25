@@ -9,6 +9,7 @@ import com.sc.demo.model.notification.NotificationType;
 import com.sc.demo.repository.Notifications.NotificationDetailsRepo;
 import com.sc.demo.repository.Notifications.NotificationRepo;
 import com.sc.demo.repository.Notifications.NotificationTokenRepo;
+import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,9 @@ public class NotificationService {
 
     @Autowired
     private NotificationTokenRepo notificationTokenRepo;
+
+    @Autowired
+    private TokenService tokenService;
 
     // انشاء اشعار
     public NotificationMaster createNotification(NotificationRequest notificationRequest) {
@@ -111,7 +115,9 @@ public class NotificationService {
 
 
     // اشعارات التطيق لكل يوزر
-    public List<PHoneNotificationRequest> phoneNotification(long user_id) {
+    public List<PHoneNotificationRequest> phoneNotification(String token) {
+        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+
         return jdbcClient.sql("""
                    SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION
                    FROM SC_NOTIFICATION N
@@ -119,7 +125,7 @@ public class NotificationService {
                    WHERE ND.USER_ID = :user_id
                    OR N.NOTIFICATION_TYPE = 0
                 """)
-                .param("user_id",user_id)
+                .param("user_id", userId)
                 .query(PHoneNotificationRequest.class)
                 .list();
     }
