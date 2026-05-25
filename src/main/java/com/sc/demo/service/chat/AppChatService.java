@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -49,7 +50,9 @@ public class AppChatService {
         return appChatMaster;
     }
 
-    public List<AppChatResponse> phoneChats(long user_id){
+    public List<AppChatResponse> phoneChats(String token){
+        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+
         return jdbcClient.sql("""
                 SELECT M.CHAT_TITLE AS chatTitle,
                        D.MESSAGES AS messages,
@@ -58,44 +61,32 @@ public class AppChatService {
                 LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON M.CHAT_ID = D.CHAT_ID
                 WHERE M.USER_ID = :user_id
                 """)
-                .param("user_id", user_id)
+                .param("user_id", userId)
                 .query(AppChatResponse.class)
                 .list();
     }
 
-    public AppChatDetails writeMessages(MessagesRequest messagesRequest, String token){
-        AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
-                messagesRequest.sender(), messagesRequest.receiver(),
-                messagesRequest.receiverFrom(), messagesRequest.messages(),
-                messagesRequest.msgType());
-
-        var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
-        var headId = tokenService.decodeToken(token.substring(7)).getClaim("headId");
+    public boolean writeMessages(MessagesRequest messagesRequest, MultipartFile file, String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
 
-        messagesRequest.messages() = String originalFilename = file.getOriginalFilename();
+        String originalFilename = file.getOriginalFilename();
         String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
         String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
 
-
-        appChatDetails = messagesRepo.save(appChatDetails);
         if(messagesRequest.msgType() == MsgType.IMAGE) {
-            file.transferTo(new File(filePath));
-
+            try {
+                file.transferTo(new File(filePath));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-//        if (file != null)
-//            try {
-//                String originalFilename = file.getOriginalFilename();
-//                String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
-//                String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
-//                appChatAttachmentsRepo.save(newFilename);
-//                file.transferTo(new File(filePath));
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-
-        return appChatDetails;
+        AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
+                Long.parseLong(userId), messagesRequest.receiver(),
+                messagesRequest.receiverFrom(), messagesRequest.messages() == null ? newFilename : messagesRequest.messages(),
+                messagesRequest.msgType() == null ? MsgType.IMAGE : MsgType.MESSAGE);
+        System.out.println(messagesRepo.save(appChatDetails).getDetailsChatId());
+        return true;
     }
 
 

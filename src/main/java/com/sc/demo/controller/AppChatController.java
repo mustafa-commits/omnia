@@ -30,21 +30,22 @@ public class AppChatController {
 
     // اظهار المحادثات
     @GetMapping("/V1/api/sc/getPhoneChats")
-    public List<AppChatResponse> getPhoneChats(@RequestParam long user_id){
-        return appChatService.phoneChats(user_id);
+    public List<AppChatResponse> getPhoneChats(String token){
+        return appChatService.phoneChats(token);
     }
 
     // ارسال رسالة
     @PostMapping("/V1/api/sc/writeMessages")
-    public AppChatDetails writeMessages(@RequestParam Long chatId,
+    public boolean writeMessages(@RequestParam Long chatId,
                                         @RequestParam Long sender,
                                         @RequestParam Long receiver,
                                         @RequestParam ReceiverFrom receiverFrom,
-                                        @RequestParam String messages,
+                                        @RequestParam(required = false) String messages,
                                         @RequestParam MsgType msgType,
+                                        @RequestParam(required = false) MultipartFile file,
                                         @RequestHeader(name = "authorization") String token){
         return appChatService.writeMessages(new MessagesRequest(chatId, sender, receiver,
-                        receiverFrom, messages, msgType), token);
+                        receiverFrom, messages, msgType), file, token);
     }
 
     // اظهار الرسائل في المحادثات
