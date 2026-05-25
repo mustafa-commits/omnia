@@ -64,6 +64,7 @@ public class SecurityConfig {
                         .requestMatchers("/V1/api/sc/SearchByName/**","/SearchByName","/SearchByName/**").permitAll()
                         .requestMatchers("/V2/api/sc/SearchByNameV2/**","/SearchByNameV2","/SearchByNameV2/**").permitAll()
                         .requestMatchers("/V1/sc/api/checkNumber/**","/checkNumber","/checkNumber/**").permitAll()
+                        .requestMatchers("/V1/api/sc/getAllNotificationFamily/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer((oauth2) -> oauth2
