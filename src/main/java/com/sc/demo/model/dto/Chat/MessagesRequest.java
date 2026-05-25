@@ -1,5 +1,6 @@
 package com.sc.demo.model.dto.Chat;
 
+import com.sc.demo.model.chat.MsgType;
 import com.sc.demo.model.chat.ReceiverFrom;
 
 public record MessagesRequest(
@@ -7,7 +8,8 @@ public record MessagesRequest(
         Long sender,
         Long receiver,
         ReceiverFrom receiverFrom,
-        String messages
+        String messages,
+        MsgType msgType
 
 ) {
 }

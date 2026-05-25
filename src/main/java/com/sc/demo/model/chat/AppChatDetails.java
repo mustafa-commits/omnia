@@ -29,8 +29,12 @@ public class AppChatDetails {
     private ReceiverFrom receiverFrom = ReceiverFrom.APP;
 
     @Enumerated(EnumType.ORDINAL)
+    @Column(name = "MSG_ACTIVITY")
+    private MsgActivity msgActivity = MsgActivity.ACTIVE;
+
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "MSG_TYPE")
-    private MsgType msgType = MsgType.ACTIVE;
+    private MsgType msgType = MsgType.MESSAGE;
 
     private String messages;
 
@@ -56,12 +60,13 @@ public class AppChatDetails {
         this.chatApp = appChatMaster;
     }
 
-    public AppChatDetails(AppChatMaster chatApp, Long sender, Long receiver, ReceiverFrom receiverFrom, String messages) {
+    public AppChatDetails(AppChatMaster chatApp, Long sender, Long receiver, ReceiverFrom receiverFrom, String messages, MsgType msgType) {
         this.chatApp = chatApp;
         this.sender = sender;
         this.receiver = receiver;
         this.receiverFrom = receiverFrom;
         this.messages = messages;
+        this.msgType = msgType;
     }
 
     @PrePersist
