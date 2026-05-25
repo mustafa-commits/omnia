@@ -53,8 +53,6 @@ public class AppChatService {
     }
 
     public AppChatDetails writeMessages(MessagesRequest messagesRequest){
-        //Optional<AppChatDetails> byChatId = messagesRepo.findById(messagesRequest.chatId());
-
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 messagesRequest.sender(), messagesRequest.receiver(),
                 messagesRequest.receiverFrom(), messagesRequest.messages());
@@ -73,7 +71,7 @@ public class AppChatService {
                        CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chat_id
-                order by CREATE_DATE
+                order by CREATE_DATE desc
                 """)
                 .param("chat_id", chat_id)
                 .query(MessagesResponse.class)
