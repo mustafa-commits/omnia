@@ -14,7 +14,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class AnnouncementsController extends OpenApi30Config {
+public class AnnouncementsController implements OpenApi30Config {
 
     @Autowired
     private AnnouncementsService announcementsService;

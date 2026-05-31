@@ -14,7 +14,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class SearchController extends OpenApi30Config {
+public class SearchController implements OpenApi30Config {
 
     @Autowired
     private SearchService searchService;

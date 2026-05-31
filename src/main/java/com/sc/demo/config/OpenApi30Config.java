@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
-
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "My API", version = "v1"))
 @SecurityScheme(
@@ -19,7 +18,8 @@ import java.util.List;
         bearerFormat = "JWT",
         scheme = "bearer"
 )
-public class OpenApi30Config {
+public interface OpenApi30Config {
+
 //    @Bean
 //    public OpenAPI customOpenAPI() {
 //        return new OpenAPI()
@@ -28,3 +28,4 @@ public class OpenApi30Config {
 //                ));
 //    }
 }
+

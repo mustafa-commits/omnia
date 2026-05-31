@@ -12,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class FamilyInfoController extends OpenApi30Config {
+public class FamilyInfoController implements OpenApi30Config {
 
     @Autowired
     private FamilyInfoService familyInfoService;

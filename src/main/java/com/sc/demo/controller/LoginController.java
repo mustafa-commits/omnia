@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @Slf4j
-public class LoginController extends OpenApi30Config {
+public class LoginController implements OpenApi30Config {
 
     @Autowired
     private LoginService loginService;

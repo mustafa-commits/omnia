@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.dto.Notification.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.service.notification.NotificationService;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class NotificationController {
+public class NotificationController implements OpenApi30Config {
 
     @Autowired
     private NotificationService notificationService;
