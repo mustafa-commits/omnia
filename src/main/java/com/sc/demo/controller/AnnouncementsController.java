@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.dto.Announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.Announcements.AnnouncementsRequest;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class AnnouncementsController {
+public class AnnouncementsController extends OpenApi30Config {
 
     @Autowired
     private AnnouncementsService announcementsService;

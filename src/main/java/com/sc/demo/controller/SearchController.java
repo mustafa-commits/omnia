@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.dto.Search.SearchResponse;
 import com.sc.demo.model.dto.Search.SearchResponseV2;
 import com.sc.demo.service.Search.SearchService;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class SearchController {
+public class SearchController extends OpenApi30Config {
 
     @Autowired
     private SearchService searchService;

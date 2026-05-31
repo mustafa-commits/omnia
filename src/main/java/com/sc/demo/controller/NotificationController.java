@@ -29,7 +29,7 @@ public class NotificationController {
 
     // اشعارات التلفون
     @GetMapping("/V1/api/sc/getPHoneNotification")
-    public List<PHoneNotificationRequest> getPHoneNotification(String token){
+    public List<PHoneNotificationRequest> getPHoneNotification(@RequestHeader(name = "authorization") String token){
         return notificationService.phoneNotification(token);
     }
 

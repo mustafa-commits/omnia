@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.dto.Login.LogInResponse;
 import com.sc.demo.service.Login.LoginService;
 import com.sc.demo.service.token.TokenService;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @Slf4j
-public class LoginController {
+public class LoginController extends OpenApi30Config {
 
     @Autowired
     private LoginService loginService;

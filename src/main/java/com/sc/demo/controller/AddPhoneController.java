@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.dto.AddPhone.CheckPhone;
 import com.sc.demo.service.AddPhone.AddPhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class AddPhoneController {
+public class AddPhoneController extends OpenApi30Config {
 
     @Autowired
     private AddPhoneService addPhoneService;

@@ -5,27 +5,26 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sc_dashboard_users")
+@Table(name = "sc_dashboard_privileges")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccessToDashboard {
+public class PrivilegesDashboard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long privilegeId;
+
     private Long userId;
 
-    private Long userName;
+    private String userPrivilege;
 
-    private String Phone;
-
-    private String password;
-
-    private String departmentId;
+    private String privilegeName;
 
     private LocalDateTime createDate;
 
@@ -35,13 +34,11 @@ public class AccessToDashboard {
 
     private String lastUpdateBy;
 
-    public AccessToDashboard(Long userName, String phone, String password, String departmentId) {
-        this.userName = userName;
-        Phone = phone;
-        this.password = password;
-        this.departmentId = departmentId;
-    }
+//    @ManyToOne
+//    @JoinColumn(name = "USER_ID")
+//    private AccessToDashboard accessToDashboard;
 
     @PrePersist
     public void prePersist(){this.createDate = LocalDateTime.now(); }
+
 }
