@@ -18,7 +18,7 @@ import java.util.List;
         bearerFormat = "JWT",
         scheme = "bearer"
 )
-public interface OpenApi30Config {
+public class OpenApi30Config {
 
 //    @Bean
 //    public OpenAPI customOpenAPI() {
