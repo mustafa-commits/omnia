@@ -23,7 +23,7 @@ public class AnnouncementsController {
     public Announcements createAnnouncements(@RequestParam Integer sendId,
                                              @RequestParam String title,
                                              @RequestParam String description,
-                                             @RequestHeader(name = "authorization", required = false) String token,
+                                             @RequestHeader(name = "authorization") String token,
                                              @RequestParam (required = false) MultipartFile file)  {
         return announcementsService.createAnnouncements(new AnnouncementsRequest
                 (sendId, title, description, null), file, token);

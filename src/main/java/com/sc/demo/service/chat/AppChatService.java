@@ -52,6 +52,7 @@ public class AppChatService {
 
     public List<AppChatResponse> phoneChats(String token){
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+        System.out.println(userId);
 
         return jdbcClient.sql("""
                 SELECT M.CHAT_TITLE AS chatTitle,

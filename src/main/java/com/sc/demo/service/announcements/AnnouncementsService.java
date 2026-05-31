@@ -44,6 +44,7 @@ public class AnnouncementsService {
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
                                              MultipartFile file, String token){
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+        System.out.println(userId);
 
         Announcements announcements = new Announcements(announcementsRequest.sendId(),
                 announcementsRequest.title(), announcementsRequest.description());

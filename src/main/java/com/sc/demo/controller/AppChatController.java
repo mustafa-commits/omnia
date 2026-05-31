@@ -30,7 +30,7 @@ public class AppChatController {
 
     // اظهار المحادثات
     @GetMapping("/V1/api/sc/getPhoneChats")
-    public List<AppChatResponse> getPhoneChats(String token){
+    public List<AppChatResponse> getPhoneChats(@RequestHeader(name = "authorization") String token){
         return appChatService.phoneChats(token);
     }
 

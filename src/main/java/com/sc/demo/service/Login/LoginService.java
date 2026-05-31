@@ -102,7 +102,7 @@ public class LoginService implements CommandLineRunner {
                 .query(ChekLoginRequest.class).optional();
 
         if (logInChek.isPresent()) {
-            return ResponseEntity.ok(tokenService.generateToken("123"));
+            return ResponseEntity.ok(tokenService.generateToken("1"));
 
         }else
             return ResponseEntity.badRequest().body("WRONG CRED");
@@ -110,6 +110,6 @@ public class LoginService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(tokenService.generateToken("123"));
+        System.out.println(tokenService.generateToken("1"));
     }
 }
