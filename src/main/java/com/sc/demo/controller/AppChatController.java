@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.SecuredRestController;
 import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.chat.AppChatMaster;
 import com.sc.demo.model.chat.MsgType;
@@ -17,7 +18,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class AppChatController implements OpenApi30Config {
+public class AppChatController implements SecuredRestController {
 
     @Autowired
     private AppChatService appChatService;

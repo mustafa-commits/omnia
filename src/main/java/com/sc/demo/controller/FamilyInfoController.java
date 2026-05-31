@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.SecuredRestController;
 import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.dto.FamilyInfo.ChildrenAndMailyFamilyMambersResponse;
 import com.sc.demo.model.dto.FamilyInfo.FamilyInfoBasicResponse;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class FamilyInfoController implements OpenApi30Config {
+public class FamilyInfoController implements SecuredRestController {
 
     @Autowired
     private FamilyInfoService familyInfoService;

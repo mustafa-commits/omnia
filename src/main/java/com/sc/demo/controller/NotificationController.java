@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.SecuredRestController;
 import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.dto.Notification.*;
 import com.sc.demo.model.notification.NotificationMaster;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class NotificationController implements OpenApi30Config {
+public class NotificationController implements SecuredRestController {
 
     @Autowired
     private NotificationService notificationService;
