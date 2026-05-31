@@ -55,12 +55,31 @@ public class AppChatService {
         System.out.println(userId);
 
         return jdbcClient.sql("""
-                SELECT M.CHAT_TITLE AS chatTitle,
-                       D.MESSAGES AS messages,
-                       M.CREATE_DATE AS createDate
-                FROM MOBAPP.SC_CHAT_MASTER M
-                LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON M.CHAT_ID = D.CHAT_ID
-                WHERE M.USER_ID = :user_id
+                        SELECT M.CHAT_TITLE AS chatTitle,
+                               D.MESSAGES AS messages,
+                               M.CREATE_DATE AS createDate
+                        FROM MOBAPP.SC_CHAT_MASTER M
+                        LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON M.CHAT_ID = D.CHAT_ID
+                        WHERE M.USER_ID = :user_id
+                        AND D.MSG_TYPE = 0
+                """)
+                .param("user_id", userId)
+                .query(AppChatResponse.class)
+                .list();
+    }
+
+    public List<AppChatResponse> PhoneChatsArchived(String token){
+        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+        System.out.println(userId);
+
+        return jdbcClient.sql("""
+                        SELECT M.CHAT_TITLE AS chatTitle,
+                               D.MESSAGES AS messages,
+                               M.CREATE_DATE AS createDate
+                        FROM MOBAPP.SC_CHAT_MASTER M
+                        LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON M.CHAT_ID = D.CHAT_ID
+                        WHERE M.USER_ID = :user_id
+                        AND D.MSG_TYPE = 1
                 """)
                 .param("user_id", userId)
                 .query(AppChatResponse.class)

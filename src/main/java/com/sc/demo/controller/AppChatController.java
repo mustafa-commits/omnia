@@ -29,10 +29,16 @@ public class AppChatController implements SecuredRestController {
         return appChatService.createChat(appChatRequest);
     }
 
-    // اظهار المحادثات
+    // اظهار المحادثات المفعلة
     @GetMapping("/V1/api/sc/getPhoneChats")
     public List<AppChatResponse> getPhoneChats(@RequestHeader(name = "authorization") String token){
         return appChatService.phoneChats(token);
+    }
+
+    // اظهار المحادثات المأرشفة
+    @GetMapping("/V1/api/sc/getPhoneChatsArchived")
+    public List<AppChatResponse> getPhoneChatsArchived(@RequestHeader(name = "authorization") String token){
+        return appChatService.PhoneChatsArchived(token);
     }
 
     // ارسال رسالة
