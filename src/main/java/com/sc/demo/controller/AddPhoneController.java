@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.SecuredRestController;
 import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.dto.AddPhone.CheckPhone;
 import com.sc.demo.service.AddPhone.AddPhoneService;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AddPhoneController implements OpenApi30Config {
+public class AddPhoneController implements SecuredRestController {
 
     @Autowired
     private AddPhoneService addPhoneService;
