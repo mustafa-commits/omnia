@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RestController
 @Slf4j
-public class LoginController implements SecuredRestController {
+public class LoginController{
 
     @Autowired
     private LoginService loginService;
