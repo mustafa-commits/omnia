@@ -56,7 +56,7 @@ public class FamilyInfoService {
                                       FROM AIN_CAPPS.SC_PERSON_ILLNESS
                                       GROUP BY FAMILY_PERSONS_ID)PI  ON H.FAMILY_PERSONS_ID = PI.FAMILY_PERSONS_ID
                         WHERE R.AID_REQUEST_ID = :requestId
-                        AND H.HEAD_FAMILY_ID = :headFamilyId
+                        AND (H.HEAD_FAMILY_ID = :headFamilyId OR H.RELATION_ID = 100)
                         AND (H.RELATION_ID NOT IN (7,8) OR H.IS_GUARDIAN = 1)
                 """)
                 .param("requestId", requestId)
