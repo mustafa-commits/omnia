@@ -7,6 +7,6 @@ import java.util.List;
 public record AppChatRequest(
         Long userId,
         String chatTitle,
-        List<AppChatDetails> appChatDetails
+        AppChatDetails appChatDetails
 ) {
 }

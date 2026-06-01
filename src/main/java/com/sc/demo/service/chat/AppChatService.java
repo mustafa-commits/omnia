@@ -1,27 +1,20 @@
 package com.sc.demo.service.chat;
 
-import com.google.firebase.messaging.Message;
 import com.sc.demo.model.chat.AppChatDetails;
 import com.sc.demo.model.chat.AppChatMaster;
 import com.sc.demo.model.chat.MsgType;
-import com.sc.demo.model.dto.Chat.AppChatRequest;
-import com.sc.demo.model.dto.Chat.AppChatResponse;
-import com.sc.demo.model.dto.Chat.MessagesRequest;
-import com.sc.demo.model.dto.Chat.MessagesResponse;
+import com.sc.demo.model.chat.ReceiverFrom;
+import com.sc.demo.model.dto.Chat.*;
 import com.sc.demo.repository.Chat.MessagesRepo;
 import com.sc.demo.repository.Chat.ChatRepo;
 import com.sc.demo.service.token.TokenService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -48,26 +41,27 @@ public class AppChatService {
 
         appChatMaster = chatRepo.save(appChatMaster);
 
-        for (AppChatDetails a : appChatRequest.appChatDetails()){
-                messagesRepo.save(new AppChatDetails(a.getSender(), a.getReceiver(),
-                        a.getReceiverFrom(), a.getMessages(), appChatMaster));
-        }
+        AppChatDetails appChatDetails = appChatRequest.appChatDetails();
+        messagesRepo.save(new AppChatDetails(appChatDetails.getSender(), appChatDetails.getReceiver(),
+                        appChatDetails.getReceiverFrom(), appChatDetails.getMessages(), appChatMaster));
+
+            AppChatDetails welcomeMessage = new AppChatDetails();
+            welcomeMessage.setChatApp(appChatMaster);
+            welcomeMessage.setSender(0L);
+            welcomeMessage.setReceiverFrom(ReceiverFrom.DASHBOARD);
+            welcomeMessage.setMessages("""
+                    السلام عليكم ورحمة الله وبركاته
+                    نود أن نلفت عنايتكم ألى ان كادر الدعم الفني متواجدين للإجابة على استفساراتكم من الساعة ( 8:00 )
+                     صباحاً لغاية الساعة ( 4:00 ) مساءً  طيلة أيام الأسبوع باستثناء يومي الخميس الجمعة,
+                    لطفاً يرجى ارسال استفسارك بالتفصيل ليتسنى لنا الإجابة على طلبكم بأسرع وقت ممكن ,
+                    مع الشكر والتقدير
+                    """);
+
+            messagesRepo.save(welcomeMessage);
+
         return appChatMaster;
     }
 
-
-//        // Use a NEW transaction since we're now outside the original one
-//        @Transactional
-//        public void sendWelcomeMessage(Chat chat) {
-//            Message welcome = new Message();
-//            welcome.setChatId(chat.getId());
-//            welcome.setSender("SYSTEM");
-//            welcome.setContent("Welcome! How can I help you today?");
-//            welcome.setCreatedAt(LocalDateTime.now());
-//
-//            messagesRepo.save(welcome);
-//
-//        }
 
 
     public List<AppChatResponse> phoneChats(String token){

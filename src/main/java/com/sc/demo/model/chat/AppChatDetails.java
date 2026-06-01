@@ -36,6 +36,7 @@ public class AppChatDetails {
     @Column(name = "MSG_TYPE")
     private MsgType msgType = MsgType.MESSAGE;
 
+    @Column(length = 500)
     private String messages;
 
     private LocalDateTime seenAt;
@@ -67,6 +68,12 @@ public class AppChatDetails {
         this.receiverFrom = receiverFrom;
         this.messages = messages;
         this.msgType = msgType;
+    }
+
+    public AppChatDetails(Long sender, String messages) {
+        this.sender = sender;
+        this.receiverFrom = ReceiverFrom.DASHBOARD;
+        this.messages = messages;
     }
 
     @PrePersist
