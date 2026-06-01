@@ -33,7 +33,7 @@ public class AnnouncementsController implements SecuredRestController {
 
     // تبليغات التلفون
     @GetMapping("/V1/api/sc/getPHoneAnnouncements")
-    public List<PHoneAnnouncementsRequest> getPHoneAnnouncements(String token){
+    public List<PHoneAnnouncementsRequest> getPHoneAnnouncements(@RequestHeader(name = "authorization") String token){
         return announcementsService.PHoneAnnouncements(token);
     }
 
