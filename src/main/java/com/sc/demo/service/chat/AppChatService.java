@@ -120,8 +120,8 @@ public class AppChatService {
 
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 Long.parseLong(userId), messagesRequest.receiver(),
-                messagesRequest.receiverFrom(), messagesRequest.messages() == null ? messagesRequest.messages() : newFilename,
-                messagesRequest.msgType() == null ? MsgType.MESSAGE : MsgType.IMAGE);
+                messagesRequest.receiverFrom(), messagesRequest.messages().isEmpty() ? newFilename : messagesRequest.messages(),
+                messagesRequest.msgType() == null ? MsgType.MESSAGE : messagesRequest.msgType());
         System.out.println(messagesRepo.save(appChatDetails).getDetailsChatId());
         System.out.println(messagesRepo.save(appChatDetails).getMessages());
         return true;
