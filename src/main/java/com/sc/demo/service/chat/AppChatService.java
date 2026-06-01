@@ -36,7 +36,7 @@ public class AppChatService {
     private TokenService tokenService;
 
 
-    public AppChatMaster createChat(AppChatRequest appChatRequest){
+    public boolean createChat(AppChatRequest appChatRequest){
         AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(), appChatRequest.chatTitle());
 
         appChatMaster = chatRepo.save(appChatMaster);
@@ -59,7 +59,7 @@ public class AppChatService {
 
         messagesRepo.save(welcomeMessage);
 
-        return appChatMaster;
+        return true;
     }
 
 

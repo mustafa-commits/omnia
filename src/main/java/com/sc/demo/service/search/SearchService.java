@@ -1,4 +1,4 @@
-package com.sc.demo.service.Search;
+package com.sc.demo.service.search;
 
 import com.sc.demo.model.dto.Search.SearchResponse;
 import com.sc.demo.model.dto.Search.SearchResponseV2;

@@ -1,9 +1,7 @@
 package com.sc.demo.controller;
 
-import com.sc.demo.SecuredRestController;
-import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.dto.Login.LogInResponse;
-import com.sc.demo.service.Login.LoginService;
+import com.sc.demo.service.login.LoginService;
 import com.sc.demo.service.token.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

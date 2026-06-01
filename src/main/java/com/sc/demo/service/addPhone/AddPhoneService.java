@@ -1,4 +1,4 @@
-package com.sc.demo.service.AddPhone;
+package com.sc.demo.service.addPhone;
 
 import com.sc.demo.model.dto.AddPhoneNumber.CheckPhone;
 import org.springframework.beans.factory.annotation.Autowired;

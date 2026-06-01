@@ -1,4 +1,4 @@
-package com.sc.demo.service.Login;
+package com.sc.demo.service.login;
 
 import org.springframework.stereotype.Service;
 

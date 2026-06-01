@@ -25,7 +25,7 @@ public class AppChatController implements SecuredRestController {
 
     // انشاء محادثة
     @PostMapping("/V1/api/sc/createChat")
-    public AppChatMaster createChat(@RequestBody AppChatRequest appChatRequest){
+    public boolean createChat(@RequestBody AppChatRequest appChatRequest){
         return appChatService.createChat(appChatRequest);
     }
 

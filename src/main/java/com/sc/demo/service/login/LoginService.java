@@ -1,4 +1,4 @@
-package com.sc.demo.service.Login;
+package com.sc.demo.service.login;
 
 import com.sc.demo.model.verification.SendingType;
 import com.sc.demo.model.dto.Login.ChekLoginRequest;

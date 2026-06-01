@@ -2,7 +2,7 @@ package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.AddPhoneNumber.CheckPhone;
-import com.sc.demo.service.AddPhone.AddPhoneService;
+import com.sc.demo.service.addPhone.AddPhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
