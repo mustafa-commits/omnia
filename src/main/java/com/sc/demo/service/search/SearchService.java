@@ -1,7 +1,7 @@
 package com.sc.demo.service.search;
 
-import com.sc.demo.model.dto.Search.SearchResponse;
-import com.sc.demo.model.dto.Search.SearchResponseV2;
+import com.sc.demo.model.dto.search.SearchResponse;
+import com.sc.demo.model.dto.search.SearchResponseV2;
 import org.hibernate.type.SqlTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;

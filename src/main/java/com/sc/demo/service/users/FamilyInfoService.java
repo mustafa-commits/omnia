@@ -1,8 +1,8 @@
 package com.sc.demo.service.users;
 
-import com.sc.demo.model.dto.FamilyInfo.ChildrenAndMailyFamilyMambersResponse;
-import com.sc.demo.model.dto.FamilyInfo.FamilyInfoBasicResponse;
-import com.sc.demo.model.dto.FamilyInfo.FamilyInfoHousingResponse;
+import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMambersResponse;
+import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
+import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;

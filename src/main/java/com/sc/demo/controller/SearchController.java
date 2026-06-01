@@ -1,8 +1,8 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.dto.Search.SearchResponse;
-import com.sc.demo.model.dto.Search.SearchResponseV2;
+import com.sc.demo.model.dto.search.SearchResponse;
+import com.sc.demo.model.dto.search.SearchResponseV2;
 import com.sc.demo.service.search.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;

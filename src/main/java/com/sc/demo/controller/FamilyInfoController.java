@@ -1,10 +1,9 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.config.OpenApi30Config;
-import com.sc.demo.model.dto.FamilyInfo.ChildrenAndMailyFamilyMambersResponse;
-import com.sc.demo.model.dto.FamilyInfo.FamilyInfoBasicResponse;
-import com.sc.demo.model.dto.FamilyInfo.FamilyInfoHousingResponse;
+import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMambersResponse;
+import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
+import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
 import com.sc.demo.service.users.FamilyInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

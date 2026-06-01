@@ -1,14 +1,14 @@
 package com.sc.demo.service.notification;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.dto.Notification.*;
+import com.sc.demo.model.dto.notification.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.notification.NotificationToken;
 import com.sc.demo.model.notification.NotificationType;
-import com.sc.demo.repository.Notifications.NotificationDetailsRepo;
-import com.sc.demo.repository.Notifications.NotificationRepo;
-import com.sc.demo.repository.Notifications.NotificationTokenRepo;
+import com.sc.demo.repository.notifications.NotificationDetailsRepo;
+import com.sc.demo.repository.notifications.NotificationRepo;
+import com.sc.demo.repository.notifications.NotificationTokenRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;

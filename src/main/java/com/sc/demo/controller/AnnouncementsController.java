@@ -1,11 +1,10 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.config.OpenApi30Config;
 import com.sc.demo.model.announcements.Announcements;
-import com.sc.demo.model.dto.Announcements.AllAnnouncementsFamilyRequest;
-import com.sc.demo.model.dto.Announcements.AnnouncementsRequest;
-import com.sc.demo.model.dto.Announcements.PHoneAnnouncementsRequest;
+import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
+import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
+import com.sc.demo.model.dto.announcements.PHoneAnnouncementsRequest;
 import com.sc.demo.service.announcements.AnnouncementsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

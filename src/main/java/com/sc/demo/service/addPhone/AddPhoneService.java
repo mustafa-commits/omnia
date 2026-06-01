@@ -1,6 +1,6 @@
 package com.sc.demo.service.addPhone;
 
-import com.sc.demo.model.dto.AddPhoneNumber.CheckPhone;
+import com.sc.demo.model.dto.addPhoneNumber.CheckPhone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;

@@ -1,14 +1,12 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.config.OpenApi30Config;
-import com.sc.demo.model.chat.AppChatMaster;
 import com.sc.demo.model.chat.MsgType;
 import com.sc.demo.model.chat.ReceiverFrom;
-import com.sc.demo.model.dto.Chat.AppChatRequest;
-import com.sc.demo.model.dto.Chat.AppChatResponse;
-import com.sc.demo.model.dto.Chat.MessagesRequest;
-import com.sc.demo.model.dto.Chat.MessagesResponse;
+import com.sc.demo.model.dto.chat.AppChatRequest;
+import com.sc.demo.model.dto.chat.AppChatResponse;
+import com.sc.demo.model.dto.chat.MessagesRequest;
+import com.sc.demo.model.dto.chat.MessagesResponse;
 import com.sc.demo.service.chat.AppChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

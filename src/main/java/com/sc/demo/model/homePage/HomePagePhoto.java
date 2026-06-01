@@ -24,8 +24,11 @@ public class HomePagePhoto {
     @Column(name = "")
     private LinkType linkType;
 
-    public HomePagePhoto(String fileName, LinkType linkType) {
+    private String link;
+
+    public HomePagePhoto(String fileName, LinkType linkType, String link) {
         this.fileName = fileName;
         this.linkType = linkType;
+        this.link = link;
     }
 }
