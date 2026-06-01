@@ -16,8 +16,8 @@ public class HomePageService {
 
     public String addHomePagePhoto(String link, LinkType linkType, MultipartFile file){
 
-        HomePagePhoto homePagePhoto = new HomePagePhoto(link, linkType, file);
-        homePagePhoto = photoRepo.save(homePagePhoto);
+//        HomePagePhoto homePagePhoto = new HomePagePhoto(link, linkType, file);
+//        homePagePhoto = photoRepo.save(homePagePhoto);
 
         return "تم,  اضافة الصورة مع الرابط";
     }

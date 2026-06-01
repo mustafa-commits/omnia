@@ -13,6 +13,7 @@ import java.util.List;
 @RestController
 public class NotificationController implements SecuredRestController {
 
+
     @Autowired
     private NotificationService notificationService;
 

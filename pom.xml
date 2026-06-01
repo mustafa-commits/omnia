@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.sc</groupId>
 	<artifactId>demo1</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.3</version>
 	<packaging>war</packaging>
 	<name>SC</name>
 	<description>social care app</description>
@@ -94,9 +94,8 @@
 	<!--oracle db libs-->
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
-			<artifactId>ojdbc10-production</artifactId>
-			<version>19.24.0.0</version>
-			<type>pom</type>
+			<artifactId>ojdbc11</artifactId>
+			<version>23.8.0.25.04</version>
 		</dependency>
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
@@ -144,7 +143,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>scicalCare##${version}</finalName>
+		<finalName>socialCare##${project.version}</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

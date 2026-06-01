@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.security.interfaces.RSAPublicKey;
 
 @EnableConfigurationProperties(Demo1Application.KeyProperties.class)
 @SpringBootApplication
-public class Demo1Application {
+public class Demo1Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Demo1Application.class, args);
@@ -27,7 +28,7 @@ public class Demo1Application {
 	FirebaseMessaging firebaseMessaging() throws IOException {
 
 		GoogleCredentials googleCredentials=GoogleCredentials.fromStream(
-				new ClassPathResource("firebase-service-account.json").getInputStream()
+				new ClassPathResource("Firebase-service-account.json").getInputStream()
 		);
 		FirebaseOptions firebaseOptions= FirebaseOptions.builder()
 				.setCredentials(googleCredentials).build();

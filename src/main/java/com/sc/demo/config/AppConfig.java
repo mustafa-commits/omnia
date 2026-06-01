@@ -13,8 +13,6 @@ import javax.sql.DataSource;
 @Configuration
 public class AppConfig {
 
-    @Autowired
-    Environment environment;
 
     @Value("${url}")
     private String URL;
@@ -34,7 +32,7 @@ public class AppConfig {
         config.setJdbcUrl(URL);
         config.setUsername(USER);
         config.setPassword(PASSWORD);
-        System.out.println(DRIVER);
+        config.setDriverClassName(DRIVER);
 
         config.setMaximumPoolSize(5);
         config.setMinimumIdle(1);
