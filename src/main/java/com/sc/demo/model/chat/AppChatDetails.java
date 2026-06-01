@@ -34,7 +34,7 @@ public class AppChatDetails {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "MSG_TYPE")
-    private MsgType msgType = MsgType.MESSAGE;
+    private MsgType msgType;
 
     @Column(length = 500)
     private String messages;

@@ -1,8 +1,7 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.config.OpenApi30Config;
-import com.sc.demo.model.dto.AddPhone.CheckPhone;
+import com.sc.demo.model.dto.AddPhoneNumber.CheckPhone;
 import com.sc.demo.service.AddPhone.AddPhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

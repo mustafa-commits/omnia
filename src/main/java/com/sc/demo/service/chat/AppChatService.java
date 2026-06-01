@@ -45,19 +45,19 @@ public class AppChatService {
         messagesRepo.save(new AppChatDetails(appChatDetails.getSender(), appChatDetails.getReceiver(),
                         appChatDetails.getReceiverFrom(), appChatDetails.getMessages(), appChatMaster));
 
-            AppChatDetails welcomeMessage = new AppChatDetails();
-            welcomeMessage.setChatApp(appChatMaster);
-            welcomeMessage.setSender(0L);
-            welcomeMessage.setReceiverFrom(ReceiverFrom.DASHBOARD);
-            welcomeMessage.setMessages("""
-                    السلام عليكم ورحمة الله وبركاته
-                    نود أن نلفت عنايتكم ألى ان كادر الدعم الفني متواجدين للإجابة على استفساراتكم من الساعة ( 8:00 )
-                     صباحاً لغاية الساعة ( 4:00 ) مساءً  طيلة أيام الأسبوع باستثناء يومي الخميس الجمعة,
-                    لطفاً يرجى ارسال استفسارك بالتفصيل ليتسنى لنا الإجابة على طلبكم بأسرع وقت ممكن ,
-                    مع الشكر والتقدير
-                    """);
+        AppChatDetails welcomeMessage = new AppChatDetails();
+        welcomeMessage.setChatApp(appChatMaster);
+        welcomeMessage.setSender(0L);
+        welcomeMessage.setReceiverFrom(ReceiverFrom.DASHBOARD);
+        welcomeMessage.setMessages("""
+                السلام عليكم ورحمة الله وبركاته
+                نود أن نلفت عنايتكم ألى ان كادر الدعم الفني متواجدين للإجابة على استفساراتكم من الساعة ( 8:00 )
+                 صباحاً لغاية الساعة ( 4:00 ) مساءً  طيلة أيام الأسبوع باستثناء يومي الخميس الجمعة,
+                لطفاً يرجى ارسال استفسارك بالتفصيل ليتسنى لنا الإجابة على طلبكم بأسرع وقت ممكن ,
+                مع الشكر والتقدير
+                """);
 
-            messagesRepo.save(welcomeMessage);
+        messagesRepo.save(welcomeMessage);
 
         return appChatMaster;
     }
@@ -104,13 +104,14 @@ public class AppChatService {
 
     public boolean writeMessages(MessagesRequest messagesRequest, MultipartFile file, String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+        String newFilename = null;
 
-        String originalFilename = file.getOriginalFilename();
-        String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
-        String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
 
         if(messagesRequest.msgType() == MsgType.IMAGE) {
             try {
+                String originalFilename = file.getOriginalFilename();
+                 newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
+                String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
                 file.transferTo(new File(filePath));
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -119,9 +120,10 @@ public class AppChatService {
 
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 Long.parseLong(userId), messagesRequest.receiver(),
-                messagesRequest.receiverFrom(), messagesRequest.messages() == null ? newFilename : messagesRequest.messages(),
-                messagesRequest.msgType() == null ? MsgType.IMAGE : MsgType.MESSAGE);
+                messagesRequest.receiverFrom(), messagesRequest.messages() == null ? messagesRequest.messages() : newFilename,
+                messagesRequest.msgType() == null ? MsgType.MESSAGE : MsgType.IMAGE);
         System.out.println(messagesRepo.save(appChatDetails).getDetailsChatId());
+        System.out.println(messagesRepo.save(appChatDetails).getMessages());
         return true;
     }
 
