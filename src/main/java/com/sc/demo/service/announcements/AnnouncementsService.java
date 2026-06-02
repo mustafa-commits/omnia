@@ -1,11 +1,11 @@
 package com.sc.demo.service.announcements;
 
-import com.sc.demo.model.announcements.Announcements;
-import com.sc.demo.model.announcements.AnnouncementsAttachment;
-import com.sc.demo.model.announcements.AnnouncementsDetails;
-import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
-import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
-import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
+import com.sc.demo.model.announcements.announcements;
+import com.sc.demo.model.announcements.announcementsAttachment;
+import com.sc.demo.model.announcements.announcementsDetails;
+import com.sc.demo.model.dto.announcements.allAnnouncementsFamilyRequest;
+import com.sc.demo.model.dto.announcements.announcementsRequest;
+import com.sc.demo.model.dto.announcements.phoneAnnouncementsRequest;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
@@ -41,22 +41,22 @@ public class AnnouncementsService {
     private TokenService tokenService;
 
     // انشاء تبليغ
-    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
+    public announcements createAnnouncements(announcementsRequest announcementsRequest,
                                              MultipartFile file, String token){
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         System.out.println(userId);
 
-        Announcements announcements = new Announcements(announcementsRequest.sendId(),
+        announcements announcements = new announcements(announcementsRequest.sendId(),
                 announcementsRequest.title(), announcementsRequest.description());
         announcements = announcementsRepo.save(announcements);
         if (userId != null)
-            announcementsDetailsRepo.save(new AnnouncementsDetails(Long.parseLong(userId), announcements));
+            announcementsDetailsRepo.save(new announcementsDetails(Long.parseLong(userId), announcements));
         if (file != null)
         try {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
             String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
-            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, announcements));
+            announcementsAttachmentRepo.save(new announcementsAttachment(newFilename, announcements));
             file.transferTo(new File(filePath));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -65,7 +65,7 @@ public class AnnouncementsService {
     }
 
     // اشعارات التطيق لكل يززر
-    public List<PhoneAnnouncementsRequest> PHoneAnnouncements(String token) {
+    public List<phoneAnnouncementsRequest> PHoneAnnouncements(String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         return jdbcClient.sql("""
@@ -76,7 +76,7 @@ public class AnnouncementsService {
                    Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
                    Where ad.user_id = :user_id OR ad.USER_ID = 0
                 """).param("user_id",userId)
-                .query(PhoneAnnouncementsRequest.class).list();
+                .query(phoneAnnouncementsRequest.class).list();
 
     }
     /*
@@ -92,13 +92,13 @@ public class AnnouncementsService {
                                       end) ) */
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
-    public List<AllAnnouncementsFamilyRequest> AllAnnouncementsFamily() {
+    public List<allAnnouncementsFamilyRequest> AllAnnouncementsFamily() {
 
         return jdbcClient.sql("""
                    select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION
                    from SC_ANNOUNCEMENTS a
                    join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
-                """).query(AllAnnouncementsFamilyRequest.class).list();
+                """).query(allAnnouncementsFamilyRequest.class).list();
 
     }
 }

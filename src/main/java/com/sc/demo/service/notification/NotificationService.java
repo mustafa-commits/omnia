@@ -2,10 +2,10 @@ package com.sc.demo.service.notification;
 
 import com.google.firebase.messaging.*;
 import com.sc.demo.model.dto.notification.*;
-import com.sc.demo.model.notification.NotificationMaster;
-import com.sc.demo.model.notification.NotificationDetails;
-import com.sc.demo.model.notification.NotificationToken;
-import com.sc.demo.model.notification.NotificationType;
+import com.sc.demo.model.notification.notificationMaster;
+import com.sc.demo.model.notification.notificationDetails;
+import com.sc.demo.model.notification.notificationToken;
+import com.sc.demo.model.notification.notificationType;
 import com.sc.demo.repository.notifications.NotificationDetailsRepo;
 import com.sc.demo.repository.notifications.NotificationRepo;
 import com.sc.demo.repository.notifications.NotificationTokenRepo;
@@ -41,13 +41,13 @@ public class NotificationService {
     private TokenService tokenService;
 
     // انشاء اشعار
-    public NotificationMaster createNotification(NotificationRequest notificationRequest) {
+    public notificationMaster createNotification(notificationRequest notificationRequest) {
 
         Map<String, String> map = new HashMap<>();
         map.put("notification_type", "3");
         map.put("content_available", "1");
 
-        NotificationMaster notificationMaster = new NotificationMaster(notificationRequest.sendId(),
+        notificationMaster notificationMaster = new notificationMaster(notificationRequest.sendId(),
                 notificationRequest.title(), notificationRequest.description(),
                 notificationRequest.notificationType()
         );
@@ -62,11 +62,11 @@ public class NotificationService {
         ApnsConfig apnsConfig = getApnsConfig();
 
         notificationMaster = notificationRepo.save(notificationMaster);
-        if (notificationRequest.notificationType().equals(NotificationType.PRIVATE)) {
-            for (NotificationDetails n : notificationRequest.notificationDetails()) {
-                notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), notificationMaster));
+        if (notificationRequest.notificationType().equals(notificationType.PRIVATE)) {
+            for (notificationDetails n : notificationRequest.notificationDetails()) {
+                notificationDetailsRepo.save(new notificationDetails(n.getUserId(), notificationMaster));
 
-                Optional<NotificationToken> byToken = notificationTokenRepo.findById(n.getUserId());
+                Optional<notificationToken> byToken = notificationTokenRepo.findById(n.getUserId());
 
                 if (byToken.isPresent()) {
                     messageList.add(Message.builder()
@@ -76,7 +76,7 @@ public class NotificationService {
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
-                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), notificationMaster));
+                    notificationDetailsRepo.save(new notificationDetails(n.getUserId(), notificationMaster));
                 }
             }
             if (messageList.size() >= 1) {
@@ -97,16 +97,16 @@ public class NotificationService {
     }
 
     // حفظ Token القادم من firebase في قاعدة البيانات
-    public long saveToken(NotificationTokenRequest notificationTokenRequest) {
-        Optional<NotificationToken> byToken = notificationTokenRepo.findById(notificationTokenRequest.userId());
+    public long saveToken(notificationTokenRequest notificationTokenRequest) {
+        Optional<notificationToken> byToken = notificationTokenRepo.findById(notificationTokenRequest.userId());
 
         if (byToken.isPresent()){
-            NotificationToken notificationToken = byToken.get();
+            notificationToken notificationToken = byToken.get();
             notificationToken.setLastUpdate(LocalDateTime.now());
             notificationToken.setToken(notificationTokenRequest.token());
             return notificationTokenRepo.save(notificationToken).getUserId();
         } else {
-            NotificationToken notificationToken = byToken.get();
+            notificationToken notificationToken = byToken.get();
             notificationToken.setToken(notificationTokenRequest.token());
             notificationToken.setUserId(notificationTokenRequest.userId());
             return notificationTokenRepo.save(notificationToken).getUserId();
@@ -115,7 +115,7 @@ public class NotificationService {
 
 
     // اشعارات التطيق لكل يوزر
-    public List<PHoneNotificationRequest> phoneNotification(String token) {
+    public List<phoneNotificationRequest> phoneNotification(String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         return jdbcClient.sql("""
@@ -126,12 +126,12 @@ public class NotificationService {
                    OR N.NOTIFICATION_TYPE = 0
                 """)
                 .param("user_id", userId)
-                .query(PHoneNotificationRequest.class)
+                .query(phoneNotificationRequest.class)
                 .list();
     }
 
     // جلب اشعارات الداشبورد حسب النوع (عامة او خاصة)
-    public List<NotificationByType> NotificationByType(long notification_type) {
+    public List<notificationByType> NotificationByType(long notification_type) {
         return jdbcClient.sql("""
                    SELECT SEND_ID as sendId
                           ,TITLE
@@ -144,18 +144,18 @@ public class NotificationService {
                    where notification_type = :notification_type
                 """)
                 .param("notification_type",notification_type)
-                .query(NotificationByType.class)
+                .query(notificationByType.class)
                 .list();
     }
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
-    public List<AllNotificationFamilyRequest> AllNotificationFamily() {
+    public List<allNotificationFamilyRequest> AllNotificationFamily() {
 
         return jdbcClient.sql("""
                    SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION, N.NOTIFICATION_TYPE AS NotificationType
                    FROM SC_NOTIFICATION N
                    LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
-                """).query(AllNotificationFamilyRequest.class).list();
+                """).query(allNotificationFamilyRequest.class).list();
     }
 
 

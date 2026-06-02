@@ -1,6 +1,6 @@
 package com.sc.demo.service.addPhone;
 
-import com.sc.demo.model.dto.addPhoneNumber.CheckPhone;
+import com.sc.demo.model.dto.addPhoneNumber.checkPhone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -13,8 +13,8 @@ public class AddPhoneService {
     @Autowired
     private JdbcClient jdbcClient;
 
-    public CheckPhone checkForTheNumber(long phone_Number){
-        Optional <CheckPhone> check = jdbcClient.sql("""
+    public checkPhone checkForTheNumber(long phone_Number){
+        Optional <checkPhone> check = jdbcClient.sql("""
                         SELECT p.PERSON_NAME_FIRST || ' '
                                                      || p.PERSON_NAME_SECOND || ' '
                                                      || p.PERSON_NAME_THIRD  || ' '
@@ -35,7 +35,7 @@ public class AddPhoneService {
                                 WHERE FI.PHONE LIKE '%' || :phone_Number
                 """)
                 .param("phone_Number", phone_Number)
-                .query(CheckPhone.class)
+                .query(checkPhone.class)
                 .optional();
 
 

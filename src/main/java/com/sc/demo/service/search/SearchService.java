@@ -1,7 +1,7 @@
 package com.sc.demo.service.search;
 
-import com.sc.demo.model.dto.search.SearchResponse;
-import com.sc.demo.model.dto.search.SearchResponseV2;
+import com.sc.demo.model.dto.search.searchResponse;
+import com.sc.demo.model.dto.search.searchResponseV2;
 import org.hibernate.type.SqlTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -14,7 +14,7 @@ public class SearchService {
     @Autowired
     private JdbcClient jdbcClient;
 
-    public List<SearchResponse> SearchByName(String GuardianName){
+    public List<searchResponse> SearchByName(String GuardianName){
         return jdbcClient.sql("""
                     SELECT * FROM (SELECT   DISTINCT PERSON_NAME_FIRST  || ' '
                                                   || PERSON_NAME_SECOND || ' '
@@ -29,12 +29,12 @@ public class SearchService {
                     WHERE SEARCHNAME.GUARDIANNAME LIKE '%' || :GuardianName || '%'
                 """)
                 .param("GuardianName", GuardianName, SqlTypes.VARCHAR)
-                .query(SearchResponse.class)
+                .query(searchResponse.class)
                 .list();
     }
 
 
-    public List<SearchResponseV2> SearchByNameV2(String GuardianName){
+    public List<searchResponseV2> SearchByNameV2(String GuardianName){
         return jdbcClient.sql("""
                     SELECT * FROM (SELECT p.PERSON_NAME_FIRST || ' '
                                          || p.PERSON_NAME_SECOND || ' '
@@ -55,7 +55,7 @@ public class SearchService {
                     WHERE SEARCHNAME.GUARDIANNAME LIKE '%' || :GuardianName || '%'
                 """)
                 .param("GuardianName", GuardianName, SqlTypes.VARCHAR)
-                .query(SearchResponseV2.class)
+                .query(searchResponseV2.class)
                 .list();
     }
 }

@@ -1,9 +1,9 @@
 package com.sc.demo.service.login;
 
-import com.sc.demo.model.verification.SendingType;
-import com.sc.demo.model.dto.login.ChekLoginRequest;
-import com.sc.demo.model.dto.login.LogInResponse;
-import com.sc.demo.model.verification.VerificationApp;
+import com.sc.demo.model.verification.sendingType;
+import com.sc.demo.model.dto.login.chekLoginRequest;
+import com.sc.demo.model.dto.login.logInResponse;
+import com.sc.demo.model.verification.verificationApp;
 import com.sc.demo.repository.login.VerificationLoginRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +32,13 @@ public class LoginService implements CommandLineRunner {
     String regex = "^(77|78|79)\\d{8}$";
 
     // تسجيل دخول من خلال رقم الهاتف
-    public LogInResponse logIn(long phone_Number, String country_code, String birthDate){
+    public logInResponse logIn(long phone_Number, String country_code, String birthDate){
 
         if (!String.valueOf(phone_Number).matches(regex)){
             return null;
         }
 
-        Optional <LogInResponse> logInRes = jdbcClient.sql("""
+        Optional <logInResponse> logInRes = jdbcClient.sql("""
                         SELECT H.HEAD_FAMILY_ID as HeadFamilyId
                                ,R.AID_REQUEST_ID as RequestId
                         FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
@@ -69,11 +69,11 @@ public class LoginService implements CommandLineRunner {
                 """)
                 .param("phone_Number",phone_Number)
                 .param("birthDate", birthDate)
-                .query(LogInResponse.class)
+                .query(logInResponse.class)
                 .optional();
 
         if (logInRes.isPresent()) {
-            Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), SendingType.WHATSAPP);
+            Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), sendingType.WHATSAPP);
             whatsAppService.sendVerificationCode(code);
             return logInRes.get();
         }else
@@ -81,16 +81,16 @@ public class LoginService implements CommandLineRunner {
     }
 
     // جلب ال OTP بعد خزنه بالجدول
-    public Long GeneratingVerificationLogin(String userIdentifier, SendingType sendingType) {
+    public Long GeneratingVerificationLogin(String userIdentifier, sendingType sendingType) {
         Long code;
         code = ThreadLocalRandom.current().nextLong(100000, 1_000_000);
-        verificationLoginRepo.save(new VerificationApp(userIdentifier, code, sendingType));
+        verificationLoginRepo.save(new verificationApp(userIdentifier, code, sendingType));
         return code;
     }
 
     // التحقق من تاريخ الميلاد وارسال رقم الحاتف
     public ResponseEntity<?> ChekLoginApp(Long phone_Number, Long secretCode){
-        Optional <ChekLoginRequest> logInChek = jdbcClient.sql("""
+        Optional <chekLoginRequest> logInChek = jdbcClient.sql("""
                         SELECT USER_IDENTIFIER AS userIdentifier
                         FROM MOBAPP.SC_VERIFICATION_APP V
                         WHERE V.USER_IDENTIFIER = :phone_Number
@@ -99,7 +99,7 @@ public class LoginService implements CommandLineRunner {
                 """)
                 .param("phone_Number",phone_Number)
                 .param("secretCode", secretCode)
-                .query(ChekLoginRequest.class).optional();
+                .query(chekLoginRequest.class).optional();
 
         if (logInChek.isPresent()) {
             return ResponseEntity.ok(tokenService.generateToken("1"));

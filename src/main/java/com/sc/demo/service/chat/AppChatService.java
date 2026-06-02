@@ -38,20 +38,19 @@ public class AppChatService {
     @Autowired
     private ChatTokenRepo chatTokenRepo;
 
-
-    public boolean createChat(AppChatRequest appChatRequest){
-        AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(), appChatRequest.chatTitle());
+    public boolean createChat(appChatRequest appChatRequest){
+        appChatMaster appChatMaster = new appChatMaster(appChatRequest.userId(), appChatRequest.chatTitle());
 
         appChatMaster = chatRepo.save(appChatMaster);
 
-        AppChatDetails appChatDetails = appChatRequest.appChatDetails();
-        messagesRepo.save(new AppChatDetails(appChatDetails.getSender(), appChatDetails.getReceiver(),
+        appChatDetails appChatDetails = appChatRequest.appChatDetails();
+        messagesRepo.save(new appChatDetails(appChatDetails.getSender(), appChatDetails.getReceiver(),
                         appChatDetails.getPlatform(), appChatDetails.getMessages(), appChatMaster));
 
-        AppChatDetails welcomeMessage = new AppChatDetails();
+        appChatDetails welcomeMessage = new appChatDetails();
         welcomeMessage.setChatApp(appChatMaster);
         welcomeMessage.setSender(0L);
-        welcomeMessage.setPlatform(Platform.DASHBOARD);
+        welcomeMessage.setPlatform(platform.DASHBOARD);
         welcomeMessage.setMessages("""
                 السلام عليكم ورحمة الله وبركاته
                 نود أن نلفت عنايتكم ألى ان كادر الدعم الفني متواجدين للإجابة على استفساراتكم من الساعة ( 8:00 )
@@ -66,16 +65,16 @@ public class AppChatService {
     }
 
     // حفظ Token القادم من firebase في قاعدة البيانات
-    public long saveToken(ChatTokenRequest chatTokenRequest) {
-        Optional<ChatToken> byToken = chatTokenRepo.findById(chatTokenRequest.chatId());
+    public long saveToken(chatTokenRequest chatTokenRequest) {
+        Optional<chatToken> byToken = chatTokenRepo.findById(chatTokenRequest.chatId());
 
         if (byToken.isPresent()){
-            ChatToken chatToken = byToken.get();
+            chatToken chatToken = byToken.get();
             chatToken.setLastUpdate(LocalDateTime.now());
             chatToken.setToken(chatTokenRequest.token());
             return chatTokenRepo.save(chatToken).getChatId();
         } else {
-            ChatToken chatToken = byToken.get();
+            chatToken chatToken = byToken.get();
             chatToken.setToken(chatTokenRequest.token());
             chatToken.setChatId(chatTokenRequest.chatId());
             return chatTokenRepo.save(chatToken).getChatId();
@@ -83,7 +82,7 @@ public class AppChatService {
     }
 
     // جلي المحادثات المفعلة
-    public List<AppChatResponse> phoneChats(String token){
+    public List<appChatResponse> phoneChats(String token){
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         System.out.println(userId);
 
@@ -99,11 +98,11 @@ public class AppChatService {
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 """)
                 .param("user_id", userId)
-                .query(AppChatResponse.class)
+                .query(appChatResponse.class)
                 .list();
     }
 
-    public List<AppChatResponse> PhoneChatsArchived(String token){
+    public List<appChatResponse> PhoneChatsArchived(String token){
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         System.out.println(userId);
 
@@ -119,16 +118,16 @@ public class AppChatService {
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 """)
                 .param("user_id", userId)
-                .query(AppChatResponse.class)
+                .query(appChatResponse.class)
                 .list();
     }
 
-    public boolean writeMessages(MessagesRequest messagesRequest, MultipartFile file, String token) {
+    public boolean writeMessages(messagesRequest messagesRequest, MultipartFile file, String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         String newFilename = null;
 
 
-        if(messagesRequest.msgType() == MsgType.IMAGE) {
+        if(messagesRequest.msgType() == msgType.IMAGE) {
             try {
                 String originalFilename = file.getOriginalFilename();
                  newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -139,17 +138,17 @@ public class AppChatService {
             }
         }
 
-        AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
+        appChatDetails appChatDetails = new appChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 Long.parseLong(userId), messagesRequest.receiver(),
                 messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFilename : messagesRequest.messages(),
-                messagesRequest.msgType() == null ? MsgType.MESSAGE : messagesRequest.msgType());
+                messagesRequest.msgType() == null ? msgType.MESSAGE : messagesRequest.msgType());
         System.out.println(messagesRepo.save(appChatDetails).getDetailsChatId());
         System.out.println(messagesRepo.save(appChatDetails).getMessages());
         return true;
     }
 
 
-    public List<MessagesResponse> getMessages(long chat_id){
+    public List<messagesResponse> getMessages(long chat_id){
         return jdbcClient.sql("""
                 SELECT MESSAGES,
                        RECEIVER,
@@ -160,7 +159,7 @@ public class AppChatService {
                 order by CREATE_DATE desc
                 """)
                 .param("chat_id", chat_id)
-                .query(MessagesResponse.class)
+                .query(messagesResponse.class)
                 .list();
     }
 }

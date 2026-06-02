@@ -1,8 +1,8 @@
 package com.sc.demo.service.users;
 
-import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMambersResponse;
-import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
-import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
+import com.sc.demo.model.dto.familyInfo.childrenAndMailyFamilyMambersResponse;
+import com.sc.demo.model.dto.familyInfo.familyInfoBasicResponse;
+import com.sc.demo.model.dto.familyInfo.familyInfoHousingResponse;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -19,7 +19,7 @@ public class FamilyInfoService {
     private TokenService tokenService;
 
     // المعلومات العائلة الاساسية
-    public List<FamilyInfoBasicResponse> getFamilyBasicInfo(String token){
+    public List<familyInfoBasicResponse> getFamilyBasicInfo(String token){
 
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
@@ -61,12 +61,12 @@ public class FamilyInfoService {
                 """)
                 .param("requestId", requestId)
                 .param("headFamilyId", headFamilyId)
-                .query(FamilyInfoBasicResponse.class)
+                .query(familyInfoBasicResponse.class)
                 .list();
     }
 
     // ارقام الهواتف + سكن العائلة + فرع التسجيل
-    public List<FamilyInfoHousingResponse> getFamilyHousingInfo(String token){
+    public List<familyInfoHousingResponse> getFamilyHousingInfo(String token){
 
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
@@ -110,12 +110,12 @@ public class FamilyInfoService {
                 """)
                 .param("requestId", requestId)
                 .param("headFamilyId", headFamilyId)
-                .query(FamilyInfoHousingResponse.class)
+                .query(familyInfoHousingResponse.class)
                 .list();
     }
 
     // عدد افراد العائلة + عدد الايتام
-    public List<ChildrenAndMailyFamilyMambersResponse> getChildrenAndMailyFamilyMambersResponse(String token){
+    public List<childrenAndMailyFamilyMambersResponse> getChildrenAndMailyFamilyMambersResponse(String token){
 
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
@@ -138,7 +138,7 @@ public class FamilyInfoService {
                 """)
                 .param("requestId", requestId)
                 .param("headFamilyId", headFamilyId)
-                .query(ChildrenAndMailyFamilyMambersResponse.class)
+                .query(childrenAndMailyFamilyMambersResponse.class)
                 .list();
     }
 }

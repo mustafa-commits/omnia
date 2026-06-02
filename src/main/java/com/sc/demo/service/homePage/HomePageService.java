@@ -1,9 +1,8 @@
 package com.sc.demo.service.homePage;
 
-import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
-import com.sc.demo.model.dto.homePage.HomePageResponse;
-import com.sc.demo.model.homePage.HomePagePhoto;
-import com.sc.demo.model.homePage.LinkType;
+import com.sc.demo.model.dto.homePage.homePageResponse;
+import com.sc.demo.model.homePage.homePagePhoto;
+import com.sc.demo.model.homePage.linkType;
 import com.sc.demo.repository.homePage.PhotoRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +30,13 @@ public class HomePageService {
     @Autowired
     private JdbcClient jdbcClient;
 
-    public String addHomePagePhoto(LinkType linkType, String link, MultipartFile file, String token){
+    public String addHomePagePhoto(linkType linkType, String link, MultipartFile file, String token){
 
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
                 String originalFilename = file.getOriginalFilename();
                 String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
                 String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
-                photoRepo.save(new HomePagePhoto(newFilename, linkType, link));
+                photoRepo.save(new homePagePhoto(newFilename, linkType, link));
 
         try {
             file.transferTo(new File(filePath));
@@ -48,7 +47,7 @@ public class HomePageService {
         return "تم,  اضافة الصورة مع الرابط";
     }
 
-    public List<HomePageResponse> viewHomePagePhotos(String token) {
+    public List<homePageResponse> viewHomePagePhotos(String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         return jdbcClient.sql("""
@@ -60,7 +59,7 @@ public class HomePageService {
                    FETCH FIRST 3 ROWS ONLY
                 """)
                 .param("user_id",userId)
-                .query(HomePageResponse.class)
+                .query(homePageResponse.class)
                 .list();
 
     }

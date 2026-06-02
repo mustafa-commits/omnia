@@ -1,0 +1,46 @@
+package com.sc.demo.model.notification;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "sc_notification_token")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class notificationToken {
+
+    @Id
+    private Long userId;
+
+    private String token;
+
+    private Long tokenType;
+
+    private Boolean isActive;
+
+    private LocalDateTime createDate;
+
+    private Long createBy;
+
+    private LocalDateTime lastUpdate;
+
+    private Long lastCreateBy;
+
+    public notificationToken(Long userId, String token, Long tokenType) {
+        this.userId = userId;
+        this.token = token;
+        this.tokenType = tokenType;
+        this.isActive = true;
+    }
+
+    @PrePersist
+    public void PrePersist(){
+        this.createDate = LocalDateTime.now();
+    }
+}
