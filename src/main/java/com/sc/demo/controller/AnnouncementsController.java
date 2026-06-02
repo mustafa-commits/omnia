@@ -4,7 +4,7 @@ import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
-import com.sc.demo.model.dto.announcements.PHoneAnnouncementsRequest;
+import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.service.announcements.AnnouncementsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,7 +32,7 @@ public class AnnouncementsController implements SecuredRestController {
 
     // تبليغات التلفون
     @GetMapping("/V1/api/sc/getPHoneAnnouncements")
-    public List<PHoneAnnouncementsRequest> getPHoneAnnouncements(@RequestHeader(name = "authorization") String token){
+    public List<PhoneAnnouncementsRequest> getPHoneAnnouncements(@RequestHeader(name = "authorization") String token){
         return announcementsService.PHoneAnnouncements(token);
     }
 

@@ -5,7 +5,7 @@ import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
-import com.sc.demo.model.dto.announcements.PHoneAnnouncementsRequest;
+import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
@@ -65,7 +65,7 @@ public class AnnouncementsService {
     }
 
     // اشعارات التطيق لكل يززر
-    public List<PHoneAnnouncementsRequest> PHoneAnnouncements(String token) {
+    public List<PhoneAnnouncementsRequest> PHoneAnnouncements(String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         return jdbcClient.sql("""
@@ -76,7 +76,7 @@ public class AnnouncementsService {
                    Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
                    Where ad.user_id = :user_id OR ad.USER_ID = 0
                 """).param("user_id",userId)
-                .query(PHoneAnnouncementsRequest.class).list();
+                .query(PhoneAnnouncementsRequest.class).list();
 
     }
     /*

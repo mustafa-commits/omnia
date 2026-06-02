@@ -1,18 +1,20 @@
 package com.sc.demo.service.homePage;
 
-import com.sc.demo.model.announcements.AnnouncementsAttachment;
-import com.sc.demo.model.dto.homePage.HomePageRequest;
+import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
+import com.sc.demo.model.dto.homePage.HomePageResponse;
 import com.sc.demo.model.homePage.HomePagePhoto;
 import com.sc.demo.model.homePage.LinkType;
 import com.sc.demo.repository.homePage.PhotoRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class HomePageService {
@@ -26,12 +28,12 @@ public class HomePageService {
     @Autowired
     private Environment environment;
 
+    @Autowired
+    private JdbcClient jdbcClient;
+
     public String addHomePagePhoto(LinkType linkType, String link, MultipartFile file, String token){
 
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
-
-//        HomePagePhoto homePagePhoto = new HomePagePhoto(homePageRequest.linkType(), homePageRequest.link());
-
                 String originalFilename = file.getOriginalFilename();
                 String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
                 String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
@@ -43,7 +45,23 @@ public class HomePageService {
             throw new RuntimeException(e);
         }
 
-
         return "تم,  اضافة الصورة مع الرابط";
+    }
+
+    public List<HomePageResponse> viewHomePagePhotos(String token) {
+        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+
+        return jdbcClient.sql("""
+                   SELECT FILE_NAME AS fileName,
+                          LINK_TYPE AS linkType,
+                          LINK AS link
+                   FROM MOBAPP.SC_HOMEPAGE_PHOTO
+                   ORDER BY CREATE_DATE DESC
+                   FETCH FIRST 3 ROWS ONLY
+                """)
+                .param("user_id",userId)
+                .query(HomePageResponse.class)
+                .list();
+
     }
 }
