@@ -75,7 +75,7 @@ public class AppChatService {
                 FROM MOBAPP.SC_CHAT_MASTER M
                 JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
                 WHERE M.USER_ID = :user_id
-                AND D.MSG_TYPE = 0
+                AND D.MSG_ACTIVITY = 0
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 """)
                 .param("user_id", userId)
@@ -94,7 +94,7 @@ public class AppChatService {
                 FROM MOBAPP.SC_CHAT_MASTER M
                 JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
                 WHERE M.USER_ID = :user_id
-                AND D.MSG_TYPE = 1
+                AND D.MSG_ACTIVITY = 1
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 """)
                 .param("user_id", userId)

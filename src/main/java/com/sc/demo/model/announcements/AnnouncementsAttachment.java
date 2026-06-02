@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Table(name = "sc_announcements_attachment")
@@ -25,12 +27,15 @@ public class AnnouncementsAttachment {
     @JoinColumn(name = "announcements_id")
     private Announcements announcements;
 
-    public AnnouncementsAttachment(String fileName) {
-        this.fileName = fileName;
-    }
+    private LocalDateTime createDate;
 
     public AnnouncementsAttachment(String fileName, Announcements announcements) {
         this.fileName = fileName;
         this.announcements = announcements;
+    }
+
+    @PrePersist
+    public void prePersist(){
+        this.createDate = LocalDateTime.now();
     }
 }

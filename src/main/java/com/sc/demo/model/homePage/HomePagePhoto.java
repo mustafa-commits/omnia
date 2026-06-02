@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "sc_homepage_photo")
 @Getter
@@ -26,9 +28,16 @@ public class HomePagePhoto {
 
     private String link;
 
+    private LocalDateTime createDate;
+
     public HomePagePhoto(String fileName, LinkType linkType, String link) {
         this.fileName = fileName;
         this.linkType = linkType;
         this.link = link;
+    }
+
+    @PrePersist
+    public void prePersist(){
+        this.createDate = LocalDateTime.now();
     }
 }

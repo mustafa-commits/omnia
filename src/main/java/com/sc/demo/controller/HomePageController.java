@@ -19,7 +19,8 @@ public class HomePageController {
     @PostMapping("/V1/api/sc/addHomePagePhoto")
     public String addHomePagePhoto(@RequestParam String link,
                                    @RequestParam LinkType linkType,
-                                   @RequestParam (required = false) MultipartFile file){
-        return homePageService.addHomePagePhoto(link,linkType, file);
+                                   @RequestParam MultipartFile file,
+                                   @RequestHeader(name = "authorization") String token){
+        return homePageService.addHomePagePhoto(linkType, link, file, token);
     }
 }

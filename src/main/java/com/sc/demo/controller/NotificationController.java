@@ -13,7 +13,6 @@ import java.util.List;
 @RestController
 public class NotificationController implements SecuredRestController {
 
-
     @Autowired
     private NotificationService notificationService;
 
@@ -29,19 +28,19 @@ public class NotificationController implements SecuredRestController {
         return notificationService.saveToken(notificationTokenRequest);
     }
 
-    // اشعارات التلفون
+    // جلب اشعارات التلفون
     @GetMapping("/V1/api/sc/getPHoneNotification")
     public List<PHoneNotificationRequest> getPHoneNotification(@RequestHeader(name = "authorization") String token){
         return notificationService.phoneNotification(token);
     }
 
-    // اشعارات الداشبورد حسب النوع الاشعار خاص او عام
+    // جلب اشعارات الداشبورد حسب النوع الاشعار خاص او عام
     @GetMapping("/V1/api/sc/getNotificationByType")
     public List<NotificationByType> getPNotificationByType(@RequestParam long notification_type){
         return notificationService.NotificationByType(notification_type);
     }
 
-    // جميع اشعارات الداشبورد للعائلة
+    // جلب جميع اشعارات الداشبورد للعائلة
     @GetMapping("/V1/api/sc/getAllNotificationFamily")
     public List<AllNotificationFamilyRequest> getAllNotificationFamily(){
         return notificationService.AllNotificationFamily();
