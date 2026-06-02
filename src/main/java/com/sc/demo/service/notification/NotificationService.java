@@ -64,9 +64,9 @@ public class NotificationService {
         notificationMaster = notificationRepo.save(notificationMaster);
         if (notificationRequest.notificationType().equals(NotificationType.PRIVATE)) {
             for (NotificationDetails n : notificationRequest.notificationDetails()) {
-                notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
+                notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), notificationMaster));
 
-                Optional<NotificationToken> byToken = notificationTokenRepo.findById(n.getUser_id());
+                Optional<NotificationToken> byToken = notificationTokenRepo.findById(n.getUserId());
 
                 if (byToken.isPresent()) {
                     messageList.add(Message.builder()
@@ -76,7 +76,7 @@ public class NotificationService {
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
-                    notificationDetailsRepo.save(new NotificationDetails(n.getUser_id(), notificationMaster));
+                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), notificationMaster));
                 }
             }
             if (messageList.size() >= 1) {
@@ -103,13 +103,13 @@ public class NotificationService {
         if (byToken.isPresent()){
             NotificationToken notificationToken = byToken.get();
             notificationToken.setLastUpdate(LocalDateTime.now());
-            notificationToken.setToken(notificationTokenRequest.Token());
-            return notificationTokenRepo.save(notificationToken).getUser_id();
+            notificationToken.setToken(notificationTokenRequest.token());
+            return notificationTokenRepo.save(notificationToken).getUserId();
         } else {
             NotificationToken notificationToken = byToken.get();
-            notificationToken.setToken(notificationTokenRequest.Token());
-            notificationToken.setUser_id(notificationTokenRequest.userId());
-            return notificationTokenRepo.save(notificationToken).getUser_id();
+            notificationToken.setToken(notificationTokenRequest.token());
+            notificationToken.setUserId(notificationTokenRequest.userId());
+            return notificationTokenRepo.save(notificationToken).getUserId();
         }
     }
 

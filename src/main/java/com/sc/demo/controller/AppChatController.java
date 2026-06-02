@@ -2,11 +2,8 @@ package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.chat.MsgType;
-import com.sc.demo.model.chat.ReceiverFrom;
-import com.sc.demo.model.dto.chat.AppChatRequest;
-import com.sc.demo.model.dto.chat.AppChatResponse;
-import com.sc.demo.model.dto.chat.MessagesRequest;
-import com.sc.demo.model.dto.chat.MessagesResponse;
+import com.sc.demo.model.chat.Platform;
+import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.service.chat.AppChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +24,13 @@ public class AppChatController implements SecuredRestController {
         return appChatService.createChat(appChatRequest);
     }
 
-    // اظهار المحادثات المفعلة
+    // تخزين Token
+//    @PostMapping("/V1/api/sc/setChatToken")
+//    public long setChatToken(@RequestBody ChatTokenRequest chatTokenRequest){
+//        return appChatService.saveToken(chatTokenRequest);
+//    }
+
+    // اظهار المحادثات الفعالة
     @GetMapping("/V1/api/sc/getPhoneChats")
     public List<AppChatResponse> getPhoneChats(@RequestHeader(name = "authorization") String token){
         return appChatService.phoneChats(token);
@@ -44,13 +47,13 @@ public class AppChatController implements SecuredRestController {
     public boolean writeMessages(@RequestParam Long chatId,
                                 @RequestParam Long sender,
                                 @RequestParam Long receiver,
-                                @RequestParam ReceiverFrom receiverFrom,
+                                @RequestParam Platform platform,
                                 @RequestParam(required = false) String messages,
                                 @RequestParam MsgType msgType,
                                 @RequestParam(required = false) MultipartFile file,
                                 @RequestHeader(name = "authorization") String token){
         return appChatService.writeMessages(new MessagesRequest(chatId, sender, receiver,
-                        receiverFrom, messages, msgType), file, token);
+                platform, messages, msgType), file, token);
     }
 
     // اظهار الرسائل في المحادثات

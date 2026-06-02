@@ -1,22 +1,26 @@
-package com.sc.demo.model.notification;
+package com.sc.demo.model.chat;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sc_notification_token")
+@Table(name = "sc_chat_token")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotificationToken {
+public class ChatToken {
 
     @Id
-    private Long userId;
+    private Long chatId;
 
     private String token;
 
@@ -32,8 +36,8 @@ public class NotificationToken {
 
     private Long lastCreateBy;
 
-    public NotificationToken(Long userId,  String token, Long tokenType) {
-        this.userId = userId;
+    public ChatToken(Long chatId, String token, Long tokenType) {
+        this.chatId = chatId;
         this.token = token;
         this.tokenType = tokenType;
         this.isActive = true;

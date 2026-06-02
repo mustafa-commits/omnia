@@ -26,7 +26,7 @@ public class AppChatDetails {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "RECEIVER_FROM")
-    private ReceiverFrom receiverFrom = ReceiverFrom.APP;
+    private Platform platform = Platform.APP;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "MSG_ACTIVITY")
@@ -53,26 +53,26 @@ public class AppChatDetails {
     @JoinColumn(name = "chat_id")
     private AppChatMaster chatApp;
 
-    public AppChatDetails(Long sender, Long receiver, ReceiverFrom receiverFrom, String messages, AppChatMaster appChatMaster) {
+    public AppChatDetails(Long sender, Long receiver, Platform platform, String messages, AppChatMaster appChatMaster) {
         this.sender = sender;
         this.receiver = receiver;
-        this.receiverFrom = receiverFrom;
+        this.platform = platform;
         this.messages = messages;
         this.chatApp = appChatMaster;
     }
 
-    public AppChatDetails(AppChatMaster chatApp, Long sender, Long receiver, ReceiverFrom receiverFrom, String messages, MsgType msgType) {
+    public AppChatDetails(AppChatMaster chatApp, Long sender, Long receiver, Platform platform, String messages, MsgType msgType) {
         this.chatApp = chatApp;
         this.sender = sender;
         this.receiver = receiver;
-        this.receiverFrom = receiverFrom;
+        this.platform = platform;
         this.messages = messages;
         this.msgType = msgType;
     }
 
     public AppChatDetails(Long sender, String messages) {
         this.sender = sender;
-        this.receiverFrom = ReceiverFrom.DASHBOARD;
+        this.platform = Platform.DASHBOARD;
         this.messages = messages;
     }
 

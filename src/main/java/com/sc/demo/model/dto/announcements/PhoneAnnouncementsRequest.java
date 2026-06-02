@@ -3,7 +3,7 @@ package com.sc.demo.model.dto.announcements;
 import java.time.LocalDateTime;
 
 public record PhoneAnnouncementsRequest(
-        Long user_id,
+        Long userId,
         String title,
         String description,
         LocalDateTime createDate,

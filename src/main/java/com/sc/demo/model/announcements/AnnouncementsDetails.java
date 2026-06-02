@@ -16,20 +16,16 @@ public class AnnouncementsDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long announcements_details_id;
+    private Long announcementsDetailsId;
 
-    private Long user_id;
+    private Long userId;
 
     @ManyToOne
     @JoinColumn(name = "announcements_id")
     private Announcements announcements;
 
-    public AnnouncementsDetails(Long user_id) {
-        this.user_id = user_id;
-    }
-
-    public AnnouncementsDetails(Long user_id, Announcements announcements) {
-        this.user_id = user_id;
+    public AnnouncementsDetails(Long userId, Announcements announcements) {
+        this.userId = userId;
         this.announcements = announcements;
     }
 }

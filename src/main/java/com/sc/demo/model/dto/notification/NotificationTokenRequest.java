@@ -1,7 +1,7 @@
 package com.sc.demo.model.dto.notification;
 
 public record NotificationTokenRequest(
-        String Token,
+        String token,
         Long userId
 ) {
 }

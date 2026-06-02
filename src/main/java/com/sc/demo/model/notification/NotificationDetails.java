@@ -16,9 +16,9 @@ public class NotificationDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long notification_details_id;
+    private Long notificationDetailsId;
 
-    private Long user_id;
+    private Long userId;
 
     @ManyToOne
     @JoinColumn(name = "notification_id")
@@ -29,8 +29,8 @@ public class NotificationDetails {
 //        this.user_id = user_id;
 //    }
 
-    public NotificationDetails(Long user_id, NotificationMaster notificationMaster) {
-        this.user_id = user_id;
+    public NotificationDetails(Long userId, NotificationMaster notificationMaster) {
+        this.userId = userId;
         this.notification = notificationMaster;
     }
 }

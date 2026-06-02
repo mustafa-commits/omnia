@@ -1,10 +1,8 @@
 package com.sc.demo.service.chat;
 
-import com.sc.demo.model.chat.AppChatDetails;
-import com.sc.demo.model.chat.AppChatMaster;
-import com.sc.demo.model.chat.MsgType;
-import com.sc.demo.model.chat.ReceiverFrom;
+import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
+import com.sc.demo.repository.chat.ChatTokenRepo;
 import com.sc.demo.repository.chat.MessagesRepo;
 import com.sc.demo.repository.chat.ChatRepo;
 import com.sc.demo.service.token.TokenService;
@@ -35,6 +33,9 @@ public class AppChatService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private ChatTokenRepo chatTokenRepo;
+
 
     public boolean createChat(AppChatRequest appChatRequest){
         AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(), appChatRequest.chatTitle());
@@ -43,12 +44,12 @@ public class AppChatService {
 
         AppChatDetails appChatDetails = appChatRequest.appChatDetails();
         messagesRepo.save(new AppChatDetails(appChatDetails.getSender(), appChatDetails.getReceiver(),
-                        appChatDetails.getReceiverFrom(), appChatDetails.getMessages(), appChatMaster));
+                        appChatDetails.getPlatform(), appChatDetails.getMessages(), appChatMaster));
 
         AppChatDetails welcomeMessage = new AppChatDetails();
         welcomeMessage.setChatApp(appChatMaster);
         welcomeMessage.setSender(0L);
-        welcomeMessage.setReceiverFrom(ReceiverFrom.DASHBOARD);
+        welcomeMessage.setPlatform(Platform.DASHBOARD);
         welcomeMessage.setMessages("""
                 السلام عليكم ورحمة الله وبركاته
                 نود أن نلفت عنايتكم ألى ان كادر الدعم الفني متواجدين للإجابة على استفساراتكم من الساعة ( 8:00 )
@@ -62,14 +63,31 @@ public class AppChatService {
         return true;
     }
 
+    // حفظ Token القادم من firebase في قاعدة البيانات
+//    public long saveToken(ChatTokenRequest chatTokenRequest) {
+//        Optional<ChatToken> byToken = chatRepo.findById(chatTokenRequest.chatId());
+//
+//        if (byToken.isPresent()){
+//            ChatToken chatToken = byToken.get();
+//            chatToken.setLastUpdate(LocalDateTime.now());
+//            chatToken.setToken(chatTokenRequest.token());
+//            return chatTokenRepo.save(chatToken).getChatId();
+//        } else {
+//            ChatToken chatToken = byToken.get();
+//            chatToken.setToken(chatTokenRequest.token());
+//            chatToken.setChatId(chatTokenRequest.chatId());
+//            return chatTokenRepo.save(chatToken).getChatId();
+//        }
+//    }
 
-
+    // جلي المحادثات المفعلة
     public List<AppChatResponse> phoneChats(String token){
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         System.out.println(userId);
 
         return jdbcClient.sql("""
-                SELECT M.CHAT_TITLE AS chatTitle,
+                SELECT M.CHAT_ID AS chatId,
+                       M.CHAT_TITLE AS chatTitle,
                        D.MESSAGES AS messages,
                        M.CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_MASTER M
@@ -88,7 +106,8 @@ public class AppChatService {
         System.out.println(userId);
 
         return jdbcClient.sql("""
-                SELECT M.CHAT_TITLE AS chatTitle,
+                SELECT M.CHAT_ID AS chatId,
+                       M.CHAT_TITLE AS chatTitle,
                        D.MESSAGES AS messages,
                        M.CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_MASTER M
@@ -120,7 +139,7 @@ public class AppChatService {
 
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 Long.parseLong(userId), messagesRequest.receiver(),
-                messagesRequest.receiverFrom(), messagesRequest.messages().isEmpty() ? newFilename : messagesRequest.messages(),
+                messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFilename : messagesRequest.messages(),
                 messagesRequest.msgType() == null ? MsgType.MESSAGE : messagesRequest.msgType());
         System.out.println(messagesRepo.save(appChatDetails).getDetailsChatId());
         System.out.println(messagesRepo.save(appChatDetails).getMessages());
