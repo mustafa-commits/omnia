@@ -13,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppChatService {
@@ -64,21 +66,21 @@ public class AppChatService {
     }
 
     // حفظ Token القادم من firebase في قاعدة البيانات
-//    public long saveToken(ChatTokenRequest chatTokenRequest) {
-//        Optional<ChatToken> byToken = chatRepo.findById(chatTokenRequest.chatId());
-//
-//        if (byToken.isPresent()){
-//            ChatToken chatToken = byToken.get();
-//            chatToken.setLastUpdate(LocalDateTime.now());
-//            chatToken.setToken(chatTokenRequest.token());
-//            return chatTokenRepo.save(chatToken).getChatId();
-//        } else {
-//            ChatToken chatToken = byToken.get();
-//            chatToken.setToken(chatTokenRequest.token());
-//            chatToken.setChatId(chatTokenRequest.chatId());
-//            return chatTokenRepo.save(chatToken).getChatId();
-//        }
-//    }
+    public long saveToken(ChatTokenRequest chatTokenRequest) {
+        Optional<ChatToken> byToken = chatTokenRepo.findById(chatTokenRequest.chatId());
+
+        if (byToken.isPresent()){
+            ChatToken chatToken = byToken.get();
+            chatToken.setLastUpdate(LocalDateTime.now());
+            chatToken.setToken(chatTokenRequest.token());
+            return chatTokenRepo.save(chatToken).getChatId();
+        } else {
+            ChatToken chatToken = byToken.get();
+            chatToken.setToken(chatTokenRequest.token());
+            chatToken.setChatId(chatTokenRequest.chatId());
+            return chatTokenRepo.save(chatToken).getChatId();
+        }
+    }
 
     // جلي المحادثات المفعلة
     public List<AppChatResponse> phoneChats(String token){
