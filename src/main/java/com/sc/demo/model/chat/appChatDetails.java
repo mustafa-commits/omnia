@@ -20,21 +20,23 @@ public class appChatDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long detailsChatId;
 
-    private Long sender;
-
-    private Long receiver;
+    private Long userIdSender;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "RECEIVER_FROM")
-    private platform platform = com.sc.demo.model.chat.platform.APP;
+    @Column(name = "WHOAMI")
+    private WhoAmI whoAmI;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "PLATFORM")
+    private Platform platform = Platform.APP;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "MSG_ACTIVITY")
-    private msgActivity msgActivity = com.sc.demo.model.chat.msgActivity.ACTIVE;
+    private MsgActivity msgActivity = MsgActivity.ACTIVE;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "MSG_TYPE")
-    private msgType msgType = com.sc.demo.model.chat.msgType.MESSAGE;
+    private MsgType msgType = MsgType.MESSAGE;
 
     @Column(length = 500)
     private String messages;
@@ -53,26 +55,26 @@ public class appChatDetails {
     @JoinColumn(name = "chat_id")
     private appChatMaster chatApp;
 
-    public appChatDetails(Long sender, Long receiver, platform platform, String messages, appChatMaster appChatMaster) {
-        this.sender = sender;
-        this.receiver = receiver;
+    public appChatDetails(Long userIdSender, WhoAmI whoAmI, Platform platform, String messages, appChatMaster appChatMaster) {
+        this.userIdSender = userIdSender;
+        this.whoAmI = whoAmI;
         this.platform = platform;
         this.messages = messages;
         this.chatApp = appChatMaster;
     }
 
-    public appChatDetails(appChatMaster chatApp, Long sender, Long receiver, platform platform, String messages, msgType msgType) {
+    public appChatDetails(appChatMaster chatApp, Long userIdSender, WhoAmI whoAmI, Platform platform, String messages, MsgType msgType) {
         this.chatApp = chatApp;
-        this.sender = sender;
-        this.receiver = receiver;
+        this.userIdSender = userIdSender;
+        this.whoAmI = whoAmI;
         this.platform = platform;
         this.messages = messages;
         this.msgType = msgType;
     }
 
-    public appChatDetails(Long sender, String messages) {
-        this.sender = sender;
-        this.platform = com.sc.demo.model.chat.platform.DASHBOARD;
+    public appChatDetails(Long userIdSender, String messages) {
+        this.userIdSender = userIdSender;
+        this.platform = Platform.DASHBOARD;
         this.messages = messages;
     }
 

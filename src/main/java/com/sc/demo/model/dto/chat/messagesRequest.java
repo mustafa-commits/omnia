@@ -1,15 +1,16 @@
 package com.sc.demo.model.dto.chat;
 
-import com.sc.demo.model.chat.msgType;
-import com.sc.demo.model.chat.platform;
+import com.sc.demo.model.chat.MsgType;
+import com.sc.demo.model.chat.Platform;
+import com.sc.demo.model.chat.WhoAmI;
 
 public record messagesRequest(
         Long chatId,
         Long sender,
-        Long receiver,
-        platform platform,
+        WhoAmI whoAmI,
+        Platform platform,
         String messages,
-        msgType msgType
+        MsgType msgType
 
 ) {
 }

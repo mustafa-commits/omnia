@@ -44,13 +44,13 @@ public class AppChatService {
         appChatMaster = chatRepo.save(appChatMaster);
 
         appChatDetails appChatDetails = appChatRequest.appChatDetails();
-        messagesRepo.save(new appChatDetails(appChatDetails.getSender(), appChatDetails.getReceiver(),
+        messagesRepo.save(new appChatDetails(appChatDetails.getUserIdSender(), appChatDetails.getWhoAmI(),
                         appChatDetails.getPlatform(), appChatDetails.getMessages(), appChatMaster));
 
         appChatDetails welcomeMessage = new appChatDetails();
         welcomeMessage.setChatApp(appChatMaster);
-        welcomeMessage.setSender(0L);
-        welcomeMessage.setPlatform(platform.DASHBOARD);
+        welcomeMessage.setUserIdSender(0L);
+        welcomeMessage.setPlatform(Platform.DASHBOARD);
         welcomeMessage.setMessages("""
                 السلام عليكم ورحمة الله وبركاته
                 نود أن نلفت عنايتكم ألى ان كادر الدعم الفني متواجدين للإجابة على استفساراتكم من الساعة ( 8:00 )
@@ -127,7 +127,7 @@ public class AppChatService {
         String newFilename = null;
 
 
-        if(messagesRequest.msgType() == msgType.IMAGE) {
+        if(messagesRequest.msgType() == MsgType.IMAGE) {
             try {
                 String originalFilename = file.getOriginalFilename();
                  newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -139,9 +139,9 @@ public class AppChatService {
         }
 
         appChatDetails appChatDetails = new appChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
-                Long.parseLong(userId), messagesRequest.receiver(),
+                Long.parseLong(userId), messagesRequest.whoAmI(),
                 messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFilename : messagesRequest.messages(),
-                messagesRequest.msgType() == null ? msgType.MESSAGE : messagesRequest.msgType());
+                messagesRequest.msgType() == null ? MsgType.MESSAGE : messagesRequest.msgType());
         System.out.println(messagesRepo.save(appChatDetails).getDetailsChatId());
         System.out.println(messagesRepo.save(appChatDetails).getMessages());
         return true;
@@ -151,7 +151,7 @@ public class AppChatService {
     public List<messagesResponse> getMessages(long chat_id){
         return jdbcClient.sql("""
                 SELECT MESSAGES,
-                       RECEIVER,
+                       WHOAMI,
                        SENDER,
                        CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_DETAILS

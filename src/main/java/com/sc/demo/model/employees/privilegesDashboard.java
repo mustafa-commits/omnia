@@ -20,7 +20,7 @@ public class privilegesDashboard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long privilegeId;
 
-    private Long userId;
+    private Long dashboardUserId;
 
     private String userPrivilege;
 

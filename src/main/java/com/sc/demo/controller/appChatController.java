@@ -1,8 +1,9 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.chat.msgType;
-import com.sc.demo.model.chat.platform;
+import com.sc.demo.model.chat.MsgType;
+import com.sc.demo.model.chat.Platform;
+import com.sc.demo.model.chat.WhoAmI;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.service.chat.AppChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +46,14 @@ public class appChatController implements SecuredRestController {
     // ارسال رسالة
     @PostMapping("/V1/api/sc/writeMessages")
     public boolean writeMessages(@RequestParam Long chatId,
-                                @RequestParam Long sender,
-                                @RequestParam Long receiver,
-                                @RequestParam platform platform,
-                                @RequestParam(required = false) String messages,
-                                @RequestParam msgType msgType,
-                                @RequestParam(required = false) MultipartFile file,
-                                @RequestHeader(name = "authorization") String token){
-        return appChatService.writeMessages(new messagesRequest(chatId, sender, receiver,
+                                 @RequestParam Long userIdSender,
+                                 @RequestParam WhoAmI whoAmI,
+                                 @RequestParam Platform platform,
+                                 @RequestParam(required = false) String messages,
+                                 @RequestParam MsgType msgType,
+                                 @RequestParam(required = false) MultipartFile file,
+                                 @RequestHeader(name = "authorization") String token){
+        return appChatService.writeMessages(new messagesRequest(chatId, userIdSender, whoAmI,
                 platform, messages, msgType), file, token);
     }
 

@@ -1,6 +1,6 @@
 package com.sc.demo.model.chat;
 
-public enum platform {
+public enum Platform {
     APP,
     DASHBOARD
 }

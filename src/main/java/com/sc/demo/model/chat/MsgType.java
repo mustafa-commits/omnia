@@ -1,6 +1,6 @@
 package com.sc.demo.model.chat;
 
-public enum msgType {
+public enum MsgType {
     MESSAGE,
     IMAGE,
     VOICE

@@ -17,7 +17,7 @@ public class accessToDashboard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long dashboardUserId;
 
     private Long userName;
 

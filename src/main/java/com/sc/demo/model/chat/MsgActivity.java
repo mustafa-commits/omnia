@@ -1,6 +1,6 @@
 package com.sc.demo.model.chat;
 
-public enum msgActivity {
+public enum MsgActivity {
     ACTIVE,
     ARCHIVED
 }

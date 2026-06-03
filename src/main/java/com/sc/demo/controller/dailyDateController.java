@@ -6,11 +6,13 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @Slf4j
 public class dailyDateController {
 
@@ -26,6 +28,7 @@ public class dailyDateController {
         fetchDataFromSource();
     }
 
+    // اظهار تاريخ اليوم بالهجري
     @GetMapping("/V1/sc/api/arabicDate")
     public List<String> getHtml2() throws InterruptedException {
         if (data == null) {
@@ -62,7 +65,6 @@ public class dailyDateController {
                 }
             }
         }
-
         return null;
     }
 

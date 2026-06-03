@@ -24,8 +24,8 @@ public class TokenService {
                 .issuedAt(now)
                 .expiresAt(now.plus(2, ChronoUnit.DAYS))
                 .subject(Id)
-                .claim("requestId", "10272")
-                .claim("headFamilyId", "71120")
+                .claim("requestId", "12")
+                .claim("headFamilyId", "28")
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

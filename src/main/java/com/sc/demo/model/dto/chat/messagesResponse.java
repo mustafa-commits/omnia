@@ -1,10 +1,12 @@
 package com.sc.demo.model.dto.chat;
 
+import com.sc.demo.model.chat.WhoAmI;
+
 import java.time.LocalDateTime;
 
 public record messagesResponse(
         String MESSAGES,
-        Long RECEIVER,
+        WhoAmI whoAmI,
         Long SENDER,
         LocalDateTime createDate
 ) {
