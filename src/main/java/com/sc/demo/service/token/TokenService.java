@@ -17,15 +17,15 @@ public class TokenService {
     @Autowired
     private JwtDecoder jwtDecoder;
 
-    public String generateToken(String Id) {
+    public String generateToken(String Id, Long requestId, Long headFamilyId) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(2, ChronoUnit.DAYS))
                 .subject(Id)
-                .claim("requestId", "12")
-                .claim("headFamilyId", "28")
+                .claim("requestId", requestId)
+                .claim("headFamilyId", headFamilyId)
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

@@ -1,6 +1,6 @@
 package com.sc.demo.model.dto.chat;
 
-public record chatTokenRequest(
+public record ChatTokenRequest(
         String token,
         Long chatId
 ) {

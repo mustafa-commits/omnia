@@ -1,6 +1,6 @@
 package com.sc.demo.model.dto.familyInfo;
 
-public record familyInfoBasicResponse(
+public record FamilyInfoBasicResponse(
        String FamilyNo,
        Long FamilyPersonsId,
        String PersonsFullName,

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class verificationApp {
+public class VerificationApp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +25,11 @@ public class verificationApp {
 
     private LocalDateTime createDate;
 
-    private sendingType sendingType;
+    private SendingType sendingType;
 
     private Integer isUsed = 0;
 
-    public verificationApp(String userIdentifier, Long secretCode, sendingType sendingType) {
+    public VerificationApp(String userIdentifier, Long secretCode, SendingType sendingType) {
         this.userIdentifier = userIdentifier;
         this.secretCode = secretCode;
         this.sendingType = sendingType;

@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.dto.login.logInResponse;
 import com.sc.demo.service.login.LoginService;
 import com.sc.demo.service.token.TokenService;
@@ -33,8 +34,9 @@ public class loginController {
 
     // جلب ال OTP بعد خزنه بالجدول
     @PostMapping("/V1/api/sc/ChekLogin")
-    public ResponseEntity<?> ChekLogin(@RequestParam Long phone_Number,
-                                       @RequestParam Long secretCode){
-        return loginService.ChekLoginApp(phone_Number, secretCode);
+    public ResponseEntity<?> ChekLogin(/*@RequestParam Long phone_Number,
+                                       @RequestParam Long secretCode,*/
+                                       @RequestBody AppUserRequest appUserRequest){
+        return loginService.ChekLoginApp(appUserRequest);
     }
 }

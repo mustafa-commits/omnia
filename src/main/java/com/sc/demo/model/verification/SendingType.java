@@ -1,6 +1,6 @@
 package com.sc.demo.model.verification;
 
-public enum sendingType {
+public enum SendingType {
     SMS,
     WHATSAPP
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class appChatMaster {
+public class AppChatMaster {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,9 +28,9 @@ public class appChatMaster {
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "chatApp", cascade = CascadeType.ALL)
-    private List<appChatDetails> appChatDetails = new ArrayList<>();
+    private List<AppChatDetails> appChatDetails = new ArrayList<>();
 
-    public appChatMaster(Long userId, String chatTitle) {
+    public AppChatMaster(Long userId, String chatTitle) {
         this.userId = userId;
         this.chatTitle = chatTitle;
     }

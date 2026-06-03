@@ -4,7 +4,7 @@ import com.sc.demo.model.chat.MsgType;
 import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.chat.WhoAmI;
 
-public record messagesRequest(
+public record MessagesRequest(
         Long chatId,
         Long sender,
         WhoAmI whoAmI,

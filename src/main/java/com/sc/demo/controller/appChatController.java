@@ -21,25 +21,25 @@ public class appChatController implements SecuredRestController {
 
     // انشاء محادثة
     @PostMapping("/V1/api/sc/createChat")
-    public boolean createChat(@RequestBody appChatRequest appChatRequest){
+    public boolean createChat(@RequestBody AppChatRequest appChatRequest){
         return appChatService.createChat(appChatRequest);
     }
 
     // تخزين Token
     @PostMapping("/V1/api/sc/setChatToken")
-    public long setChatToken(@RequestBody chatTokenRequest chatTokenRequest){
+    public long setChatToken(@RequestBody ChatTokenRequest chatTokenRequest){
         return appChatService.saveToken(chatTokenRequest);
     }
 
     // اظهار المحادثات الفعالة
     @GetMapping("/V1/api/sc/getPhoneChats")
-    public List<appChatResponse> getPhoneChats(@RequestHeader(name = "authorization") String token){
+    public List<AppChatResponse> getPhoneChats(@RequestHeader(name = "authorization") String token){
         return appChatService.phoneChats(token);
     }
 
     // اظهار المحادثات المأرشفة
     @GetMapping("/V1/api/sc/getPhoneChatsArchived")
-    public List<appChatResponse> getPhoneChatsArchived(@RequestHeader(name = "authorization") String token){
+    public List<AppChatResponse> getPhoneChatsArchived(@RequestHeader(name = "authorization") String token){
         return appChatService.PhoneChatsArchived(token);
     }
 
@@ -53,13 +53,13 @@ public class appChatController implements SecuredRestController {
                                  @RequestParam MsgType msgType,
                                  @RequestParam(required = false) MultipartFile file,
                                  @RequestHeader(name = "authorization") String token){
-        return appChatService.writeMessages(new messagesRequest(chatId, userIdSender, whoAmI,
+        return appChatService.writeMessages(new MessagesRequest(chatId, userIdSender, whoAmI,
                 platform, messages, msgType), file, token);
     }
 
     // اظهار الرسائل في المحادثات
     @GetMapping("/V1/api/sc/getMessagesChat")
-    public List<messagesResponse> getMessages(@RequestParam long chat_id){
+    public List<MessagesResponse> getMessages(@RequestParam long chat_id){
         return appChatService.getMessages(chat_id);
     }
 }

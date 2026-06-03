@@ -1,6 +1,6 @@
 package com.sc.demo.model.dto.familyInfo;
 
-public record familyInfoHousingResponse(
+public record FamilyInfoHousingResponse(
         String GovernorateName,
         String JudgeName,
         String CityName,

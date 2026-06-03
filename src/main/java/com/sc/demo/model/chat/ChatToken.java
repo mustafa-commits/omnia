@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class chatToken {
+public class ChatToken {
 
     @Id
     private Long chatId;
@@ -36,7 +36,7 @@ public class chatToken {
 
     private Long lastCreateBy;
 
-    public chatToken(Long chatId, String token, Long tokenType) {
+    public ChatToken(Long chatId, String token, Long tokenType) {
         this.chatId = chatId;
         this.token = token;
         this.tokenType = tokenType;

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class appChatDetails {
+public class AppChatDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,9 +53,9 @@ public class appChatDetails {
 
     @ManyToOne
     @JoinColumn(name = "chat_id")
-    private appChatMaster chatApp;
+    private AppChatMaster chatApp;
 
-    public appChatDetails(Long userIdSender, WhoAmI whoAmI, Platform platform, String messages, appChatMaster appChatMaster) {
+    public AppChatDetails(Long userIdSender, WhoAmI whoAmI, Platform platform, String messages, AppChatMaster appChatMaster) {
         this.userIdSender = userIdSender;
         this.whoAmI = whoAmI;
         this.platform = platform;
@@ -63,7 +63,7 @@ public class appChatDetails {
         this.chatApp = appChatMaster;
     }
 
-    public appChatDetails(appChatMaster chatApp, Long userIdSender, WhoAmI whoAmI, Platform platform, String messages, MsgType msgType) {
+    public AppChatDetails(AppChatMaster chatApp, Long userIdSender, WhoAmI whoAmI, Platform platform, String messages, MsgType msgType) {
         this.chatApp = chatApp;
         this.userIdSender = userIdSender;
         this.whoAmI = whoAmI;
@@ -72,7 +72,7 @@ public class appChatDetails {
         this.msgType = msgType;
     }
 
-    public appChatDetails(Long userIdSender, String messages) {
+    public AppChatDetails(Long userIdSender, String messages) {
         this.userIdSender = userIdSender;
         this.platform = Platform.DASHBOARD;
         this.messages = messages;

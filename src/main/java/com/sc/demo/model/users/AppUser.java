@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class appUser {
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,7 @@ public class appUser {
 
     private String Phone;
 
-    public appUser(String phone, Long requestId, Long headFamilyId) {
+    public AppUser(String phone, Long requestId, Long headFamilyId) {
         Phone = phone;
         this.requestId = requestId;
         this.headFamilyId = headFamilyId;

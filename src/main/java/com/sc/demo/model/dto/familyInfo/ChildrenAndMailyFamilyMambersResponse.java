@@ -1,6 +1,6 @@
 package com.sc.demo.model.dto.familyInfo;
 
-public record childrenAndMailyFamilyMambersResponse(
+public record ChildrenAndMailyFamilyMambersResponse(
         Long MailyMambers,
         Long FamilyChildren
 ) {

@@ -1,9 +1,12 @@
 package com.sc.demo.service.login;
 
-import com.sc.demo.model.verification.sendingType;
+import com.sc.demo.model.dto.familyInfo.AppUserRequest;
+import com.sc.demo.model.users.AppUser;
+import com.sc.demo.model.verification.SendingType;
 import com.sc.demo.model.dto.login.chekLoginRequest;
 import com.sc.demo.model.dto.login.logInResponse;
-import com.sc.demo.model.verification.verificationApp;
+import com.sc.demo.model.verification.VerificationApp;
+import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.repository.login.VerificationLoginRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ public class LoginService implements CommandLineRunner {
 
     @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    private AppUserRepo appUserRepo;
 
     String regex = "^(77|78|79)\\d{8}$";
 
@@ -73,7 +79,7 @@ public class LoginService implements CommandLineRunner {
                 .optional();
 
         if (logInRes.isPresent()) {
-            Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), sendingType.WHATSAPP);
+            Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), SendingType.WHATSAPP);
             whatsAppService.sendVerificationCode(code);
             return logInRes.get();
         }else
@@ -81,35 +87,38 @@ public class LoginService implements CommandLineRunner {
     }
 
     // جلب ال OTP بعد خزنه بالجدول
-    public Long GeneratingVerificationLogin(String userIdentifier, sendingType sendingType) {
+    public Long GeneratingVerificationLogin(String userIdentifier, SendingType sendingType) {
         Long code;
         code = ThreadLocalRandom.current().nextLong(100000, 1_000_000);
-        verificationLoginRepo.save(new verificationApp(userIdentifier, code, sendingType));
+        verificationLoginRepo.save(new VerificationApp(userIdentifier, code, sendingType));
         return code;
     }
 
     // التحقق من تاريخ الميلاد وارسال رقم الحاتف
-    public ResponseEntity<?> ChekLoginApp(Long phone_Number, Long secretCode){
+    public ResponseEntity<?> ChekLoginApp(AppUserRequest appUserRequest){
         Optional <chekLoginRequest> logInChek = jdbcClient.sql("""
-                        SELECT USER_IDENTIFIER AS userIdentifier
-                        FROM MOBAPP.SC_VERIFICATION_APP V
-                        WHERE V.USER_IDENTIFIER = :phone_Number
-                        AND V.SECRET_CODE = :secretCode
-                        and Sysdate <= CREATE_DATE + interval '10' minute
+                    SELECT USER_IDENTIFIER AS userIdentifier
+                    FROM MOBAPP.SC_VERIFICATION_APP V
+                    WHERE V.USER_IDENTIFIER = :phone_Number
+                    AND V.SECRET_CODE = :secretCode
+                    and Sysdate <= CREATE_DATE + interval '10' minute
                 """)
-                .param("phone_Number",phone_Number)
-                .param("secretCode", secretCode)
+                .param("phone_Number",appUserRequest.phone())
+                .param("secretCode", appUserRequest.secretCode())
                 .query(chekLoginRequest.class).optional();
 
         if (logInChek.isPresent()) {
-            return ResponseEntity.ok(tokenService.generateToken("1"));
+                Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), appUserRequest.requestId(), appUserRequest.headFamilyId())).getUserid();
+            return ResponseEntity.ok(tokenService.generateToken(String.valueOf(userId),appUserRequest.requestId(), appUserRequest.headFamilyId()));
 
         }else
             return ResponseEntity.badRequest().body("WRONG CRED");
     }
 
+
+
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(tokenService.generateToken("1"));
+        System.out.println(tokenService.generateToken("1", 12L, 28L));
     }
 }

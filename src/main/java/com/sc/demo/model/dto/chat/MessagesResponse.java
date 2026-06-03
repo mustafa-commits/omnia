@@ -4,7 +4,7 @@ import com.sc.demo.model.chat.WhoAmI;
 
 import java.time.LocalDateTime;
 
-public record messagesResponse(
+public record MessagesResponse(
         String MESSAGES,
         WhoAmI whoAmI,
         Long SENDER,
