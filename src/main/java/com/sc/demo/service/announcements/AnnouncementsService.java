@@ -55,7 +55,7 @@ public class AnnouncementsService {
         try {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
-            String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
+            String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
             announcementsAttachmentRepo.save(new announcementsAttachment(newFilename, announcements));
             file.transferTo(new File(filePath));
         } catch (IOException e) {

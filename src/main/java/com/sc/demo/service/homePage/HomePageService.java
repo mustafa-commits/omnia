@@ -30,12 +30,11 @@ public class HomePageService {
     @Autowired
     private JdbcClient jdbcClient;
 
-    public String addHomePagePhoto(linkType linkType, String link, MultipartFile file, String token){
+    public String addHomePagePhoto(linkType linkType, String link, MultipartFile file){
 
-        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
                 String originalFilename = file.getOriginalFilename();
                 String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
-                String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
+                String filePath = environment.getProperty("ATTACHMENT_PATH_HOMEPAGE") + newFilename;
                 photoRepo.save(new homePagePhoto(newFilename, linkType, link));
 
         try {
@@ -47,9 +46,7 @@ public class HomePageService {
         return "تم,  اضافة الصورة مع الرابط";
     }
 
-    public List<homePageResponse> viewHomePagePhotos(String token) {
-        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
-
+    public List<homePageResponse> viewHomePagePhotos() {
         return jdbcClient.sql("""
                    SELECT FILE_NAME AS fileName,
                           LINK_TYPE AS linkType,
@@ -58,7 +55,6 @@ public class HomePageService {
                    ORDER BY CREATE_DATE DESC
                    FETCH FIRST 3 ROWS ONLY
                 """)
-                .param("user_id",userId)
                 .query(homePageResponse.class)
                 .list();
 

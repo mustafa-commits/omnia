@@ -131,7 +131,7 @@ public class AppChatService {
             try {
                 String originalFilename = file.getOriginalFilename();
                  newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
-                String filePath = environment.getProperty("ATTACHMENT_PATH") + newFilename;
+                String filePath = environment.getProperty("ATTACHMENT_PATH_CHAT") + newFilename;
                 file.transferTo(new File(filePath));
             } catch (IOException e) {
                 throw new RuntimeException(e);

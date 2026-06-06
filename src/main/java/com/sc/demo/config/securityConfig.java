@@ -64,6 +64,8 @@ public class securityConfig {
                         .requestMatchers("/V1/api/sc/SearchByName/**","/SearchByName","/SearchByName/**").permitAll()
                         .requestMatchers("/V2/api/sc/SearchByNameV2/**","/SearchByNameV2","/SearchByNameV2/**").permitAll()
                         .requestMatchers("/V1/sc/api/checkNumber/**","/checkNumber","/checkNumber/**").permitAll()
+                        .requestMatchers("/V1/api/sc/addHomePagePhoto/**","/addHomePagePhoto","/addHomePagePhoto/**").permitAll()
+                        .requestMatchers("/V1/sc/api/viewHomePagePhotos/**","/viewHomePagePhotos","/viewHomePagePhotos/**").permitAll()
                         .requestMatchers("/V1/sc/api/arabicDate/**","/arabicDate").permitAll()
                         .requestMatchers("/V1/api/sc/getAllNotificationFamily/**").permitAll()
                         .anyRequest().authenticated()

@@ -19,14 +19,13 @@ public class homePageController {
     @PostMapping("/V1/api/sc/addHomePagePhoto")
     public String addHomePagePhoto(@RequestParam String link,
                                    @RequestParam linkType linkType,
-                                   @RequestParam MultipartFile file,
-                                   @RequestHeader(name = "authorization") String token){
-        return homePageService.addHomePagePhoto(linkType, link, file, token);
+                                   @RequestParam MultipartFile file){
+        return homePageService.addHomePagePhoto(linkType, link, file);
     }
 
     // عرض الصور في واجهة التطبيق
     @GetMapping("/V1/sc/api/viewHomePagePhotos")
-    public List<homePageResponse> viewHomePagePhotos(@RequestHeader (name = "authorization") String token){
-        return homePageService.viewHomePagePhotos(token);
+    public List<homePageResponse> viewHomePagePhotos(){
+        return homePageService.viewHomePagePhotos();
     }
 }
