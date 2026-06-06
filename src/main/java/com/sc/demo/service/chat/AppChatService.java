@@ -43,8 +43,10 @@ public class AppChatService {
 
         appChatMaster = chatRepo.save(appChatMaster);
 
+        Long userIdSender = appChatRequest.userId();
+
         AppChatDetails appChatDetails = appChatRequest.appChatDetails();
-        messagesRepo.save(new AppChatDetails(appChatDetails.getUserIdSender(), appChatDetails.getWhoAmI(),
+        messagesRepo.save(new AppChatDetails(userIdSender, appChatDetails.getWhoAmI(),
                         appChatDetails.getPlatform(), appChatDetails.getMessages(), appChatMaster));
 
         AppChatDetails welcomeMessage = new AppChatDetails();
