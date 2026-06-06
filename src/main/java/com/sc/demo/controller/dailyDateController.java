@@ -8,25 +8,19 @@ import org.jsoup.nodes.Element;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
+@RestController
 @Slf4j
 public class dailyDateController {
 
     List<String> data = null;
 
     String url = "https://www.sistani.org/";
-
-    // سيتم استدعاء هذه الدالة كل يوم عند الساعة 00:00 لتحديث التاريخ
-    @Scheduled(cron = "0 0/5 0-1 * * ?")
-    public void refreshDataDaily() throws InterruptedException {
-        log.info("re sync");
-        data = null;
-        fetchDataFromSource();
-    }
 
     // اظهار تاريخ اليوم بالهجري
     @GetMapping("/V1/sc/api/arabicDate")
@@ -35,6 +29,14 @@ public class dailyDateController {
             return fetchDataFromSource();
         } else
             return data;
+    }
+
+    // سيتم استدعاء هذه الدالة كل يوم عند الساعة 00:00 لتحديث التاريخ
+    @Scheduled(cron = "0 0/5 0-1 * * ?")
+    public void refreshDataDaily() throws InterruptedException {
+        log.info("re sync");
+        data = null;
+        fetchDataFromSource();
     }
 
     private List<String> fetchDataFromSource() throws InterruptedException {

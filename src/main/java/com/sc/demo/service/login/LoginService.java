@@ -108,9 +108,9 @@ public class LoginService implements CommandLineRunner {
                 .query(chekLoginRequest.class).optional();
 
         if (logInChek.isPresent()) {
-                Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), appUserRequest.requestId(), appUserRequest.headFamilyId())).getUserid();
+            Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), appUserRequest.requestId(), appUserRequest.headFamilyId())).getUserid();
+            System.out.println(userId);
             return ResponseEntity.ok(tokenService.generateToken(String.valueOf(userId),appUserRequest.requestId(), appUserRequest.headFamilyId()));
-
         }else
             return ResponseEntity.badRequest().body("WRONG CRED");
     }
