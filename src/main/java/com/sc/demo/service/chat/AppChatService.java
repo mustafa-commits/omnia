@@ -122,29 +122,41 @@ public class AppChatService {
                 .list();
     }
 
-    public boolean writeMessages(MessagesRequest messagesRequest, MultipartFile file, String token) {
+    public boolean writeMessages(MessagesRequest messagesRequest, MultipartFile file, MultipartFile voice, String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
-        String newFilename = null;
+        String newFileName = null;
+        String newVoiceName = null;
 
 
         if(messagesRequest.msgType() == MsgType.IMAGE) {
             try {
-                String originalFilename = file.getOriginalFilename();
-                 newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
-                String filePath = environment.getProperty("ATTACHMENT_PATH_CHAT") + newFilename;
+                String originalFileName = file.getOriginalFilename();
+                newFileName = System.nanoTime() + originalFileName.substring(originalFileName.lastIndexOf("."));
+                String filePath = environment.getProperty("ATTACHMENT_PATH_CHAT") + newFileName;
                 file.transferTo(new File(filePath));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
 
-//        WhoAmI whoAmI = Platform.APP.equals(messagesRequest.platform())
-//                ? WhoAmI.USER
-//                : WhoAmI.EMPLOYEE;
+        if(messagesRequest.msgType() == MsgType.VOICE) {
+            try {
+                String originalVoiceName = voice.getOriginalFilename();
+                newVoiceName = System.nanoTime() + originalVoiceName.substring(originalVoiceName.lastIndexOf("."));
+                String filePath = environment.getProperty("ATTACHMENT_PATH_VOICE") + newVoiceName;
+                file.transferTo(new File(filePath));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        WhoAmI whoAmI = Platform.APP.equals(messagesRequest.platform())
+                ? WhoAmI.USER
+                : WhoAmI.EMPLOYEE;
 
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
-                Long.parseLong(userId), messagesRequest.whoAmI(),
-                messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFilename : messagesRequest.messages(),
+                Long.parseLong(userId), whoAmI,
+                messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
                 messagesRequest.msgType() == null ? MsgType.MESSAGE : messagesRequest.msgType());
         System.out.println(messagesRepo.save(appChatDetails).getDetailsChatId());
         System.out.println(messagesRepo.save(appChatDetails).getMessages());

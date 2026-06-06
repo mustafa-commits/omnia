@@ -7,7 +7,6 @@ import com.sc.demo.model.chat.WhoAmI;
 public record MessagesRequest(
         Long chatId,
         Long sender,
-        WhoAmI whoAmI,
         Platform platform,
         String messages,
         MsgType msgType

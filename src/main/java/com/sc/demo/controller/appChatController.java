@@ -47,14 +47,14 @@ public class appChatController implements SecuredRestController {
     @PostMapping("/V1/api/sc/writeMessages")
     public boolean writeMessages(@RequestParam Long chatId,
                                  @RequestParam Long userIdSender,
-                                 @RequestParam WhoAmI whoAmI,
                                  @RequestParam Platform platform,
                                  @RequestParam(required = false) String messages,
                                  @RequestParam MsgType msgType,
                                  @RequestParam(required = false) MultipartFile file,
+                                 @RequestParam(required = false) MultipartFile voice,
                                  @RequestHeader(name = "authorization") String token){
-        return appChatService.writeMessages(new MessagesRequest(chatId, userIdSender, whoAmI,
-                platform, messages, msgType), file, token);
+        return appChatService.writeMessages(new MessagesRequest(chatId, userIdSender,
+                platform, messages, msgType), file, voice, token);
     }
 
     // اظهار الرسائل في المحادثات
