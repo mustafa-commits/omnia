@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -26,17 +28,15 @@ public class loginController {
 
     // تسجيل الدخول من خلال رقم الهاتف
     @GetMapping("/V1/api/sc/loginByPhone")
-    public logInResponse login(@RequestParam long phone_Number,
-                               @RequestParam String country_code,
-                               @RequestParam String birthDate) {
+    public List<logInResponse> login(@RequestParam long phone_Number,
+                                    @RequestParam String country_code,
+                                    @RequestParam String birthDate) {
         return loginService.logIn(phone_Number, country_code, birthDate);
     }
 
     // جلب ال OTP بعد خزنه بالجدول
     @PostMapping("/V1/api/sc/ChekLogin")
-    public ResponseEntity<?> ChekLogin(/*@RequestParam Long phone_Number,
-                                       @RequestParam Long secretCode,*/
-                                       @RequestBody AppUserRequest appUserRequest){
+    public ResponseEntity<?> ChekLogin(@RequestBody AppUserRequest appUserRequest){
         return loginService.ChekLoginApp(appUserRequest);
     }
 }

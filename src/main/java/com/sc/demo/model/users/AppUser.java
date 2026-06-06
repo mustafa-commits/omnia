@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppUser {
-
+    // تضاف البيانات في هذا الجدول للاشخاص الي سجلو دخول للتطبيق
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userid;

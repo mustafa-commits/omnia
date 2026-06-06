@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerificationApp {
-
+    // تضاف البيانات في هذا الجدول بعد التأكد من رقم الهاتف الصحيح وال Otp تم انشاءه
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

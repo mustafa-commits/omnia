@@ -14,6 +14,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
+
+import javax.security.auth.Subject;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -38,13 +42,16 @@ public class LoginService implements CommandLineRunner {
     String regex = "^(77|78|79)\\d{8}$";
 
     // تسجيل دخول من خلال رقم الهاتف
-    public logInResponse logIn(long phone_Number, String country_code, String birthDate){
+    public List<logInResponse> logIn(long phone_Number, String country_code, String birthDate){
 
         if (!String.valueOf(phone_Number).matches(regex)){
             return null;
         }
 
-        Optional <logInResponse> logInRes = jdbcClient.sql("""
+        Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), SendingType.WHATSAPP);
+        whatsAppService.sendVerificationCode(code);
+
+        return jdbcClient.sql("""
                         SELECT H.HEAD_FAMILY_ID as HeadFamilyId
                                ,R.AID_REQUEST_ID as RequestId
                         FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
@@ -76,14 +83,12 @@ public class LoginService implements CommandLineRunner {
                 .param("phone_Number",phone_Number)
                 .param("birthDate", birthDate)
                 .query(logInResponse.class)
-                .optional();
+                .list();
 
-        if (logInRes.isPresent()) {
-            Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), SendingType.WHATSAPP);
-            whatsAppService.sendVerificationCode(code);
-            return logInRes.get();
-        }else
-            return null;
+//        if (logInRes.isPresent()) {
+//            return logInResponse();
+//        }else
+//            return null;
     }
 
     // جلب ال OTP بعد خزنه بالجدول
@@ -108,13 +113,53 @@ public class LoginService implements CommandLineRunner {
                 .query(chekLoginRequest.class).optional();
 
         if (logInChek.isPresent()) {
-            Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), appUserRequest.requestId(), appUserRequest.headFamilyId())).getUserid();
-            System.out.println(userId);
-            return ResponseEntity.ok(tokenService.generateToken(String.valueOf(userId),appUserRequest.requestId(), appUserRequest.headFamilyId()));
+            List<getUserIdWithToken> aaa=new ArrayList<>();
+            List<logInResponse> responseList = jdbcClient.sql("""
+                            SELECT H.HEAD_FAMILY_ID as HeadFamilyId
+                               ,R.AID_REQUEST_ID as RequestId
+                        FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
+                        LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
+                        LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
+                        LEFT JOIN AIN_CAPPS.SC_FAMILY_PERSONS_HIST H ON (H.FOLLOW_ID = F.FOLLOW_ID)
+                        WHERE D.FOLLOW_DESCION_DATE = (SELECT MAX (D1.FOLLOW_DESCION_DATE)
+                                                FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D1
+                                                      LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F1
+                                                         ON (D1.FOLLOW_ID = F1.FOLLOW_ID)
+                                                     LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R1
+                                                          ON (F1.AID_REQUEST_ID = R1.AID_REQUEST_ID)
+                                                 WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
+                                                     AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
+                        AND H.IS_GUARDIAN = 1
+                        AND (F.PHONE1 LIKE '%' || :phone_Number
+                            OR F.PHONE2 LIKE '%' || :phone_Number
+                            OR F.PHONE3 LIKE '%' || :phone_Number)
+
+                        UNION
+
+                        SELECT FI.HEAD_FAMILY_ID as HeadFamilyId
+                              ,FI.REQUEST_ID as RequestId
+                        FROM MOBAPP.SC_FAMILY_INFO FI
+                        WHERE FI.PHONE LIKE '%' || :phone_Number
+                        """)
+                    .param("phone_Number", appUserRequest.phone())
+                    .query(logInResponse.class).list();
+
+            for (logInResponse response : responseList){
+               Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(), response.HeadFamilyId())).getUserid();
+               aaa.add(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),response.RequestId(), response.HeadFamilyId())));
+            }
+//            Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), appUserRequest.requestId(), appUserRequest.headFamilyId())).getUserid();
+//            System.out.println(userId);
+
+//            return ResponseEntity.ok(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),appUserRequest.requestId(), appUserRequest.headFamilyId())));
+            return ResponseEntity.ok(aaa);
         }else
             return ResponseEntity.badRequest().body("WRONG CRED");
     }
 
+    public record getUserIdWithToken (Long userId, String token){
+
+    }
 
 
     @Override
