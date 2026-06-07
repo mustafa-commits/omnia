@@ -1,6 +1,6 @@
 package com.sc.demo.model.dto.login;
 
-public record chekLoginRequest(
+public record ChekLoginRequest(
         String userIdentifier
 ) {
 }

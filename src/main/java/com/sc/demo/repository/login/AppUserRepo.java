@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AppUserRepo extends JpaRepository<AppUser, Long> {
+    boolean existsByHeadFamilyIdAndRequestId (
+            Long headFamilyId,
+            Long requestId
+    );
 }

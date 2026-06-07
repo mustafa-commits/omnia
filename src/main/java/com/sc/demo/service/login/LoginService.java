@@ -3,8 +3,8 @@ package com.sc.demo.service.login;
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.users.AppUser;
 import com.sc.demo.model.verification.SendingType;
-import com.sc.demo.model.dto.login.chekLoginRequest;
-import com.sc.demo.model.dto.login.logInResponse;
+import com.sc.demo.model.dto.login.ChekLoginRequest;
+import com.sc.demo.model.dto.login.LogInResponse;
 import com.sc.demo.model.verification.VerificationApp;
 import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.repository.login.VerificationLoginRepo;
@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.Subject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,12 +41,11 @@ public class LoginService implements CommandLineRunner {
     String regex = "^(77|78|79)\\d{8}$";
 
     // تسجيل دخول من خلال رقم الهاتف
-    public List<logInResponse> logIn(long phone_Number, String country_code, String birthDate){
+    public List<LogInResponse> logIn(long phone_Number, String country_code, String birthDate){
 
         if (!String.valueOf(phone_Number).matches(regex)){
             return null;
         }
-
         Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), SendingType.WHATSAPP);
         whatsAppService.sendVerificationCode(code);
 
@@ -82,13 +80,8 @@ public class LoginService implements CommandLineRunner {
                 """)
                 .param("phone_Number",phone_Number)
                 .param("birthDate", birthDate)
-                .query(logInResponse.class)
+                .query(LogInResponse.class)
                 .list();
-
-//        if (logInRes.isPresent()) {
-//            return logInResponse();
-//        }else
-//            return null;
     }
 
     // جلب ال OTP بعد خزنه بالجدول
@@ -101,7 +94,7 @@ public class LoginService implements CommandLineRunner {
 
     // التحقق من تاريخ الميلاد وارسال رقم الحاتف
     public ResponseEntity<?> ChekLoginApp(AppUserRequest appUserRequest){
-        Optional <chekLoginRequest> logInChek = jdbcClient.sql("""
+        Optional <ChekLoginRequest> logInChek = jdbcClient.sql("""
                     SELECT USER_IDENTIFIER AS userIdentifier
                     FROM MOBAPP.SC_VERIFICATION_APP V
                     WHERE V.USER_IDENTIFIER = :phone_Number
@@ -110,11 +103,11 @@ public class LoginService implements CommandLineRunner {
                 """)
                 .param("phone_Number",appUserRequest.phone())
                 .param("secretCode", appUserRequest.secretCode())
-                .query(chekLoginRequest.class).optional();
+                .query(ChekLoginRequest.class).optional();
 
         if (logInChek.isPresent()) {
-            List<getUserIdWithToken> aaa=new ArrayList<>();
-            List<logInResponse> responseList = jdbcClient.sql("""
+            List<getUserIdWithToken> setGuardianInfo = new ArrayList<>();
+            List<LogInResponse> responseList = jdbcClient.sql("""
                             SELECT H.HEAD_FAMILY_ID as HeadFamilyId
                                ,R.AID_REQUEST_ID as RequestId
                         FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
@@ -142,17 +135,22 @@ public class LoginService implements CommandLineRunner {
                         WHERE FI.PHONE LIKE '%' || :phone_Number
                         """)
                     .param("phone_Number", appUserRequest.phone())
-                    .query(logInResponse.class).list();
+                    .query(LogInResponse.class)
+                    .list();
 
-            for (logInResponse response : responseList){
-               Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(), response.HeadFamilyId())).getUserid();
-               aaa.add(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),response.RequestId(), response.HeadFamilyId())));
-            }
-//            Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), appUserRequest.requestId(), appUserRequest.headFamilyId())).getUserid();
-//            System.out.println(userId);
+            // بعد التأكد من رقم الهاتف تضيف المعلومات في AppUsers
+            for (LogInResponse response : responseList){
 
-//            return ResponseEntity.ok(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),appUserRequest.requestId(), appUserRequest.headFamilyId())));
-            return ResponseEntity.ok(aaa);
+                boolean alreadyExists = appUserRepo.existsByHeadFamilyIdAndRequestId(
+                        response.HeadFamilyId(),
+                        response.RequestId()
+                );
+
+                if (!alreadyExists) {
+                    Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(), response.HeadFamilyId())).getUserid();
+                    setGuardianInfo.add(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),response.RequestId(), response.HeadFamilyId())));
+                } }
+           return ResponseEntity.ok(setGuardianInfo);
         }else
             return ResponseEntity.badRequest().body("WRONG CRED");
     }
@@ -160,7 +158,6 @@ public class LoginService implements CommandLineRunner {
     public record getUserIdWithToken (Long userId, String token){
 
     }
-
 
     @Override
     public void run(String... args) throws Exception {
