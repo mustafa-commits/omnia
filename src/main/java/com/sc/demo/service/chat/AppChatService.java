@@ -46,7 +46,11 @@ public class AppChatService {
         Long userIdSender = appChatRequest.userId();
 
         AppChatDetails appChatDetails = appChatRequest.appChatDetails();
-        messagesRepo.save(new AppChatDetails(userIdSender, appChatDetails.getWhoAmI(),
+        WhoIsSender whoIsSender = Platform.APP.equals(appChatRequest.appChatDetails().getPlatform())
+                ? WhoIsSender.USER
+                : WhoIsSender.EMPLOYEE;
+
+        messagesRepo.save(new AppChatDetails(userIdSender, whoIsSender,
                         appChatDetails.getPlatform(), appChatDetails.getMessages(), appChatMaster));
 
         AppChatDetails welcomeMessage = new AppChatDetails();
@@ -152,12 +156,12 @@ public class AppChatService {
             }
         }
 
-        WhoAmI whoAmI = Platform.APP.equals(messagesRequest.platform())
-                ? WhoAmI.USER
-                : WhoAmI.EMPLOYEE;
+        WhoIsSender whoIsSender = Platform.APP.equals(messagesRequest.platform())
+                ? WhoIsSender.USER
+                : WhoIsSender.EMPLOYEE;
 
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
-                Long.parseLong(userId), whoAmI,
+                Long.parseLong(userId), whoIsSender,
                 messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
                 messagesRequest.msgType() == null ? MsgType.MESSAGE : messagesRequest.msgType());
         System.out.println(messagesRepo.save(appChatDetails).getDetailsChatId());
@@ -166,17 +170,17 @@ public class AppChatService {
     }
 
 
-    public List<MessagesResponse> getMessages(long chat_id){
+    public List<MessagesResponse> getMessages(long chatId){
         return jdbcClient.sql("""
                 SELECT MESSAGES,
-                       WHOAMI,
-                       SENDER,
+                       WHO_IS_SENDER AS whoIsSender,
+                       USER_ID_SENDER AS userIdSender,
                        CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chat_id
                 order by CREATE_DATE desc
                 """)
-                .param("chat_id", chat_id)
+                .param("chat_id", chatId)
                 .query(MessagesResponse.class)
                 .list();
     }

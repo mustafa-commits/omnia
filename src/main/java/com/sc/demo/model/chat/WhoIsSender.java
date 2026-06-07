@@ -1,6 +1,6 @@
 package com.sc.demo.model.chat;
 
-public enum WhoAmI {
+public enum WhoIsSender {
     USER,
     EMPLOYEE
 }

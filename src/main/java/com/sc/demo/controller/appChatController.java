@@ -3,7 +3,6 @@ package com.sc.demo.controller;
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.chat.MsgType;
 import com.sc.demo.model.chat.Platform;
-import com.sc.demo.model.chat.WhoAmI;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.service.chat.AppChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ public class appChatController implements SecuredRestController {
 
     // اظهار الرسائل في المحادثات
     @GetMapping("/V1/api/sc/getMessagesChat")
-    public List<MessagesResponse> getMessages(@RequestParam long chat_id){
-        return appChatService.getMessages(chat_id);
+    public List<MessagesResponse> getMessages(@RequestParam long chatId){
+        return appChatService.getMessages(chatId);
     }
 }
