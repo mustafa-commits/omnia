@@ -71,21 +71,21 @@ public class AppChatService {
     }
 
     // حفظ Token القادم من firebase في قاعدة البيانات
-    public long saveToken(ChatTokenRequest chatTokenRequest) {
-        Optional<ChatToken> byToken = chatTokenRepo.findById(chatTokenRequest.chatId());
-
-        if (byToken.isPresent()){
-            ChatToken chatToken = byToken.get();
-            chatToken.setLastUpdate(LocalDateTime.now());
-            chatToken.setToken(chatTokenRequest.token());
-            return chatTokenRepo.save(chatToken).getChatId();
-        } else {
-            ChatToken chatToken = byToken.get();
-            chatToken.setToken(chatTokenRequest.token());
-            chatToken.setChatId(chatTokenRequest.chatId());
-            return chatTokenRepo.save(chatToken).getChatId();
-        }
-    }
+//    public long saveToken(ChatTokenRequest chatTokenRequest) {
+//        Optional<ChatToken> byToken = chatTokenRepo.findById(chatTokenRequest.chatId());
+//
+//        if (byToken.isPresent()){
+//            ChatToken chatToken = byToken.get();
+//            chatToken.setLastUpdate(LocalDateTime.now());
+//            chatToken.setToken(chatTokenRequest.token());
+//            return chatTokenRepo.save(chatToken).getChatId();
+//        } else {
+//            ChatToken chatToken = byToken.get();
+//            chatToken.setToken(chatTokenRequest.token());
+//            chatToken.setChatId(chatTokenRequest.chatId());
+//            return chatTokenRepo.save(chatToken).getChatId();
+//        }
+//    }
 
     // جلي المحادثات المفعلة
     public List<AppChatResponse> phoneChats(String token){
