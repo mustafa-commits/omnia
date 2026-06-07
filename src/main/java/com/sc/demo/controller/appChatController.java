@@ -47,7 +47,7 @@ public class appChatController implements SecuredRestController {
     public boolean writeMessages(@RequestParam Long chatId,
                                  @RequestParam Long userIdSender,
                                  @RequestParam Platform platform,
-                                 @RequestParam(required = false) String messages,
+                                 @RequestParam String messages,
                                  @RequestParam MsgType msgType,
                                  @RequestParam(required = false) MultipartFile file,
                                  @RequestParam(required = false) MultipartFile voice,

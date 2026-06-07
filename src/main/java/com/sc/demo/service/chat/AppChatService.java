@@ -131,7 +131,6 @@ public class AppChatService {
     public boolean writeMessages(MessagesRequest messagesRequest, MultipartFile file, MultipartFile voice, String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         String newFileName = null;
-        String newVoiceName = null;
 
 
         if(messagesRequest.msgType() == MsgType.IMAGE) {
@@ -148,8 +147,8 @@ public class AppChatService {
         if(messagesRequest.msgType() == MsgType.VOICE) {
             try {
                 String originalVoiceName = voice.getOriginalFilename();
-                newVoiceName = System.nanoTime() + originalVoiceName.substring(originalVoiceName.lastIndexOf("."));
-                String filePath = environment.getProperty("ATTACHMENT_PATH_VOICE") + newVoiceName;
+                newFileName = System.nanoTime() + originalVoiceName.substring(originalVoiceName.lastIndexOf("."));
+                String filePath = environment.getProperty("ATTACHMENT_PATH_VOICE") + newFileName;
                 file.transferTo(new File(filePath));
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -163,9 +162,9 @@ public class AppChatService {
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 Long.parseLong(userId), whoIsSender,
                 messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
-                messagesRequest.msgType() == null ? MsgType.MESSAGE : messagesRequest.msgType());
-        System.out.println(messagesRepo.save(appChatDetails).getDetailsChatId());
-        System.out.println(messagesRepo.save(appChatDetails).getMessages());
+                messagesRequest.msgType());
+        Long detailsChatId = messagesRepo.save(appChatDetails).getDetailsChatId();
+        System.out.println(detailsChatId);
         return true;
     }
 

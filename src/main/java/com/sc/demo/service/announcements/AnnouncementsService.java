@@ -15,6 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -41,18 +42,15 @@ public class AnnouncementsService {
     private TokenService tokenService;
 
     // انشاء تبليغ
-    public announcements createAnnouncements(announcementsRequest announcementsRequest,
-                                             MultipartFile file, String token){
+    public announcements createAnnouncements(announcementsRequest announcementsRequest, MultipartFile file, String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         System.out.println(userId);
 
-        announcements announcements = new announcements(announcementsRequest.sendId(),
-                announcementsRequest.title(), announcementsRequest.description());
+        announcements announcements = new announcements(announcementsRequest.sendId(), announcementsRequest.title(), announcementsRequest.description());
         announcements = announcementsRepo.save(announcements);
         if (userId != null)
             announcementsDetailsRepo.save(new announcementsDetails(Long.parseLong(userId), announcements));
-        if (file != null)
-        try {
+        if (file != null) try {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
             String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
@@ -75,8 +73,7 @@ public class AnnouncementsService {
                    Left join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
                    Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
                    Where ad.user_id = :user_id OR ad.USER_ID = 0
-                """).param("user_id",userId)
-                .query(phoneAnnouncementsRequest.class).list();
+                """).param("user_id", userId).query(phoneAnnouncementsRequest.class).list();
 
     }
     /*
