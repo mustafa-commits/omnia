@@ -139,6 +139,7 @@ public class AppChatService {
                 newFileName = System.nanoTime() + originalFileName.substring(originalFileName.lastIndexOf("."));
                 String filePath = environment.getProperty("ATTACHMENT_PATH_CHAT") + newFileName;
                 file.transferTo(new File(filePath));
+                System.out.println(filePath);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -150,6 +151,7 @@ public class AppChatService {
                 newFileName = System.nanoTime() + originalVoiceName.substring(originalVoiceName.lastIndexOf("."));
                 String filePath = environment.getProperty("ATTACHMENT_PATH_VOICE") + newFileName;
                 file.transferTo(new File(filePath));
+                System.out.println(filePath);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
