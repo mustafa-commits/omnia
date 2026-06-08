@@ -150,7 +150,7 @@ public class AppChatService {
                 String originalVoiceName = voice.getOriginalFilename();
                 newFileName = System.nanoTime() + originalVoiceName.substring(originalVoiceName.lastIndexOf("."));
                 String filePath = environment.getProperty("ATTACHMENT_PATH_VOICE") + newFileName;
-                file.transferTo(new File(filePath));
+                voice.transferTo(new File(filePath));
                 System.out.println(filePath);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -173,17 +173,17 @@ public class AppChatService {
 
     public List<MessagesResponse> getMessages(long chatId){
         return jdbcClient.sql("""
-                SELECT CASE WHEN MSG_TYPE = 1 THEN :path
-                      ELSE MESSAGES END AS messages,
-                      WHO_IS_SENDER AS whoIsSender,
-                      USER_ID_SENDER AS useridSender,
-                      CREATE_DATE AS createDate
+                SELECT CASE WHEN MSG_TYPE = 1 THEN :path || MESSAGES
+                        ELSE MESSAGES END AS messages,
+                        WHO_IS_SENDER AS whoIsSender,
+                        USER_ID_SENDER AS useridSender,
+                        CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chat_id
-                ORDER BY CREATE_DATE DESC
+                order by CREATE_DATE desc
                 """)
                 .param("chat_id", chatId)
-                .param("path", "http://10.76.233.71:1801/V1/api/photoChat")
+                .param("path", "http://10.76.233.71:1801/V1/api/photoChat/")
                 .query(MessagesResponse.class)
                 .list();
     }

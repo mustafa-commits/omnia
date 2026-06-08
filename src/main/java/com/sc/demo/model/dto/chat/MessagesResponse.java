@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public record MessagesResponse(
         String messages,
-        WhoIsSender whoIsSender,
+        Integer whoIsSender,
         Long useridSender,
         LocalDateTime createDate
 ) {
