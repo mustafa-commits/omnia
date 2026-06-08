@@ -1,12 +1,12 @@
 package com.sc.demo.model.dto.announcements;
 
-import com.sc.demo.model.announcements.announcementsDetails;
+import com.sc.demo.model.announcements.AnnouncementsDetails;
 import java.util.List;
 
 public record announcementsRequest(
         Integer sendId,
         String title,
         String description,
-        List<announcementsDetails> announcementsDetails
+        List<AnnouncementsDetails> announcementsDetails
 ) {
 }

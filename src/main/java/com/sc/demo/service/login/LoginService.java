@@ -46,6 +46,7 @@ public class LoginService implements CommandLineRunner {
         if (!String.valueOf(phone_Number).matches(regex)){
             return null;
         }
+
         Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), SendingType.WHATSAPP);
         whatsAppService.sendVerificationCode(code);
 
@@ -140,7 +141,6 @@ public class LoginService implements CommandLineRunner {
 
             // بعد التأكد من رقم الهاتف تضيف المعلومات في AppUsers
             for (LogInResponse response : responseList){
-
                 boolean alreadyExists = appUserRepo.existsByHeadFamilyIdAndRequestId(
                         response.HeadFamilyId(),
                         response.RequestId()

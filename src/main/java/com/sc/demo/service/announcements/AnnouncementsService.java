@@ -1,8 +1,8 @@
 package com.sc.demo.service.announcements;
 
-import com.sc.demo.model.announcements.announcements;
-import com.sc.demo.model.announcements.announcementsAttachment;
-import com.sc.demo.model.announcements.announcementsDetails;
+import com.sc.demo.model.announcements.Announcements;
+import com.sc.demo.model.announcements.AnnouncementsAttachment;
+import com.sc.demo.model.announcements.AnnouncementsDetails;
 import com.sc.demo.model.dto.announcements.allAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.announcementsRequest;
 import com.sc.demo.model.dto.announcements.phoneAnnouncementsRequest;
@@ -42,19 +42,19 @@ public class AnnouncementsService {
     private TokenService tokenService;
 
     // انشاء تبليغ
-    public announcements createAnnouncements(announcementsRequest announcementsRequest, MultipartFile file, String token) {
+    public Announcements createAnnouncements(announcementsRequest announcementsRequest, MultipartFile file, String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         System.out.println(userId);
 
-        announcements announcements = new announcements(announcementsRequest.sendId(), announcementsRequest.title(), announcementsRequest.description());
+        Announcements announcements = new Announcements(announcementsRequest.sendId(), announcementsRequest.title(), announcementsRequest.description());
         announcements = announcementsRepo.save(announcements);
         if (userId != null)
-            announcementsDetailsRepo.save(new announcementsDetails(Long.parseLong(userId), announcements));
+            announcementsDetailsRepo.save(new AnnouncementsDetails(Long.parseLong(userId), announcements));
         if (file != null) try {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
             String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
-            announcementsAttachmentRepo.save(new announcementsAttachment(newFilename, announcements));
+            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, announcements));
             file.transferTo(new File(filePath));
         } catch (IOException e) {
             throw new RuntimeException(e);

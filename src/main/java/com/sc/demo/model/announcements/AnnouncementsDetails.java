@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class announcementsDetails {
+public class AnnouncementsDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +22,9 @@ public class announcementsDetails {
 
     @ManyToOne
     @JoinColumn(name = "announcements_id")
-    private announcements announcements;
+    private Announcements announcements;
 
-    public announcementsDetails(Long userId, announcements announcements) {
+    public AnnouncementsDetails(Long userId, Announcements announcements) {
         this.userId = userId;
         this.announcements = announcements;
     }

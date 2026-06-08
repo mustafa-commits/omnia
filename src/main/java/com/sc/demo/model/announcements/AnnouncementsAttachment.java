@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class announcementsAttachment {
+public class AnnouncementsAttachment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +25,11 @@ public class announcementsAttachment {
 
     @ManyToOne
     @JoinColumn(name = "announcements_id")
-    private announcements announcements;
+    private Announcements announcements;
 
     private LocalDateTime createDate;
 
-    public announcementsAttachment(String fileName, announcements announcements) {
+    public AnnouncementsAttachment(String fileName, Announcements announcements) {
         this.fileName = fileName;
         this.announcements = announcements;
     }
