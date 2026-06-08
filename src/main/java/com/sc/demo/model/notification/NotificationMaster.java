@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class notificationMaster {
+public class NotificationMaster {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +30,7 @@ public class notificationMaster {
     private Integer isActive;
 
     @Enumerated(EnumType.ORDINAL)
-    private notificationType notificationType;
+    private NotificationType notificationType;
 
     private LocalDateTime createDate;
 
@@ -41,10 +41,10 @@ public class notificationMaster {
     private Long lastCreateBy;
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
-    private List<notificationDetails> notificationDetails = new ArrayList<>();
+    private List<NotificationDetails> notificationDetails = new ArrayList<>();
 
-    public notificationMaster(Integer sendId, String title,
-                              String description, notificationType notificationType) {
+    public NotificationMaster(Integer sendId, String title,
+                              String description, NotificationType notificationType) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;

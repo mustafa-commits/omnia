@@ -2,7 +2,7 @@ package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.notification.*;
-import com.sc.demo.model.notification.notificationMaster;
+import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,31 +18,31 @@ public class notificationController implements SecuredRestController {
 
     // انشاء اشعار
     @PostMapping("/V1/api/sc/createNotification")
-    public notificationMaster createNotification(@RequestBody notificationRequest notificationRequest){
+    public NotificationMaster createNotification(@RequestBody NotificationRequest notificationRequest){
         return notificationService.createNotification(notificationRequest);
     }
 
     // تخزين Token
     @PostMapping("/V1/api/sc/setNotificationToken")
-    public long setNotificationToken(@RequestBody notificationTokenRequest notificationTokenRequest){
+    public long setNotificationToken(@RequestBody NotificationTokenRequest notificationTokenRequest){
         return notificationService.saveToken(notificationTokenRequest);
     }
 
     // جلب اشعارات التلفون
     @GetMapping("/V1/api/sc/getPHoneNotification")
-    public List<phoneNotificationRequest> getPHoneNotification(@RequestHeader(name = "authorization") String token){
+    public List<PhoneNotificationRequest> getPHoneNotification(@RequestHeader(name = "authorization") String token){
         return notificationService.phoneNotification(token);
     }
 
     // جلب اشعارات الداشبورد حسب النوع الاشعار خاص او عام
     @GetMapping("/V1/api/sc/getNotificationByType")
-    public List<notificationByType> getPNotificationByType(@RequestParam long notification_type){
+    public List<NotificationByType> getPNotificationByType(@RequestParam long notification_type){
         return notificationService.NotificationByType(notification_type);
     }
 
     // جلب جميع اشعارات الداشبورد للعائلة
     @GetMapping("/V1/api/sc/getAllNotificationFamily")
-    public List<allNotificationFamilyRequest> getAllNotificationFamily(){
+    public List<AllNotificationFamilyRequest> getAllNotificationFamily(){
         return notificationService.AllNotificationFamily();
     }
 

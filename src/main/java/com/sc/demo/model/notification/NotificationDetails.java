@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class notificationDetails {
+public class NotificationDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,9 +22,9 @@ public class notificationDetails {
 
     @ManyToOne
     @JoinColumn(name = "notification_id")
-    private notificationMaster notification;
+    private NotificationMaster notification;
 
-    public notificationDetails(Long userId, notificationMaster notificationMaster) {
+    public NotificationDetails(Long userId, NotificationMaster notificationMaster) {
         this.userId = userId;
         this.notification = notificationMaster;
     }

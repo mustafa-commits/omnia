@@ -5,9 +5,9 @@ import com.sc.demo.model.chat.WhoIsSender;
 import java.time.LocalDateTime;
 
 public record MessagesResponse(
-        String MESSAGES,
+        String messages,
         WhoIsSender whoIsSender,
-        Long userIdSender,
+        Long useridSender,
         LocalDateTime createDate
 ) {
 }

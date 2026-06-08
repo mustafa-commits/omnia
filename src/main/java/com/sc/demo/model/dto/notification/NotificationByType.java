@@ -2,7 +2,7 @@ package com.sc.demo.model.dto.notification;
 
 import java.time.LocalDateTime;
 
-public record notificationByType(
+public record NotificationByType(
         Integer sendId,
         LocalDateTime createDate,
         String title,

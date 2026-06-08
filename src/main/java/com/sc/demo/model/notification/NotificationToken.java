@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class notificationToken {
+public class NotificationToken {
 
     @Id
     private Long userId;
@@ -32,7 +32,7 @@ public class notificationToken {
 
     private Long lastCreateBy;
 
-    public notificationToken(Long userId, String token, Long tokenType) {
+    public NotificationToken(Long userId, String token, Long tokenType) {
         this.userId = userId;
         this.token = token;
         this.tokenType = tokenType;

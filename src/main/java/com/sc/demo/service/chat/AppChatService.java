@@ -173,15 +173,17 @@ public class AppChatService {
 
     public List<MessagesResponse> getMessages(long chatId){
         return jdbcClient.sql("""
-                SELECT MESSAGES,
-                       WHO_IS_SENDER AS whoIsSender,
-                       USER_ID_SENDER AS userIdSender,
-                       CREATE_DATE AS createDate
+                SELECT CASE WHEN MSG_TYPE = 1 THEN :path
+                      ELSE MESSAGES END AS messages,
+                      WHO_IS_SENDER AS whoIsSender,
+                      USER_ID_SENDER AS useridSender,
+                      CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chat_id
-                order by CREATE_DATE desc
+                ORDER BY CREATE_DATE DESC
                 """)
                 .param("chat_id", chatId)
+                .param("path", "http://10.76.233.71:1801/V1/api/photoChat")
                 .query(MessagesResponse.class)
                 .list();
     }

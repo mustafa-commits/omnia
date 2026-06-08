@@ -1,12 +1,12 @@
 package com.sc.demo.model.dto.notification;
 
-import com.sc.demo.model.notification.notificationType;
+import com.sc.demo.model.notification.NotificationType;
 import java.time.LocalDateTime;
 
-public record allNotificationFamilyRequest(
+public record AllNotificationFamilyRequest(
         LocalDateTime createDate,
         String title,
         String description,
-        notificationType NotificationType
+        NotificationType NotificationType
 ) {
 }
