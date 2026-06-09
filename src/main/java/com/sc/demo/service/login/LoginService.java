@@ -46,6 +46,7 @@ public class LoginService implements CommandLineRunner {
         if (!String.valueOf(phone_Number).matches(regex)){
             return null;
         }
+
         Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), SendingType.WHATSAPP);
         whatsAppService.sendVerificationCode(code);
 

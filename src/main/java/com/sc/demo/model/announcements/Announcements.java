@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class announcements {
+public class Announcements {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +38,12 @@ public class announcements {
     private Long lastCreateBy;
 
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
-    private List<announcementsDetails> announcementsDetails = new ArrayList<>();
+    private List<AnnouncementsDetails> announcementsDetails = new ArrayList<>();
 
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
-    private List<announcementsAttachment> announcementsAttachment = new ArrayList<>();
+    private List<AnnouncementsAttachment> announcementsAttachment = new ArrayList<>();
 
-    public announcements(Integer sendId, String title, String description) {
+    public Announcements(Integer sendId, String title, String description) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;

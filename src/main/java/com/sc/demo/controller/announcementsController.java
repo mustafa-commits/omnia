@@ -1,7 +1,7 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.announcements.announcements;
+import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.dto.announcements.allAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.announcementsRequest;
 import com.sc.demo.model.dto.announcements.phoneAnnouncementsRequest;
@@ -21,7 +21,7 @@ public class announcementsController implements SecuredRestController {
 
     // انشار تبليغ
     @PostMapping("/V1/api/sc/createAnnouncements")
-    public announcements createAnnouncements(@RequestParam Integer sendId,
+    public Announcements createAnnouncements(@RequestParam Integer sendId,
                                              @RequestParam String title,
                                              @RequestParam String description,
                                              @RequestHeader(name = "authorization") String token,
