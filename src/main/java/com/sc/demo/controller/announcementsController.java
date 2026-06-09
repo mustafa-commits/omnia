@@ -2,9 +2,9 @@ package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.announcements.Announcements;
-import com.sc.demo.model.dto.announcements.allAnnouncementsFamilyRequest;
-import com.sc.demo.model.dto.announcements.announcementsRequest;
-import com.sc.demo.model.dto.announcements.phoneAnnouncementsRequest;
+import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
+import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
+import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.service.announcements.AnnouncementsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +30,14 @@ public class announcementsController implements SecuredRestController {
                                              @RequestParam String description,
                                              @RequestHeader(name = "authorization") String token,
                                              @RequestParam (required = false) MultipartFile file)  {
-        return announcementsService.createAnnouncements(new announcementsRequest
+        return announcementsService.createAnnouncements(new AnnouncementsRequest
                 (sendId, title, description, null), file, token);
     }
 
     //  المرفقات مع التبليغات التلفون
     String uploadDir = "http://10.76.233.71:1801/";
 
-    @GetMapping("/V1/api/sc/getPHoneAnnouncements/{filename:.+}")
+    @GetMapping("/V1/api/sc/getPhoneAnnouncements/{filename:.+}")
     public void serveFile(
             @PathVariable String filename,
             HttpServletResponse response
@@ -53,9 +53,9 @@ public class announcementsController implements SecuredRestController {
     }
 
     // تبليغات التلفون
-    @GetMapping("/V1/api/sc/getPHoneAnnouncements")
-    public List<phoneAnnouncementsRequest> getPHoneAnnouncements(@RequestHeader(name = "authorization") String token){
-        return announcementsService.PHoneAnnouncements(token);
+    @GetMapping("/V1/api/sc/getPhoneAnnouncements")
+    public List<PhoneAnnouncementsRequest> getPhoneAnnouncements(@RequestHeader(name = "authorization") String token){
+        return announcementsService.PhoneAnnouncements(token);
     }
 
     //  المرفقات مع التبليغات الداشبورد
@@ -76,7 +76,7 @@ public class announcementsController implements SecuredRestController {
 
     // جميع تبليغات الداشبورد للعائلة
     @GetMapping("/V1/api/sc/getAllAnnouncementsFamily")
-    public List<allAnnouncementsFamilyRequest> getAllAnnouncementsFamily(){
+    public List<AllAnnouncementsFamilyRequest> getAllAnnouncementsFamily(){
         return announcementsService.AllAnnouncementsFamily();
     }
 }

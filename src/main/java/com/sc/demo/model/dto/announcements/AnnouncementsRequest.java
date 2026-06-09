@@ -3,7 +3,7 @@ package com.sc.demo.model.dto.announcements;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
 import java.util.List;
 
-public record announcementsRequest(
+public record AnnouncementsRequest(
         Integer sendId,
         String title,
         String description,

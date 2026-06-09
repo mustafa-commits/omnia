@@ -2,10 +2,10 @@ package com.sc.demo.model.dto.announcements;
 
 import java.time.LocalDateTime;
 
-public record phoneAnnouncementsRequest(
-        String title,
-        String description,
+public record AllAnnouncementsFamilyRequest(
         LocalDateTime createDate,
-        String fileName
+        String title,
+        String fileName,
+        String description
 ) {
 }

@@ -173,7 +173,7 @@ public class AppChatService {
 
     public List<MessagesResponse> getMessages(long chatId){
         return jdbcClient.sql("""
-                SELECT CASE WHEN MSG_TYPE = 1 THEN TO_CHAR(:path) || MESSAGES
+                SELECT CASE WHEN MSG_TYPE in (1,2) THEN TO_CHAR(:path) || MESSAGES
                         ELSE MESSAGES END AS messages,
                         WHO_IS_SENDER AS whoIsSender,
                         USER_ID_SENDER AS useridSender,
@@ -183,7 +183,7 @@ public class AppChatService {
                 order by CREATE_DATE desc
                 """)
                 .param("chat_id", chatId)
-                .param("path", "http://10.76.233.71:1801/V1/api/photoChat/")
+                .param("path", "http://10.76.233.71:1801/V1/api/sc/photoChat/")
                 .query(MessagesResponse.class)
                 .list();
     }

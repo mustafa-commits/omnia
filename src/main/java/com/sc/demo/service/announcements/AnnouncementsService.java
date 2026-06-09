@@ -3,9 +3,9 @@ package com.sc.demo.service.announcements;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
-import com.sc.demo.model.dto.announcements.allAnnouncementsFamilyRequest;
-import com.sc.demo.model.dto.announcements.announcementsRequest;
-import com.sc.demo.model.dto.announcements.phoneAnnouncementsRequest;
+import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
+import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
+import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
@@ -42,7 +42,7 @@ public class AnnouncementsService {
     private TokenService tokenService;
 
     // انشاء تبليغ
-    public Announcements createAnnouncements(announcementsRequest announcementsRequest, MultipartFile file, String token) {
+    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file, String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         System.out.println(userId);
 
@@ -64,7 +64,7 @@ public class AnnouncementsService {
     }
 
     // اشعارات التطيق لكل يززر
-    public List<phoneAnnouncementsRequest> PHoneAnnouncements(String token) {
+    public List<PhoneAnnouncementsRequest> PhoneAnnouncements(String token) {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         return jdbcClient.sql("""
@@ -78,14 +78,14 @@ public class AnnouncementsService {
                    WHERE AD.USER_ID = :user_id OR AD.USER_ID = 0
                 """)
                 .param("user_id", userId)
-                .param("path", "http://10.76.233.71:1801/V1/api/getPHoneAnnouncements/")
-                .query(phoneAnnouncementsRequest.class)
+                .param("path", "http://10.76.233.71:1801/V1/api/sc/getPhoneAnnouncements/")
+                .query(PhoneAnnouncementsRequest.class)
                 .list();
 
     }
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
-    public List<allAnnouncementsFamilyRequest> AllAnnouncementsFamily() {
+    public List<AllAnnouncementsFamilyRequest> AllAnnouncementsFamily() {
         return jdbcClient.sql("""
                    SELECT A.CREATE_DATE AS createDate
                           ,A.TITLE
@@ -95,8 +95,8 @@ public class AnnouncementsService {
                    JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
                 """)
-                .param("path", "http://10.76.233.71:1801/V1/api/getAllAnnouncementsFamily/")
-                .query(allAnnouncementsFamilyRequest.class)
+                .param("path", "http://10.76.233.71:1801/V1/api/sc/getAllAnnouncementsFamily/")
+                .query(AllAnnouncementsFamilyRequest.class)
                 .list();
 
     }
