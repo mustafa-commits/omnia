@@ -140,15 +140,15 @@ public class LoginService implements CommandLineRunner {
 
             // بعد التأكد من رقم الهاتف تضيف المعلومات في AppUsers
             for (LogInResponse response : responseList){
-
                 boolean alreadyExists = appUserRepo.existsByHeadFamilyIdAndRequestId(
                         response.HeadFamilyId(),
                         response.RequestId()
                 );
+                Long userId = null;
+                setGuardianInfo.add(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),response.RequestId(), response.HeadFamilyId())));
 
                 if (!alreadyExists) {
-                    Long userId = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(), response.HeadFamilyId())).getUserid();
-                    setGuardianInfo.add(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),response.RequestId(), response.HeadFamilyId())));
+                    userId = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(), response.HeadFamilyId())).getUserid();
                 } }
            return ResponseEntity.ok(setGuardianInfo);
         }else
