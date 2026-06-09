@@ -7,6 +7,7 @@ import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.service.chat.AppChatService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -66,7 +67,8 @@ public class appChatController implements SecuredRestController {
         return appChatService.getMessages(chatId);
     }
 
-    String uploadDir = "http://10.76.233.71:1801/";
+    @Value("ATTACHMENT_PATH_CHAT")
+    String uploadDir;
 
     @GetMapping("/V1/api/sc/photoChat/{filename:.+}")
     public void serveFile(
