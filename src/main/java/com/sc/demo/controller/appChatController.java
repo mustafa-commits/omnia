@@ -68,7 +68,7 @@ public class appChatController implements SecuredRestController {
 
     String uploadDir = "http://10.76.233.71:1801/";
 
-    @GetMapping("/V1/api/photoChat/{filename:.+}")
+    @GetMapping("/V1/api/sc/photoChat/{filename:.+}")
     public void serveFile(
             @PathVariable String filename,
             HttpServletResponse response

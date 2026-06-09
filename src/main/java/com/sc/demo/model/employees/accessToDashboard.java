@@ -19,7 +19,8 @@ public class accessToDashboard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dashboardUserId;
 
-    private Long userName;
+    @Column(length = 50)
+    private String userName;
 
     private String Phone;
 
@@ -35,7 +36,7 @@ public class accessToDashboard {
 
     private String lastUpdateBy;
 
-    public accessToDashboard(Long userName, String phone, String password, String departmentId) {
+    public accessToDashboard(String userName, String phone, String password, String departmentId) {
         this.userName = userName;
         Phone = phone;
         this.password = password;

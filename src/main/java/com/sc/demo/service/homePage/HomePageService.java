@@ -48,13 +48,14 @@ public class HomePageService {
 
     public List<homePageResponse> viewHomePagePhotos() {
         return jdbcClient.sql("""
-                   SELECT FILE_NAME AS fileName,
-                          LINK_TYPE AS linkType,
-                          LINK AS link
+                   SELECT TO_CHAR(:path) || FILE_NAME AS fileName ,
+                           LINK_TYPE AS linkType,
+                           LINK AS link
                    FROM MOBAPP.SC_HOMEPAGE_PHOTO
                    ORDER BY CREATE_DATE DESC
                    FETCH FIRST 3 ROWS ONLY
                 """)
+                .param("path", "http://10.76.233.71:1801/V1/api/viewHomePagePhotos/")
                 .query(homePageResponse.class)
                 .list();
 

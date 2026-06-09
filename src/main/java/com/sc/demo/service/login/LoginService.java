@@ -145,12 +145,19 @@ public class LoginService implements CommandLineRunner {
                         response.HeadFamilyId(),
                         response.RequestId()
                 );
-                Long userId = null;
-                setGuardianInfo.add(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),response.RequestId(), response.HeadFamilyId())));
+
+                Long userId;
 
                 if (!alreadyExists) {
                     userId = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(), response.HeadFamilyId())).getUserid();
-                } }
+                }else {
+                    userId = appUserRepo.findByHeadFamilyIdAndRequestId(
+                            response.HeadFamilyId(),
+                            response.RequestId()
+                    ).getUserid();
+                }
+                setGuardianInfo.add(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),response.RequestId(), response.HeadFamilyId())));
+            }
            return ResponseEntity.ok(setGuardianInfo);
         }else
             return ResponseEntity.badRequest().body("WRONG CRED");
@@ -162,6 +169,6 @@ public class LoginService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(tokenService.generateToken("1", 12L, 28L));
+        System.out.println(tokenService.generateToken("77", 12L, 28L));
     }
 }

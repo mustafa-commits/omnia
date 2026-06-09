@@ -173,7 +173,7 @@ public class AppChatService {
 
     public List<MessagesResponse> getMessages(long chatId){
         return jdbcClient.sql("""
-                SELECT CASE WHEN MSG_TYPE = 1 THEN :path || MESSAGES
+                SELECT CASE WHEN MSG_TYPE = 1 THEN TO_CHAR(:path) || MESSAGES
                         ELSE MESSAGES END AS messages,
                         WHO_IS_SENDER AS whoIsSender,
                         USER_ID_SENDER AS useridSender,

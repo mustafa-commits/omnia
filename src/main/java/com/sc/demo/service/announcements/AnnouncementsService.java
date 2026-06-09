@@ -47,6 +47,7 @@ public class AnnouncementsService {
         System.out.println(userId);
 
         Announcements announcements = new Announcements(announcementsRequest.sendId(), announcementsRequest.title(), announcementsRequest.description());
+        System.out.println(announcements);
         announcements = announcementsRepo.save(announcements);
         if (userId != null)
             announcementsDetailsRepo.save(new AnnouncementsDetails(Long.parseLong(userId), announcements));
@@ -67,35 +68,36 @@ public class AnnouncementsService {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         return jdbcClient.sql("""
-                   select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION,
-                   ad.user_id, at.FILE_NAME
-                   from SC_ANNOUNCEMENTS a
-                   Left join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
-                   Left join sc_announcements_attachment at on a.ANNOUNCEMENTS_ID = at.ANNOUNCEMENTS_ID
-                   Where ad.user_id = :user_id OR ad.USER_ID = 0
-                """).param("user_id", userId).query(phoneAnnouncementsRequest.class).list();
+                   SELECT A.CREATE_DATE AS createDate
+                           ,A.TITLE
+                           ,A.DESCRIPTION
+                           ,TO_CHAR(:path) || AA.FILE_NAME AS fileName
+                   FROM SC_ANNOUNCEMENTS A
+                   JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
+                   LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
+                   WHERE AD.USER_ID = :user_id OR AD.USER_ID = 0
+                """)
+                .param("user_id", userId)
+                .param("path", "http://10.76.233.71:1801/V1/api/getPHoneAnnouncements/")
+                .query(phoneAnnouncementsRequest.class)
+                .list();
 
     }
-    /*
-    (  select json_arrayagg(
-                json_object('img_name' is 'http://10.76.232.55:8090/i/ayn_hc/ayn_hic/hic_pharmacy_supply_order_files/' || pharmacy_supplier_files_id
-                                          || '.' || substr (file_type, instr (file_type, '/', 1) + 1)
-                           ,'full_img' is case when upper (substr (file_type, instr (file_type, '/', 1) + 1)) = 'pdf'
-                                             then n'<img src="../i/ayn_hc/pdf.png" width="100" height="100" id="image1">'
-                                             when upper (substr (file_type, 0, instr (file_type, '/', 1) - 1)) = 'image'
-                                             then n'<img src="http://10.76.232.55:8090/i/ayn_hc/ayn_hic/hic_pharmacy_supply_order_files/' || pharmacy_supplier_files_id
-                                                 || '.' || substr (file_type, instr (file_type, '/', 1) + 1) || '" width="100" height="100" id="image1">'
-                                             else n'<img src="../i/ayn_hc/unknown.png" width="100" height="100" id="image1">'
-                                      end) ) */
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
     public List<allAnnouncementsFamilyRequest> AllAnnouncementsFamily() {
-
         return jdbcClient.sql("""
-                   select a.CREATE_DATE as createDate, a.TITLE, a.DESCRIPTION
-                   from SC_ANNOUNCEMENTS a
-                   join SC_ANNOUNCEMENTS_DETAILS ad on a.ANNOUNCEMENTS_ID = ad.ANNOUNCEMENTS_ID
-                """).query(allAnnouncementsFamilyRequest.class).list();
+                   SELECT A.CREATE_DATE AS createDate
+                          ,A.TITLE
+                          ,TO_CHAR(:path) || AA.FILE_NAME AS fileName
+                          ,A.DESCRIPTION
+                   FROM SC_ANNOUNCEMENTS A
+                   JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
+                   LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
+                """)
+                .param("path", "http://10.76.233.71:1801/V1/api/getAllAnnouncementsFamily/")
+                .query(allAnnouncementsFamilyRequest.class)
+                .list();
 
     }
 }

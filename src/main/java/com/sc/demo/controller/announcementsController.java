@@ -6,10 +6,14 @@ import com.sc.demo.model.dto.announcements.allAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.announcementsRequest;
 import com.sc.demo.model.dto.announcements.phoneAnnouncementsRequest;
 import com.sc.demo.service.announcements.AnnouncementsService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -30,10 +34,44 @@ public class announcementsController implements SecuredRestController {
                 (sendId, title, description, null), file, token);
     }
 
+    //  المرفقات مع التبليغات التلفون
+    String uploadDir = "http://10.76.233.71:1801/";
+
+    @GetMapping("/V1/api/sc/getPHoneAnnouncements/{filename:.+}")
+    public void serveFile(
+            @PathVariable String filename,
+            HttpServletResponse response
+    ) throws IOException {
+        var file = Paths.get(uploadDir, filename);
+        if (Files.notExists(file)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        response.setContentType(Files.probeContentType(file));
+        response.setContentLengthLong(Files.size(file));
+        Files.copy(file, response.getOutputStream());
+    }
+
     // تبليغات التلفون
     @GetMapping("/V1/api/sc/getPHoneAnnouncements")
     public List<phoneAnnouncementsRequest> getPHoneAnnouncements(@RequestHeader(name = "authorization") String token){
         return announcementsService.PHoneAnnouncements(token);
+    }
+
+    //  المرفقات مع التبليغات الداشبورد
+    @GetMapping("/V1/api/sc/getAllAnnouncementsFamily/{filename:.+}")
+    public void serveAllFile(
+            @PathVariable String filename,
+            HttpServletResponse response
+    ) throws IOException {
+        var file = Paths.get(uploadDir, filename);
+        if (Files.notExists(file)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        response.setContentType(Files.probeContentType(file));
+        response.setContentLengthLong(Files.size(file));
+        Files.copy(file, response.getOutputStream());
     }
 
     // جميع تبليغات الداشبورد للعائلة

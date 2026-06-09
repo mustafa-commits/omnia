@@ -10,4 +10,5 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
             Long headFamilyId,
             Long requestId
     );
+    AppUser findByHeadFamilyIdAndRequestId(Long headFamilyId, Long requestId);
 }
