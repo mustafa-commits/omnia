@@ -185,7 +185,7 @@ public class AppChatService {
                 order by CREATE_DATE desc
                 """)
                 .param("chat_id", chatId)
-                .param("path", "http://10.76.233.71:1801/socialCare/V1/api/sc/photoChat/")
+                .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoChat/")
                 .query(MessagesResponse.class)
                 .list();
     }

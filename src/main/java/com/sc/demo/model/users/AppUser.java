@@ -1,5 +1,6 @@
 package com.sc.demo.model.users;
 
+import com.sc.demo.model.announcements.Branches;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +29,10 @@ public class AppUser {
     private Integer isActive = 1;
 
     private String Phone;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "BRANCHES")
+    private Branches branches;
 
     public AppUser(String phone, Long requestId, Long headFamilyId) {
         Phone = phone;
