@@ -3,7 +3,6 @@ package com.sc.demo.controller;
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.Branches;
-import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.model.notification.SendingType;
@@ -20,7 +19,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class announcementsController implements SecuredRestController {
+public class AannouncementsController implements SecuredRestController {
 
     @Autowired
     private AnnouncementsService announcementsService;
@@ -62,25 +61,4 @@ public class announcementsController implements SecuredRestController {
         return announcementsService.PhoneAnnouncements(token);
     }
 
-    //  المرفقات مع التبليغات الداشبورد
-    @GetMapping("/V1/api/sc/getAllAnnouncementsFamily/{filename:.+}")
-    public void serveAllFile(
-            @PathVariable String filename,
-            HttpServletResponse response
-    ) throws IOException {
-        var file = Paths.get(uploadDir, filename);
-        if (Files.notExists(file)) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        response.setContentType(Files.probeContentType(file));
-        response.setContentLengthLong(Files.size(file));
-        Files.copy(file, response.getOutputStream());
-    }
-
-    // جميع تبليغات الداشبورد للعائلة
-    @GetMapping("/V1/api/sc/getAllAnnouncementsFamily")
-    public List<AllAnnouncementsFamilyRequest> getAllAnnouncementsFamily(){
-        return announcementsService.AllAnnouncementsFamily();
-    }
 }
