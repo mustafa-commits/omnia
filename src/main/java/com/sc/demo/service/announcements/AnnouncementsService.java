@@ -13,6 +13,7 @@ import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,8 @@ public class AnnouncementsService {
 
     @Autowired
     private TokenService tokenService;
+
+
 
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file, List<Long> userId) {
