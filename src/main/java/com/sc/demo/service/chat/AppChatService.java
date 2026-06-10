@@ -2,7 +2,6 @@ package com.sc.demo.service.chat;
 
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
-import com.sc.demo.repository.chat.ChatTokenRepo;
 import com.sc.demo.repository.chat.MessagesRepo;
 import com.sc.demo.repository.chat.ChatRepo;
 import com.sc.demo.service.token.TokenService;
@@ -14,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AppChatService {
@@ -35,9 +32,6 @@ public class AppChatService {
 
     @Autowired
     private TokenService tokenService;
-
-    @Autowired
-    private ChatTokenRepo chatTokenRepo;
 
     public boolean createChat(AppChatRequest appChatRequest){
         AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(), appChatRequest.chatTitle());
