@@ -55,7 +55,7 @@ public class HomePageService {
                    ORDER BY CREATE_DATE DESC
                    FETCH FIRST 3 ROWS ONLY
                 """)
-                .param("path", "http://10.76.233.71:1801/V1/api/viewHomePagePhotos/")
+                .param("path", "http://10.76.233.71:1801/socialCare/V1/api/viewHomePagePhotos/")
                 .query(homePageResponse.class)
                 .list();
 

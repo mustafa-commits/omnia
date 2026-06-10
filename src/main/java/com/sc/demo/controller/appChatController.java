@@ -7,7 +7,6 @@ import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.service.chat.AppChatService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,11 +63,11 @@ public class appChatController implements SecuredRestController {
     // اظهار الرسائل في المحادثات
     @GetMapping("/V1/api/sc/getMessagesChat")
     public List<MessagesResponse> getMessages(@RequestParam long chatId){
+        System.out.println(chatId);
         return appChatService.getMessages(chatId);
     }
 
-    @Value("ATTACHMENT_PATH_CHAT")
-    String uploadDir;
+    String uploadDir = "http://10.76.233.71:1801/socialCare";
 
     @GetMapping("/V1/api/sc/photoChat/{filename:.+}")
     public void serveFile(
@@ -76,6 +75,7 @@ public class appChatController implements SecuredRestController {
             HttpServletResponse response
     ) throws IOException {
         var file = Paths.get(uploadDir, filename);
+        System.out.println("Looking for file at: " + file.toAbsolutePath());
         if (Files.notExists(file)) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;

@@ -169,6 +169,11 @@ public class LoginService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(tokenService.generateToken("77", 12L, 28L));
+
+//        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+//        Long headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
+//        Long requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
+//
+        System.out.println(tokenService.generateToken("77", 73619L, 506173L));
     }
 }

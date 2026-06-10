@@ -30,7 +30,7 @@ public class NotificationMaster {
     private Integer isActive;
 
     @Enumerated(EnumType.ORDINAL)
-    private NotificationType notificationType;
+    private SendingType sendingType;
 
     private LocalDateTime createDate;
 
@@ -44,12 +44,12 @@ public class NotificationMaster {
     private List<NotificationDetails> notificationDetails = new ArrayList<>();
 
     public NotificationMaster(Integer sendId, String title,
-                              String description, NotificationType notificationType) {
+                              String description, SendingType sendingType) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;
         this.isActive = 1;
-        this.notificationType = notificationType;
+        this.sendingType = sendingType;
     }
 
     @PrePersist

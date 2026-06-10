@@ -3,9 +3,11 @@ package com.sc.demo.service.announcements;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
+import com.sc.demo.model.chat.MsgType;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
+import com.sc.demo.model.notification.SendingType;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
@@ -42,15 +44,17 @@ public class AnnouncementsService {
     private TokenService tokenService;
 
     // انشاء تبليغ
-    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file, String token) {
-        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file, List<Long> userId) {
         System.out.println(userId);
 
-        Announcements announcements = new Announcements(announcementsRequest.sendId(), announcementsRequest.title(), announcementsRequest.description());
+        Announcements announcements = new Announcements(announcementsRequest.sendId(), announcementsRequest.title(),
+                announcementsRequest.description(), announcementsRequest.branches(), announcementsRequest.sendingType());
         System.out.println(announcements);
         announcements = announcementsRepo.save(announcements);
-        if (userId != null)
-            announcementsDetailsRepo.save(new AnnouncementsDetails(Long.parseLong(userId), announcements));
+        if (announcementsRequest.sendingType() == SendingType.PRIVATE)
+            for (Long a : userId){
+                announcementsDetailsRepo.save(new AnnouncementsDetails(a, announcements));
+            }
         if (file != null) try {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -78,7 +82,7 @@ public class AnnouncementsService {
                    WHERE AD.USER_ID = :user_id OR AD.USER_ID = 0
                 """)
                 .param("user_id", userId)
-                .param("path", "http://10.76.233.71:1801/V1/api/sc/getPhoneAnnouncements/")
+                .param("path", "http://10.76.233.71:1801/socialCare/V1/api/sc/getPhoneAnnouncements/")
                 .query(PhoneAnnouncementsRequest.class)
                 .list();
 
@@ -95,7 +99,7 @@ public class AnnouncementsService {
                    JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
                 """)
-                .param("path", "http://10.76.233.71:1801/V1/api/sc/getAllAnnouncementsFamily/")
+                .param("path", "http://10.76.233.71:1801/socialCare/V1/api/sc/getAllAnnouncementsFamily/")
                 .query(AllAnnouncementsFamilyRequest.class)
                 .list();
 

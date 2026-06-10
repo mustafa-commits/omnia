@@ -2,7 +2,7 @@ package com.sc.demo.model.dto.notification;
 
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.notification.NotificationToken;
-import com.sc.demo.model.notification.NotificationType;
+import com.sc.demo.model.notification.SendingType;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ public record NotificationRequest(
         Integer sendId,
         String title,
         String description,
-        NotificationType notificationType,
+        SendingType sendingType,
         List<NotificationDetails> notificationDetails,
         List<NotificationToken> NotificationTokens
 ) {

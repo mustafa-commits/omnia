@@ -2,9 +2,11 @@ package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.announcements.Announcements;
+import com.sc.demo.model.announcements.Branches;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
+import com.sc.demo.model.notification.SendingType;
 import com.sc.demo.service.announcements.AnnouncementsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +30,16 @@ public class announcementsController implements SecuredRestController {
     public Announcements createAnnouncements(@RequestParam Integer sendId,
                                              @RequestParam String title,
                                              @RequestParam String description,
-                                             @RequestHeader(name = "authorization") String token,
+                                             @RequestParam Branches branches,
+                                             @RequestParam SendingType sendingType,
+                                             @RequestParam List<Long> userId,
                                              @RequestParam (required = false) MultipartFile file)  {
         return announcementsService.createAnnouncements(new AnnouncementsRequest
-                (sendId, title, description, null), file, token);
+                (sendId, title, description, branches, sendingType, null), file, userId);
     }
 
     //  المرفقات مع التبليغات التلفون
-    String uploadDir = "http://10.76.233.71:1801/";
+    String uploadDir = "http://10.76.233.71:1801/socialCare";
 
     @GetMapping("/V1/api/sc/getPhoneAnnouncements/{filename:.+}")
     public void serveFile(

@@ -29,7 +29,7 @@ public class homePageController {
     }
 
     //  المرفقات في الواجهة
-    String uploadDir = "http://10.76.233.71:1801/";
+    String uploadDir = "http://10.76.233.71:1801/socialCare";
 
     @GetMapping("/V1/api/sc/viewHomePagePhotos/{filename:.+}")
     public void serveFile(

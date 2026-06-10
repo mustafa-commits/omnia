@@ -18,6 +18,7 @@ public class NotificationToken {
     @Id
     private Long userId;
 
+    @Column(length = 4000)
     private String token;
 
     private Long tokenType;

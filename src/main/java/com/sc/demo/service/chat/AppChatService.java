@@ -7,6 +7,7 @@ import com.sc.demo.repository.chat.MessagesRepo;
 import com.sc.demo.repository.chat.ChatRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -172,6 +173,7 @@ public class AppChatService {
 
 
     public List<MessagesResponse> getMessages(long chatId){
+        System.out.println(chatId);
         return jdbcClient.sql("""
                 SELECT CASE WHEN MSG_TYPE in (1,2) THEN TO_CHAR(:path) || MESSAGES
                         ELSE MESSAGES END AS messages,
@@ -183,7 +185,7 @@ public class AppChatService {
                 order by CREATE_DATE desc
                 """)
                 .param("chat_id", chatId)
-                .param("path", "http://10.76.233.71:1801/V1/api/sc/photoChat/")
+                .param("path", "http://10.76.233.71:1801/socialCare/V1/api/sc/photoChat/")
                 .query(MessagesResponse.class)
                 .list();
     }
