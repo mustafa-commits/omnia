@@ -9,6 +9,5 @@ public record MessagesRequest(
         Platform platform,
         String messages,
         MsgType msgType
-
 ) {
 }

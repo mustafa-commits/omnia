@@ -23,8 +23,9 @@ public class appChatController implements SecuredRestController {
     @Autowired
     private AppChatService appChatService;
 
-    @Value("${ATTACHMENT_PATH_CHAT}")
-    private String direc;
+    @Value("#{environment['ATTACHMENT_PATH_VOICE'] = null ? " +
+            "environment['ATTACHMENT_PATH_CHAT'] : environment['ATTACHMENT_PATH_VOICE']}")
+    private String uploadDir;
 
     // انشاء محادثة
     @PostMapping("/V1/api/sc/createChat")
@@ -76,7 +77,7 @@ public class appChatController implements SecuredRestController {
             @PathVariable String filename,
             HttpServletResponse response
     ) throws IOException {
-        var file = Paths.get(direc, filename);
+        var file = Paths.get(uploadDir, filename);
         System.out.println("Looking for file at: " + file.toAbsolutePath());
         if (Files.notExists(file)) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

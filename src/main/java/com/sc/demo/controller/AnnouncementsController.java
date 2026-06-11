@@ -9,6 +9,7 @@ import com.sc.demo.model.notification.SendingType;
 import com.sc.demo.service.announcements.AnnouncementsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,10 +20,13 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class AannouncementsController implements SecuredRestController {
+public class AnnouncementsController implements SecuredRestController {
 
     @Autowired
     private AnnouncementsService announcementsService;
+
+    @Value("${ATTACHMENT_PATH_ANNOUNCEMENTS}")
+    private String uploadDir;
 
     // انشار تبليغ
     @PostMapping("/V1/api/sc/createAnnouncements")
@@ -38,8 +42,6 @@ public class AannouncementsController implements SecuredRestController {
     }
 
     //  المرفقات مع التبليغات التلفون
-    String uploadDir = "http://10.76.233.71:1801/socialCare";
-
     @GetMapping("/V1/api/sc/getPhoneAnnouncements/{filename:.+}")
     public void serveFile(
             @PathVariable String filename,

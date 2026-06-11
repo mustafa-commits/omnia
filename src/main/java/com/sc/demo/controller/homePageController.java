@@ -5,6 +5,7 @@ import com.sc.demo.model.homePage.linkType;
 import com.sc.demo.service.homePage.HomePageService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,9 @@ public class homePageController {
     @Autowired
     private HomePageService homePageService;
 
+    @Value("${ATTACHMENT_PATH_HOMEPAGE}")
+    private String uploadDir;
+
     // اضافة صورة مربوطة بصفحة او موقع
     @PostMapping("/V1/api/sc/addHomePagePhoto")
     public String addHomePagePhoto(@RequestParam String link,
@@ -29,8 +33,6 @@ public class homePageController {
     }
 
     //  المرفقات في الواجهة
-    String uploadDir = "http://10.76.233.71:1801/socialCare";
-
     @GetMapping("/V1/api/sc/viewHomePagePhotos/{filename:.+}")
     public void serveFile(
             @PathVariable String filename,
