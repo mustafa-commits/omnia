@@ -41,13 +41,13 @@ public class LoginService implements CommandLineRunner {
     String regex = "^(77|78|79)\\d{8}$";
 
     // تسجيل دخول من خلال رقم الهاتف
-    public List<LogInResponse> logIn(long phone_Number, String country_code, String birthDate){
+    public List<LogInResponse> logIn(long phone, String country_code, String birthDate){
 
-        if (!String.valueOf(phone_Number).matches(regex)){
+        if (!String.valueOf(phone).matches(regex)){
             return null;
         }
 
-        Long code = GeneratingVerificationLogin(String.valueOf(phone_Number), SendingType.WHATSAPP);
+        Long code = GeneratingVerificationLogin(String.valueOf(phone), SendingType.WHATSAPP);
         whatsAppService.sendVerificationCode(code);
 
         return jdbcClient.sql("""
@@ -66,9 +66,9 @@ public class LoginService implements CommandLineRunner {
                                                  WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
                                                      AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
                         AND H.IS_GUARDIAN = 1
-                        AND (F.PHONE1 LIKE '%' || :phone_Number
-                            OR F.PHONE2 LIKE '%' || :phone_Number
-                            OR F.PHONE3 LIKE '%' || :phone_Number)
+                        AND (F.PHONE1 LIKE '%' || :phone
+                            OR F.PHONE2 LIKE '%' || :phone
+                            OR F.PHONE3 LIKE '%' || :phone)
                         AND H.BIRTH_DATE = TO_DATE(:birthDate, 'DD/MM/YYYY')
 
                         UNION
@@ -76,10 +76,10 @@ public class LoginService implements CommandLineRunner {
                         SELECT FI.HEAD_FAMILY_ID as HeadFamilyId
                               ,FI.REQUEST_ID as RequestId
                         FROM MOBAPP.SC_FAMILY_INFO FI
-                        WHERE FI.PHONE LIKE '%' || :phone_Number
+                        WHERE FI.PHONE LIKE '%' || :phone
                         AND FI.BIRTH_DATE = TO_DATE(:birthDate, 'DD/MM/YYYY')
                 """)
-                .param("phone_Number",phone_Number)
+                .param("phone",phone)
                 .param("birthDate", birthDate)
                 .query(LogInResponse.class)
                 .list();
@@ -98,11 +98,11 @@ public class LoginService implements CommandLineRunner {
         Optional <ChekLoginRequest> logInChek = jdbcClient.sql("""
                     SELECT USER_IDENTIFIER AS userIdentifier
                     FROM MOBAPP.SC_VERIFICATION_APP V
-                    WHERE V.USER_IDENTIFIER = :phone_Number
+                    WHERE V.USER_IDENTIFIER = :phone
                     AND V.SECRET_CODE = :secretCode
                     and Sysdate <= CREATE_DATE + interval '10' minute
                 """)
-                .param("phone_Number",appUserRequest.phone())
+                .param("phone",appUserRequest.phone())
                 .param("secretCode", appUserRequest.secretCode())
                 .query(ChekLoginRequest.class).optional();
 
@@ -124,18 +124,18 @@ public class LoginService implements CommandLineRunner {
                                                  WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
                                                      AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
                         AND H.IS_GUARDIAN = 1
-                        AND (F.PHONE1 LIKE '%' || :phone_Number
-                            OR F.PHONE2 LIKE '%' || :phone_Number
-                            OR F.PHONE3 LIKE '%' || :phone_Number)
+                        AND (F.PHONE1 LIKE '%' || :phone
+                            OR F.PHONE2 LIKE '%' || :phone
+                            OR F.PHONE3 LIKE '%' || :phone)
 
                         UNION
 
                         SELECT FI.HEAD_FAMILY_ID as HeadFamilyId
                               ,FI.REQUEST_ID as RequestId
                         FROM MOBAPP.SC_FAMILY_INFO FI
-                        WHERE FI.PHONE LIKE '%' || :phone_Number
+                        WHERE FI.PHONE LIKE '%' || :phone
                         """)
-                    .param("phone_Number", appUserRequest.phone())
+                    .param("phone", appUserRequest.phone())
                     .query(LogInResponse.class)
                     .list();
 

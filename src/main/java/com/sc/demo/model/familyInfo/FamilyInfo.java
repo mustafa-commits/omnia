@@ -1,5 +1,6 @@
 package com.sc.demo.model.familyInfo;
 
+import com.sc.demo.model.announcements.Branches;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class familyInfo {
+public class FamilyInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,15 +29,21 @@ public class familyInfo {
 
     private LocalDateTime createDate;
 
-    private Integer createBy;
+    private Long createBy;
 
     private LocalDateTime birthDate;
 
     private String Phone;
 
-    private Long oldFamilyNo;
+    private String oldFamilyNo;
 
-    public familyInfo(Long headFamilyId, Long requestId, String headFamilyName, Integer createBy, LocalDateTime birthDate, String phone, Long oldFamilyNo) {
+    @Column(length = 500)
+    @Enumerated(EnumType.STRING)
+    private Branches branches;
+
+    public FamilyInfo(Long headFamilyId, Long requestId, String headFamilyName,
+                      Long createBy, LocalDateTime birthDate, String phone,
+                      String oldFamilyNo, Branches branches) {
         this.headFamilyId = headFamilyId;
         this.requestId = requestId;
         this.headFamilyName = headFamilyName;
@@ -44,7 +51,9 @@ public class familyInfo {
         this.birthDate = birthDate;
         Phone = phone;
         this.oldFamilyNo = oldFamilyNo;
+        this.branches = branches;
     }
+
 
     @PrePersist
     public void prePersist(){

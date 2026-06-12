@@ -1,28 +1,27 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.dto.addPhoneNumber.checkPhone;
+import com.sc.demo.model.dto.addPhoneNumber.AddPhonRequest;
+import com.sc.demo.model.dto.addPhoneNumber.CheckPhoneRequest;
 import com.sc.demo.service.addPhone.AddPhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class addPhoneController implements SecuredRestController {
+public class addPhoneController {
 
     @Autowired
     private AddPhoneService addPhoneService;
 
     // التحقق من وجود رقم الهاتف
     @GetMapping("/V1/sc/api/checkNumber")
-    public checkPhone checkNumber(@RequestParam long phone_Number){
-        return addPhoneService.checkForTheNumber(phone_Number);
+    public CheckPhoneRequest checkNumber(@RequestParam long phone){
+        return addPhoneService.checkForTheNumber(phone);
     }
 
-//    // اضافة رقم هاتف جديد
-//    @PostMapping("/V1/sc/api/AddNewPhone")
-//    public String addNewPhone(){
-//        return addPhoneService.addPhone();
-//    }
+    // اضافة رقم هاتف جديد
+    @PostMapping("/V1/sc/api/AddNewPhone")
+    public Boolean addNewPhone(@RequestBody AddPhonRequest addPhonRequest){
+        return addPhoneService.addPhone(addPhonRequest);
+    }
 }

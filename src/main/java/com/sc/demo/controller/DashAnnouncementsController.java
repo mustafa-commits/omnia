@@ -1,13 +1,15 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.model.announcements.Announcements;
+import com.sc.demo.model.announcements.Branches;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
+import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
+import com.sc.demo.model.notification.SendingType;
 import com.sc.demo.service.announcements.AnnouncementsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +24,19 @@ public class DashAnnouncementsController {
     private AnnouncementsService announcementsService;
 
     String uploadDir = "http://10.76.233.71:1801/socialCare";
+
+    // انشار تبليغ
+    @PostMapping("/V1/api/sc/createAnnouncements")
+    public Announcements createAnnouncements(@RequestParam Integer sendId,
+                                             @RequestParam String title,
+                                             @RequestParam String description,
+                                             @RequestParam Branches branches,
+                                             @RequestParam SendingType sendingType,
+                                             @RequestParam List<Long> userId,
+                                             @RequestParam (required = false) MultipartFile file)  {
+        return announcementsService.createAnnouncements(new AnnouncementsRequest
+                (sendId, title, description, branches, sendingType, null), file, userId);
+    }
 
     //  المرفقات مع التبليغات الداشبورد
     @GetMapping("/V1/api/sc/getAllAnnouncementsFamily/{filename:.+}")

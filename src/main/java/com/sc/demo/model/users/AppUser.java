@@ -30,8 +30,8 @@ public class AppUser {
 
     private String Phone;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "BRANCHES")
+//    @Enumerated(EnumType.ORDINAL)
+//    @Column(name = "BRANCHES")
     private Branches branches;
 
     public AppUser(String phone, Long requestId, Long headFamilyId) {

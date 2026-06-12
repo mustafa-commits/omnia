@@ -23,8 +23,9 @@ public class appChatController implements SecuredRestController {
     @Autowired
     private AppChatService appChatService;
 
-    @Value("#{environment['ATTACHMENT_PATH_VOICE'] = null ? " +
-            "environment['ATTACHMENT_PATH_CHAT'] : environment['ATTACHMENT_PATH_VOICE']}")
+//    @Value("#{environment['ATTACHMENT_PATH_VOICE'] = null ? " +
+//            "environment['ATTACHMENT_PATH_CHAT'] : environment['ATTACHMENT_PATH_VOICE']}")
+    @Value("${ATTACHMENT_PATH_CHAT}")
     private String uploadDir;
 
     // انشاء محادثة

@@ -34,8 +34,8 @@ public class Announcements {
 
     private Integer isActive;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "BRANCHES")
+//    @Enumerated(EnumType.ORDINAL)
+//    @Column(name = "BRANCHES")
     private Branches branches;
 
     private LocalDateTime createDate;

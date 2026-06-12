@@ -28,10 +28,10 @@ public class loginController {
 
     // تسجيل الدخول من خلال رقم الهاتف
     @GetMapping("/V1/api/sc/loginByPhone")
-    public List<LogInResponse> login(@RequestParam long phone_Number,
+    public List<LogInResponse> login(@RequestParam long phone,
                                     @RequestParam String country_code,
                                     @RequestParam String birthDate) {
-        return loginService.logIn(phone_Number, country_code, birthDate);
+        return loginService.logIn(phone, country_code, birthDate);
     }
 
     // جلب ال OTP بعد خزنه بالجدول
