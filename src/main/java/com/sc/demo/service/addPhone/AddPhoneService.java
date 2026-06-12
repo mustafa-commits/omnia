@@ -3,8 +3,6 @@ package com.sc.demo.service.addPhone;
 import com.sc.demo.model.dto.addPhoneNumber.AddPhonRequest;
 import com.sc.demo.model.dto.addPhoneNumber.CheckPhoneRequest;
 import com.sc.demo.model.familyInfo.FamilyInfo;
-import com.sc.demo.model.notification.NotificationDetails;
-import com.sc.demo.model.notification.NotificationToken;
 import com.sc.demo.repository.addPhone.AddPhoneRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +16,6 @@ public class AddPhoneService {
 
     @Autowired
     private JdbcClient jdbcClient;
-
-    @Autowired
-    private TokenService tokenService;
 
     @Autowired
     private AddPhoneRepo addPhoneRepo;

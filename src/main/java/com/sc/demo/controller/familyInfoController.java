@@ -1,7 +1,7 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMambersResponse;
+import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMembersResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
 import com.sc.demo.service.users.FamilyInfoService;
@@ -31,7 +31,7 @@ public class familyInfoController implements SecuredRestController {
 
     // عدد افراد العائلة + عدد الايتام
     @GetMapping("/V1/sc/api/getChildrenAndMailyFamilyMambersResponse")
-    public List<ChildrenAndMailyFamilyMambersResponse> getChildrenAndMailyFamilyMambersResponse(@RequestHeader(name = "authorization") String token){
+    public List<ChildrenAndMailyFamilyMembersResponse> getChildrenAndMailyFamilyMambersResponse(@RequestHeader(name = "authorization") String token){
         return familyInfoService.getChildrenAndMailyFamilyMambersResponse(token);
     }
 }

@@ -1,6 +1,6 @@
 package com.sc.demo.service.users;
 
-import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMambersResponse;
+import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMembersResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
 import com.sc.demo.service.token.TokenService;
@@ -124,7 +124,7 @@ public class FamilyInfoService {
     }
 
     // عدد افراد العائلة + عدد الايتام
-    public List<ChildrenAndMailyFamilyMambersResponse> getChildrenAndMailyFamilyMambersResponse(String token){
+    public List<ChildrenAndMailyFamilyMembersResponse> getChildrenAndMailyFamilyMambersResponse(String token){
 
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
@@ -147,7 +147,7 @@ public class FamilyInfoService {
                 """)
                 .param("requestId", requestId)
                 .param("headFamilyId", headFamilyId)
-                .query(ChildrenAndMailyFamilyMambersResponse.class)
+                .query(ChildrenAndMailyFamilyMembersResponse.class)
                 .list();
     }
 }

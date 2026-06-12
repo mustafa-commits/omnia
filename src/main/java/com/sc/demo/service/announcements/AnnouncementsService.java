@@ -44,14 +44,14 @@ public class AnnouncementsService {
     @Autowired
     private TokenService tokenService;
 
-
-
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file, List<Long> userId) {
         System.out.println(userId);
 
         Announcements announcements = new Announcements(announcementsRequest.sendId(), announcementsRequest.title(),
-                announcementsRequest.description(), announcementsRequest.branches(), announcementsRequest.sendingType());
+                announcementsRequest.description(), announcementsRequest.branches(),
+//                SendingType.BRANCH ? announcementsRequest.branches() : null,
+                announcementsRequest.sendingType());
         System.out.println(announcements);
         announcements = announcementsRepo.save(announcements);
         if (announcementsRequest.sendingType() == SendingType.PRIVATE)

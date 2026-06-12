@@ -5,7 +5,7 @@ public record FamilyInfoHousingResponse(
         String JudgeName,
         String CityName,
         String Neighborhood,
-        String NearsetAddress,
+        String NearestAddress,
         String BranchName,
         String OfficeName,
         String Phone1,

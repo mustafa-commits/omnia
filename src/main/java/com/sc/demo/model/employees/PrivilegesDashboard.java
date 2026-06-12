@@ -1,5 +1,6 @@
 package com.sc.demo.model.employees;
 
+import com.sc.demo.model.notification.NotificationMaster;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,13 +15,15 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class privilegesDashboard {
+public class PrivilegesDashboard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long privilegeId;
 
-    private Long dashboardUserId;
+    @ManyToOne
+    @JoinColumn(name = "dashboard_fk")
+    private AccessToDashboard dashboardUserId;
 
     private String userPrivilege;
 
@@ -33,6 +36,14 @@ public class privilegesDashboard {
     private LocalDateTime lastUpdate;
 
     private String lastUpdateBy;
+
+    public PrivilegesDashboard(AccessToDashboard dashboardUserId, String userPrivilege,
+                               String privilegeName, String createBy) {
+        this.dashboardUserId = dashboardUserId;
+        this.userPrivilege = userPrivilege;
+        this.privilegeName = privilegeName;
+        this.createBy = createBy;
+    }
 
     @PrePersist
     public void prePersist(){this.createDate = LocalDateTime.now(); }

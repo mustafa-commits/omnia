@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "sc_dashboard_users")
@@ -13,11 +15,14 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class accessToDashboard {
+public class AccessToDashboard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dashboardUserId;
+
+    @OneToMany(mappedBy = "dashboardUserId", cascade = CascadeType.ALL)
+    private List<PrivilegesDashboard> privilegesDashboards = new ArrayList<>();
 
     @Column(length = 50)
     private String userName;
@@ -26,21 +31,28 @@ public class accessToDashboard {
 
     private String password;
 
-    private String departmentId;
+    @Enumerated(EnumType.ORDINAL)
+    private Department departmentId;
 
     private LocalDateTime createDate;
 
-    private String createBy;
+    private Long createBy;
 
     private LocalDateTime lastUpdate;
 
     private String lastUpdateBy;
 
-    public accessToDashboard(String userName, String phone, String password, String departmentId) {
-        this.userName = userName;
+    private PrivilegesName privilegesName;
+
+    public AccessToDashboard(String phone, Department departmentId, String password,
+                             String userName, PrivilegesName privilegesName,
+                             Long createBy) {
         Phone = phone;
-        this.password = password;
         this.departmentId = departmentId;
+        this.password = password;
+        this.userName = userName;
+        this.privilegesName = privilegesName;
+        this.createBy = createBy;
     }
 
     @PrePersist
