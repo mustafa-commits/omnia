@@ -79,7 +79,7 @@ public class LoginService implements CommandLineRunner {
                         WHERE FI.PHONE LIKE '%' || :phone
                         AND FI.BIRTH_DATE = TO_DATE(:birthDate, 'DD/MM/YYYY')
                 """)
-                .param("phone",phone)
+                .param("phone", phone)
                 .param("birthDate", birthDate)
                 .query(LogInResponse.class)
                 .list();

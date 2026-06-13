@@ -46,12 +46,12 @@ public class HomePageService {
 
     public List<homePageResponse> viewHomePagePhotos() {
         return jdbcClient.sql("""
-                   SELECT TO_CHAR(:path) || FILE_NAME AS fileName ,
-                           LINK_TYPE AS linkType,
-                           LINK AS link
-                   FROM MOBAPP.SC_HOMEPAGE_PHOTO
-                   ORDER BY CREATE_DATE DESC
-                   FETCH FIRST 3 ROWS ONLY
+                 SELECT PHOTO_ID AS photoId
+                        ,LINK_TYPE AS linkType
+                        ,TO_CHAR(:path) || FILE_NAME AS fileName
+                        ,LINK AS link
+                 FROM MOBAPP.SC_HOMEPAGE_PHOTOS
+                 ORDER BY CREATE_DATE DESC
                 """)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/homePagePhotos/")
                 .query(homePageResponse.class)
