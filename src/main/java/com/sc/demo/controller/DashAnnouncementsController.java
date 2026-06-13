@@ -34,7 +34,7 @@ public class DashAnnouncementsController {
                                              @RequestParam(required = false) String branches,
                                              @RequestParam SendingType sendingType,
                                              @RequestParam Long createBy,
-                                             @RequestParam List<Long> userId,
+                                             @RequestParam(required = false) List<Long> userId,
                                              @RequestParam(required = false) MultipartFile file)  {
         return announcementsService.createAnnouncements(new AnnouncementsRequest
                 (sendId, title, description, branches, sendingType, createBy, null), file, userId);
