@@ -1,17 +1,15 @@
 package com.sc.demo.model.dto.addPhoneNumber;
 
-import com.sc.demo.model.announcements.Branches;
-
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record AddPhonRequest(
         Long headFamilyId,
         Long requestId,
         String headFamilyName,
         Long createBy,
-        LocalDateTime birthDate,
+        LocalDate birthDate,
         String phone,
         String oldFamilyNo,
-        Branches branches
+        String branches
 ) {
 }

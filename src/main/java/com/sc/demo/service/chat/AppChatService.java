@@ -33,7 +33,7 @@ public class AppChatService {
     private TokenService tokenService;
 
     public boolean createChat(AppChatRequest appChatRequest){
-        AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(), appChatRequest.chatTitle());
+        AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(), appChatRequest.chatTitle(), appChatRequest.createBy());
 
         appChatMaster = chatRepo.save(appChatMaster);
 
@@ -45,7 +45,8 @@ public class AppChatService {
                 : WhoIsSender.EMPLOYEE;
 
         messagesRepo.save(new AppChatDetails(userIdSender, whoIsSender,
-                        appChatDetails.getPlatform(), appChatDetails.getMessages(), appChatMaster));
+                                            appChatDetails.getPlatform(), appChatDetails.getMessages(),
+                                            appChatDetails.getCreateBy(), appChatMaster));
 
         AppChatDetails welcomeMessage = new AppChatDetails();
         welcomeMessage.setChatApp(appChatMaster);
@@ -70,7 +71,7 @@ public class AppChatService {
 //
 //        if (byToken.isPresent()){
 //            ChatToken chatToken = byToken.get();
-//            chatToken.setLastUpdate(LocalDateTime.now());
+//            chatToken.setLastUpdate(LocalDate.now());
 //            chatToken.setToken(chatTokenRequest.token());
 //            return chatTokenRepo.save(chatToken).getChatId();
 //        } else {
@@ -157,7 +158,7 @@ public class AppChatService {
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 Long.parseLong(userId), whoIsSender,
                 messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
-                messagesRequest.msgType());
+                messagesRequest.msgType(), messagesRequest.createBy());
         Long detailsChatId = messagesRepo.save(appChatDetails).getDetailsChatId();
         System.out.println(detailsChatId);
         return true;

@@ -1,12 +1,11 @@
 package com.sc.demo.model.familyInfo;
 
-import com.sc.demo.model.announcements.Branches;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "sc_family_info")
@@ -27,23 +26,27 @@ public class FamilyInfo {
 
     private String headFamilyName;
 
-    private LocalDateTime createDate;
-
-    private Long createBy;
-
-    private LocalDateTime birthDate;
+    private LocalDate birthDate;
 
     private String Phone;
 
     private String oldFamilyNo;
 
-    @Column(length = 50)
-    @Enumerated(EnumType.STRING)
-    private Branches branches;
+    private String branches;
+
+    private Integer isActive = 1;
+
+    private LocalDate createDate;
+
+    private Long createBy;
+
+    private LocalDate lastUpdate;
+
+    private String lastUpdateBy;
 
     public FamilyInfo(Long headFamilyId, Long requestId, String headFamilyName,
-                      Long createBy, LocalDateTime birthDate, String phone,
-                      String oldFamilyNo, Branches branches) {
+                      Long createBy, LocalDate birthDate, String phone,
+                      String oldFamilyNo, String branches) {
         this.headFamilyId = headFamilyId;
         this.requestId = requestId;
         this.headFamilyName = headFamilyName;
@@ -57,6 +60,6 @@ public class FamilyInfo {
 
     @PrePersist
     public void prePersist(){
-        this.createDate = LocalDateTime.now();
+        this.createDate = LocalDate.now();
     }
 }

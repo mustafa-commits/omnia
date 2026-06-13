@@ -1,12 +1,11 @@
 package com.sc.demo.model.users;
 
-import com.sc.demo.model.announcements.Branches;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "sc_app_users")
@@ -24,25 +23,36 @@ public class AppUser {
 
     private Long requestId;
 
-    private LocalDateTime createDate;
+    private String Phone;
+
+    private String branches;
+
+    @Enumerated(EnumType.ORDINAL)
+    private PhoneType phoneType;
 
     private Integer isActive = 1;
 
-    private String Phone;
+    private LocalDate createDate;
 
-//    @Enumerated(EnumType.ORDINAL)
-//    @Column(name = "BRANCHES")
-    private Branches branches;
+    private Long createBy;
 
-    public AppUser(String phone, Long requestId, Long headFamilyId) {
+    private LocalDate lastUpdate;
+
+    private String lastUpdateBy;
+
+    public AppUser(String phone, Long requestId, Long headFamilyId, Long createBy,
+                   PhoneType phoneType, String branches) {
         Phone = phone;
         this.requestId = requestId;
         this.headFamilyId = headFamilyId;
+        this.createBy = createBy;
+        this.phoneType = phoneType;
+        this.branches = branches;
     }
 
     @PrePersist
     public void prePersist(){
-        this.createDate = LocalDateTime.now();
+        this.createDate = LocalDate.now();
     }
 
 }

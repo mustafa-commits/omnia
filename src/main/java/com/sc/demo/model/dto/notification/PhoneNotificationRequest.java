@@ -1,8 +1,8 @@
 package com.sc.demo.model.dto.notification;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record PhoneNotificationRequest(
-        LocalDateTime createDate,
+        LocalDate createDate,
         String title,
         String description
 ) {

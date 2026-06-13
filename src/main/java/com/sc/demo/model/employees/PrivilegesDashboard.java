@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "sc_dashboard_privileges")
@@ -29,16 +29,18 @@ public class PrivilegesDashboard {
 
     private String privilegeName;
 
-    private LocalDateTime createDate;
+    private Integer isActive = 1;
 
-    private String createBy;
+    private LocalDate createDate;
 
-    private LocalDateTime lastUpdate;
+    private Long createBy;
+
+    private LocalDate lastUpdate;
 
     private String lastUpdateBy;
 
     public PrivilegesDashboard(AccessToDashboard dashboardUserId, String userPrivilege,
-                               String privilegeName, String createBy) {
+                               String privilegeName, Long createBy) {
         this.dashboardUserId = dashboardUserId;
         this.userPrivilege = userPrivilege;
         this.privilegeName = privilegeName;
@@ -46,6 +48,6 @@ public class PrivilegesDashboard {
     }
 
     @PrePersist
-    public void prePersist(){this.createDate = LocalDateTime.now(); }
+    public void prePersist(){this.createDate = LocalDate.now(); }
 
 }

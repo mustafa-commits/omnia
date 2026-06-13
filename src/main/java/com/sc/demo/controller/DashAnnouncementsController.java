@@ -1,7 +1,6 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.model.announcements.Announcements;
-import com.sc.demo.model.announcements.Branches;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.notification.SendingType;
@@ -32,12 +31,13 @@ public class DashAnnouncementsController {
     public Announcements createAnnouncements(@RequestParam Long sendId,
                                              @RequestParam String title,
                                              @RequestParam String description,
-                                             @RequestParam(required = false) Branches branches,
+                                             @RequestParam(required = false) String branches,
                                              @RequestParam SendingType sendingType,
+                                             @RequestParam Long createBy,
                                              @RequestParam List<Long> userId,
                                              @RequestParam(required = false) MultipartFile file)  {
         return announcementsService.createAnnouncements(new AnnouncementsRequest
-                (sendId, title, description, branches, sendingType, null), file, userId);
+                (sendId, title, description, branches, sendingType, createBy, null), file, userId);
     }
 
     //  المرفقات مع التبليغات الداشبورد

@@ -5,6 +5,7 @@ import com.sc.demo.model.chat.AppChatDetails;
 public record AppChatRequest(
         Long userId,
         String chatTitle,
+        Long createBy,
         AppChatDetails appChatDetails
 ) {
 }

@@ -13,7 +13,7 @@ import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +49,7 @@ public class NotificationService {
 
         NotificationMaster notificationMaster = new NotificationMaster(notificationRequest.sendId(),
                 notificationRequest.title(), notificationRequest.description(),
-                notificationRequest.sendingType()
+                notificationRequest.sendingType(), notificationRequest.createBy()
         );
 
         Notification firebaseNotification = Notification
@@ -64,7 +64,7 @@ public class NotificationService {
         notificationMaster = notificationRepo.save(notificationMaster);
         if (notificationRequest.sendingType().equals(SendingType.PRIVATE)) {
             for (NotificationDetails n : notificationRequest.notificationDetails()) {
-                notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), notificationMaster));
+                notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), n.getCreateBy(), notificationMaster));
 
                 Optional<NotificationToken> byToken = notificationTokenRepo.findById(n.getUserId());
 
@@ -76,7 +76,7 @@ public class NotificationService {
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
-                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), notificationMaster));
+                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), n.getCreateBy(), notificationMaster));
                 }
             }
             if (messageList.size() >= 1) {
@@ -102,7 +102,7 @@ public class NotificationService {
 
         if (byToken.isPresent()) {
             NotificationToken notificationToken = byToken.get();
-            notificationToken.setLastUpdate(LocalDateTime.now());
+            notificationToken.setLastUpdate(LocalDate.now());
             notificationToken.setToken(notificationTokenRequest.token());
             return notificationTokenRepo.save(notificationToken).getUserId();
         } else {
@@ -151,7 +151,7 @@ public class NotificationService {
     public List<AllNotificationFamilyRequest> AllNotificationFamily() {
 
         return jdbcClient.sql("""
-                   SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION, N.NOTIFICATION_TYPE AS NotificationType
+                   SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION, N.SENDING_TYPE AS sendingType
                    FROM SC_NOTIFICATION N
                    LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
                 """).query(AllNotificationFamilyRequest.class).list();

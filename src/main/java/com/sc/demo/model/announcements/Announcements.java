@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,19 +34,17 @@ public class Announcements {
 
     private String description;
 
-    private Integer isActive;
+    private String branches;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "BRANCHES")
-    private Branches branches;
+    private Integer isActive = 1;
 
-    private LocalDateTime createDate;
-
-    private LocalDateTime lastUpdate;
+    private LocalDate createDate;
 
     private Long createBy;
 
-    private Long lastCreateBy;
+    private LocalDate lastUpdate;
+
+    private String lastUpdateBy;
 
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsDetails> announcementsDetails = new ArrayList<>();
@@ -52,17 +52,19 @@ public class Announcements {
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsAttachment> announcementsAttachment = new ArrayList<>();
 
-    public Announcements(Long sendId, String title, String description, Branches branches, SendingType sendingType) {
+    public Announcements(Long sendId, String title, String description,
+                         String branches, SendingType sendingType,
+                         Long createBy) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;
-        this.isActive = 1;
         this.branches = branches;
         this.sendingType = sendingType;
+        this.createBy = createBy;
     }
 
     @PrePersist
     public void prePersist(){
-        this.createDate = LocalDateTime.now();
+        this.createDate = LocalDate.now();
     }
 }

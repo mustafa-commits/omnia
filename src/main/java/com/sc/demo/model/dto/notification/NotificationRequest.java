@@ -11,6 +11,7 @@ public record NotificationRequest(
         String title,
         String description,
         SendingType sendingType,
+        Long createBy,
         List<NotificationDetails> notificationDetails,
         List<NotificationToken> NotificationTokens
 ) {

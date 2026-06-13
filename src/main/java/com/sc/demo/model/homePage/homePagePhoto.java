@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "sc_homepage_photos")
@@ -28,16 +28,25 @@ public class homePagePhoto {
 
     private String link;
 
-    private LocalDateTime createDate;
+    private Integer isActive = 1;
 
-    public homePagePhoto(String fileName, linkType linkType, String link) {
+    private LocalDate createDate;
+
+    private Long createBy;
+
+    private LocalDate lastUpdate;
+
+    private String lastUpdateBy;
+
+    public homePagePhoto(String fileName, linkType linkType, String link, Long createBy) {
         this.fileName = fileName;
         this.linkType = linkType;
         this.link = link;
+        this.createBy = createBy;
     }
 
     @PrePersist
     public void prePersist(){
-        this.createDate = LocalDateTime.now();
+        this.createDate = LocalDate.now();
     }
 }

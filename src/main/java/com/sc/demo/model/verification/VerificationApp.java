@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "sc_verification_app")
@@ -23,7 +23,7 @@ public class VerificationApp {
 
     private Long secretCode;
 
-    private LocalDateTime createDate;
+    private LocalDate createDate;
 
     private MethodType methodType;
 
@@ -38,6 +38,6 @@ public class VerificationApp {
 
     @PrePersist
     public void prePersist(){
-        this.createDate = LocalDateTime.now();
+        this.createDate = LocalDate.now();
     }
 }

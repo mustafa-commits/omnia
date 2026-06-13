@@ -5,7 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
+import java.time.LocalDate;
 
 
 @Entity
@@ -41,13 +43,15 @@ public class AppChatDetails {
     @Column(length = 500)
     private String messages;
 
-    private LocalDateTime seenAt;
+    private LocalDate seenAt;
 
-    private LocalDateTime createDate;
+    private Integer isActive = 1;
 
-    private String createBy;
+    private LocalDate createDate;
 
-    private LocalDateTime lastUpdate;
+    private Long createBy;
+
+    private LocalDate lastUpdate;
 
     private String lastUpdateBy;
 
@@ -55,29 +59,27 @@ public class AppChatDetails {
     @JoinColumn(name = "chat_id")
     private AppChatMaster chatApp;
 
-    public AppChatDetails(Long userIdSender, WhoIsSender whoIsSender, Platform platform, String messages, AppChatMaster appChatMaster) {
+    public AppChatDetails(Long userIdSender, WhoIsSender whoIsSender, Platform platform,
+                          String messages, Long createBy, AppChatMaster appChatMaster) {
         this.userIdSender = userIdSender;
         this.whoIsSender = whoIsSender;
         this.platform = platform;
         this.messages = messages;
+        this.createBy = createBy;
         this.chatApp = appChatMaster;
     }
 
-    public AppChatDetails(AppChatMaster chatApp, Long userIdSender, WhoIsSender whoIsSender, Platform platform, String messages, MsgType msgType) {
+    public AppChatDetails(AppChatMaster chatApp, Long userIdSender, WhoIsSender whoIsSender,
+                          Platform platform, String messages, MsgType msgType, Long createBy) {
         this.chatApp = chatApp;
         this.userIdSender = userIdSender;
         this.whoIsSender = whoIsSender;
         this.platform = platform;
         this.messages = messages;
         this.msgType = msgType;
-    }
-
-    public AppChatDetails(Long userIdSender, String messages) {
-        this.userIdSender = userIdSender;
-        this.platform = Platform.DASHBOARD;
-        this.messages = messages;
+        this.createBy = createBy;
     }
 
     @PrePersist
-    public void prePersist(){this.createDate = LocalDateTime.now(); }
+    public void prePersist(){this.createDate = LocalDate.now(); }
 }

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "sc_notification_details")
 @Getter
@@ -24,8 +26,24 @@ public class NotificationDetails {
     @JoinColumn(name = "notification_id")
     private NotificationMaster notification;
 
-    public NotificationDetails(Long userId, NotificationMaster notificationMaster) {
+    private Integer isActive = 1;
+
+    private LocalDate createDate;
+
+    private Long createBy;
+
+    private LocalDate lastUpdate;
+
+    private String lastUpdateBy;
+
+    public NotificationDetails(Long userId, Long createBy, NotificationMaster notificationMaster) {
         this.userId = userId;
+        this.createBy = createBy;
         this.notification = notificationMaster;
+    }
+
+    @PrePersist
+    public void prePersist(){
+        this.createDate = LocalDate.now();
     }
 }

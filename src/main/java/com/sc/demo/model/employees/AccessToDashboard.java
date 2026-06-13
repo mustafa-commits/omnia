@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,15 +34,17 @@ public class AccessToDashboard {
     @Enumerated(EnumType.ORDINAL)
     private Department departmentId;
 
-    private LocalDateTime createDate;
+    private PrivilegesName privilegesName;
+
+    private Integer isActive = 1;
+
+    private LocalDate createDate;
 
     private Long createBy;
 
-    private LocalDateTime lastUpdate;
+    private LocalDate lastUpdate;
 
     private String lastUpdateBy;
-
-    private PrivilegesName privilegesName;
 
     public AccessToDashboard(String phone, Department departmentId, String password,
                              String userName, PrivilegesName privilegesName,
@@ -56,5 +58,5 @@ public class AccessToDashboard {
     }
 
     @PrePersist
-    public void prePersist(){this.createDate = LocalDateTime.now(); }
+    public void prePersist(){this.createDate = LocalDate.now(); }
 }

@@ -32,7 +32,8 @@ public class HomePageService {
                 String originalFilename = file.getOriginalFilename();
                 String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
                 String filePath = environment.getProperty("ATTACHMENT_PATH_HOMEPAGE") + newFilename;
-                photoRepo.save(new homePagePhoto(newFilename, linkType, link));
+        Long createBy = null;
+        photoRepo.save(new homePagePhoto(newFilename, linkType, link, createBy));
 
         try {
             file.transferTo(new File(filePath));

@@ -149,7 +149,9 @@ public class LoginService implements CommandLineRunner {
                 Long userId;
 
                 if (!alreadyExists) {
-                    userId = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(), response.HeadFamilyId())).getUserid();
+                    userId = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(),
+                            response.HeadFamilyId(), appUserRequest.createBy(),
+                            appUserRequest.phoneType(), appUserRequest.branches())).getUserid();
                 }else {
                     userId = appUserRepo.findByHeadFamilyIdAndRequestId(
                             response.HeadFamilyId(),

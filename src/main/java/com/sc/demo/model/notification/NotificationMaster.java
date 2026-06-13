@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,34 +27,35 @@ public class NotificationMaster {
 
     private String description;
 
-    private Integer isActive;
-
     @Enumerated(EnumType.ORDINAL)
     private SendingType sendingType;
 
-    private LocalDateTime createDate;
+    private Integer isActive = 1;
+
+    private LocalDate createDate;
 
     private Long createBy;
 
-    private LocalDateTime lastUpdate;
+    private LocalDate lastUpdate;
 
-    private Long lastCreateBy;
+    private String lastUpdateBy;
 
     @OneToMany(mappedBy = "notification", cascade = CascadeType.ALL)
     private List<NotificationDetails> notificationDetails = new ArrayList<>();
 
     public NotificationMaster(Integer sendId, String title,
-                              String description, SendingType sendingType) {
+                              String description, SendingType sendingType,
+                              Long createBy) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;
-        this.isActive = 1;
         this.sendingType = sendingType;
+        this.createBy = createBy;
     }
 
     @PrePersist
     public void prePersist(){
-        this.createDate = LocalDateTime.now();
+        this.createDate = LocalDate.now();
     }
 }
 

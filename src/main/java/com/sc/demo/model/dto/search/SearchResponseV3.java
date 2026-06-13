@@ -1,12 +1,12 @@
 package com.sc.demo.model.dto.search;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record SearchResponseV3(
         String guardianName,
         String headFamilyName,
         Long familyPersonsId,
-        LocalDateTime birthDate,
+        LocalDate birthDate,
         Long requestId,
         String branches,
         String oldFamilyNo

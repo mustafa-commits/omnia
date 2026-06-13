@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "sc_notification_token")
@@ -23,25 +23,18 @@ public class NotificationToken {
 
     private Long tokenType;
 
-    private Boolean isActive;
+    private Integer isActive = 1;
 
-    private LocalDateTime createDate;
+    private LocalDate createDate;
 
     private Long createBy;
 
-    private LocalDateTime lastUpdate;
+    private LocalDate lastUpdate;
 
-    private Long lastCreateBy;
-
-    public NotificationToken(Long userId, String token, Long tokenType) {
-        this.userId = userId;
-        this.token = token;
-        this.tokenType = tokenType;
-        this.isActive = true;
-    }
+    private String lastUpdateBy;
 
     @PrePersist
     public void PrePersist(){
-        this.createDate = LocalDateTime.now();
+        this.createDate = LocalDate.now();
     }
 }

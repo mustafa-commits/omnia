@@ -46,20 +46,25 @@ public class AnnouncementsService {
         System.out.println(userId);
 
         Announcements announcements = new Announcements(announcementsRequest.sendId(), announcementsRequest.title(),
-                announcementsRequest.description(), announcementsRequest.branches(),
-//                SendingType.BRANCH ? announcementsRequest.branches() : null,
-                announcementsRequest.sendingType());
+                announcementsRequest.description(), announcementsRequest.sendingType() == SendingType.BRANCH ? announcementsRequest.branches() : null,
+                announcementsRequest.sendingType(), announcementsRequest.createBy());
+
+
         System.out.println(announcements);
         announcements = announcementsRepo.save(announcements);
+
+        Long createBy = null;
+
         if (announcementsRequest.sendingType() == SendingType.PRIVATE)
             for (Long a : userId){
-                announcementsDetailsRepo.save(new AnnouncementsDetails(a, announcements));
+                announcementsDetailsRepo.save(new AnnouncementsDetails(a, announcements, createBy));
             }
+
         if (file != null) try {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
             String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
-            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, announcements));
+            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, announcements, createBy));
             file.transferTo(new File(filePath));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -96,7 +101,7 @@ public class AnnouncementsService {
                           ,TO_CHAR(:path) || AA.FILE_NAME AS fileName
                           ,A.DESCRIPTION
                    FROM SC_ANNOUNCEMENTS A
-                   JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
+                   LEFT JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
                 """)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/allAnnouncementsPhotos/")
