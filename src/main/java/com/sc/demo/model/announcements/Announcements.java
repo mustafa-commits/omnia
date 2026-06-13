@@ -22,8 +22,6 @@ public class Announcements {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long announcements_id;
 
-    private Long sendId;
-
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "SENDING_TYPE")
     private SendingType sendingType;
@@ -50,10 +48,9 @@ public class Announcements {
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsAttachment> announcementsAttachment = new ArrayList<>();
 
-    public Announcements(Long sendId, String title, String description,
+    public Announcements(String title, String description,
                          String branches, SendingType sendingType,
                          Long createBy) {
-        this.sendId = sendId;
         this.title = title;
         this.description = description;
         this.branches = branches;

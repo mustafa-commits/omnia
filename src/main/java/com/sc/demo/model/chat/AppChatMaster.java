@@ -38,10 +38,9 @@ public class AppChatMaster {
     @OneToMany(mappedBy = "chatApp", cascade = CascadeType.ALL)
     private List<AppChatDetails> appChatDetails = new ArrayList<>();
 
-    public AppChatMaster(Long userId, String chatTitle, Long createBy) {
-        this.userId = userId;
-        this.chatTitle = chatTitle;
+    public AppChatMaster(Long createBy, String chatTitle) {
         this.createBy = createBy;
+        this.chatTitle = chatTitle;
     }
 
     @PrePersist

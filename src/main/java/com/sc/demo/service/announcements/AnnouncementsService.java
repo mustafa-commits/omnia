@@ -45,7 +45,7 @@ public class AnnouncementsService {
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest, MultipartFile file, List<Long> userId) {
         System.out.println(userId);
 
-        Announcements announcements = new Announcements(announcementsRequest.sendId(), announcementsRequest.title(),
+        Announcements announcements = new Announcements(announcementsRequest.title(),
                 announcementsRequest.description(), announcementsRequest.sendingType() == SendingType.BRANCH ? announcementsRequest.branches() : null,
                 announcementsRequest.sendingType(), announcementsRequest.createBy());
 

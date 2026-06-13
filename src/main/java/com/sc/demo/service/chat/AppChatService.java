@@ -33,11 +33,11 @@ public class AppChatService {
     private TokenService tokenService;
 
     public boolean createChat(AppChatRequest appChatRequest){
-        AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.userId(), appChatRequest.chatTitle(), appChatRequest.createBy());
+        AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.createBy(), appChatRequest.chatTitle());
 
         appChatMaster = chatRepo.save(appChatMaster);
 
-        Long userIdSender = appChatRequest.userId();
+        Long userIdSender = appChatRequest.createBy();
 
         AppChatDetails appChatDetails = appChatRequest.appChatDetails();
         WhoIsSender whoIsSender = Platform.APP.equals(appChatRequest.appChatDetails().getPlatform())

@@ -28,8 +28,7 @@ public class DashAnnouncementsController {
 
     // انشار تبليغ
     @PostMapping("/V1/api/sc/createAnnouncements")
-    public Announcements createAnnouncements(@RequestParam Long sendId,
-                                             @RequestParam String title,
+    public Announcements createAnnouncements(@RequestParam String title,
                                              @RequestParam String description,
                                              @RequestParam(required = false) String branches,
                                              @RequestParam SendingType sendingType,
@@ -37,7 +36,7 @@ public class DashAnnouncementsController {
                                              @RequestParam(required = false) List<Long> userId,
                                              @RequestParam(required = false) MultipartFile file)  {
         return announcementsService.createAnnouncements(new AnnouncementsRequest
-                (sendId, title, description, branches, sendingType, createBy, null), file, userId);
+                (title, description, branches, sendingType, createBy, null), file, userId);
     }
 
     //  المرفقات مع التبليغات الداشبورد
