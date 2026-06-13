@@ -7,6 +7,8 @@ import com.sc.demo.service.addPhone.AddPhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class addPhoneController {
 
@@ -15,7 +17,7 @@ public class addPhoneController {
 
     // التحقق من وجود رقم الهاتف
     @GetMapping("/V1/api/sc/checkNumber")
-    public CheckPhoneRequest checkNumber(@RequestParam long phone){
+    public List<CheckPhoneRequest> checkNumber(@RequestParam long phone){
         return addPhoneService.checkForTheNumber(phone);
     }
 

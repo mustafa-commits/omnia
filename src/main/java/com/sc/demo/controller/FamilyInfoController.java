@@ -12,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class familyInfoController implements SecuredRestController {
+public class FamilyInfoController implements SecuredRestController {
 
     @Autowired
     private FamilyInfoService familyInfoService;

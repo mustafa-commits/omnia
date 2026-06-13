@@ -18,7 +18,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class appChatController implements SecuredRestController {
+public class AppChatController implements SecuredRestController {
 
     @Autowired
     private AppChatService appChatService;

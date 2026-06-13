@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,8 +21,8 @@ public class AddPhoneService {
     @Autowired
     private AddPhoneRepo addPhoneRepo;
 
-    public CheckPhoneRequest checkForTheNumber(long phone){
-        Optional <CheckPhoneRequest> check = jdbcClient.sql("""
+    public List<CheckPhoneRequest> checkForTheNumber(long phone){
+        return jdbcClient.sql("""
                         SELECT P.PERSON_NAME_FIRST || ' '
                                || P.PERSON_NAME_SECOND || ' '
                                || P.PERSON_NAME_THIRD  || ' '
@@ -62,14 +63,7 @@ public class AddPhoneService {
                 """)
                 .param("phone", phone)
                 .query(CheckPhoneRequest.class)
-                .optional();
-
-
-        if (check.isPresent()) {
-            return check.get();
-        }else
-            return null;
-
+                .list();
     }
 
     public Boolean addPhone(AddPhonRequest addPhonRequest){

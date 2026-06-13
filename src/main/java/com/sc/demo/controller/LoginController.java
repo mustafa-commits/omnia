@@ -15,14 +15,14 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @Slf4j
-public class loginController {
+public class LoginController {
 
     @Autowired
     private LoginService loginService;
 
     private final TokenService tokenService;
 
-    public loginController(TokenService tokenService) {
+    public LoginController(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 

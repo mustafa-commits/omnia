@@ -16,7 +16,7 @@ import java.util.List;
 @CrossOrigin(origins = "*")
 @RestController
 @Slf4j
-public class dailyDateController {
+public class DailyDateController {
 
     List<String> data = null;
 

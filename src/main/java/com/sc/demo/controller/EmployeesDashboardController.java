@@ -2,14 +2,13 @@ package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.employees.EmployeesResponse;
 import com.sc.demo.service.employees.EmployeesDashboardService;
-import jakarta.persistence.Table;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class employeesDashboardController {
+public class EmployeesDashboardController {
 
     @Autowired
     private EmployeesDashboardService employeesDashboardService;

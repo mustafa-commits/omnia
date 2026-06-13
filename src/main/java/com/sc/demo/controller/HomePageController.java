@@ -16,7 +16,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class homePageController {
+public class HomePageController {
 
     @Autowired
     private HomePageService homePageService;

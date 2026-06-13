@@ -2,7 +2,6 @@ package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.notification.*;
-import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,16 +10,10 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class notificationController implements SecuredRestController {
+public class NotificationController implements SecuredRestController {
 
     @Autowired
     private NotificationService notificationService;
-
-    // انشاء اشعار
-    @PostMapping("/V1/api/sc/createNotification")
-    public NotificationMaster createNotification(@RequestBody NotificationRequest notificationRequest){
-        return notificationService.createNotification(notificationRequest);
-    }
 
     // تخزين Token
     @PostMapping("/V1/api/sc/setNotificationToken")

@@ -14,7 +14,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class searchController {
+public class SearchController {
 
     @Autowired
     private SearchService searchService;
