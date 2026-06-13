@@ -13,7 +13,7 @@ import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +101,7 @@ public class NotificationService {
 
         if (byToken.isPresent()) {
             NotificationToken notificationToken = byToken.get();
-            notificationToken.setLastUpdate(LocalDate.now());
+            notificationToken.setLastUpdate(LocalDateTime.now());
             notificationToken.setToken(notificationTokenRequest.token());
             return notificationTokenRepo.save(notificationToken).getUserId();
         } else {
@@ -121,7 +121,7 @@ public class NotificationService {
                    FROM SC_NOTIFICATION N
                    LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
                    WHERE ND.USER_ID = :user_id
-                   OR N.NOTIFICATION_TYPE = 0
+                   OR N.SENDING_TYPE = 0
                 """)
                 .param("user_id", userId)
                 .query(PhoneNotificationRequest.class)
@@ -139,7 +139,7 @@ public class NotificationService {
                    FROM MOBAPP.SC_NOTIFICATION_DETAILS ND
                    WHERE ND.NOTIFICATION_ID = N.NOTIFICATION_ID) AS USER_ID
                    FROM SC_NOTIFICATION N
-                   where notification_type = :notification_type
+                   where SENDING_TYPE = :notification_type
                 """)
                 .param("notification_type",notification_type)
                 .query(NotificationByType.class)

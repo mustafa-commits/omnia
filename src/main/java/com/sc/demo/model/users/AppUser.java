@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -41,14 +40,14 @@ public class AppUser {
 
     private String lastUpdateBy;
 
-    public AppUser(String phone, Long requestId, Long headFamilyId, Long createBy,
-                   PhoneType phoneType, String branches) {
+    public AppUser(String phone, Long requestId, Long headFamilyId/*, Long createBy,
+                   PhoneType phoneType, String branches*/) {
         Phone = phone;
         this.requestId = requestId;
-        this.headFamilyId = headFamilyId;
+        this.headFamilyId = headFamilyId;/*
         this.createBy = createBy;
         this.phoneType = phoneType;
-        this.branches = branches;
+        this.branches = branches;*/
     }
 
     @PrePersist
