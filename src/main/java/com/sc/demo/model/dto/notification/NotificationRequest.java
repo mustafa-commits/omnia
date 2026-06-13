@@ -7,11 +7,10 @@ import com.sc.demo.model.notification.SendingType;
 import java.util.List;
 
 public record NotificationRequest(
-        Integer sendId,
+        Long createBy,
         String title,
         String description,
         SendingType sendingType,
-        Long createBy,
         List<NotificationDetails> notificationDetails,
         List<NotificationToken> NotificationTokens
 ) {

@@ -47,10 +47,9 @@ public class NotificationService {
         map.put("notification_type", "3");
         map.put("content_available", "1");
 
-        NotificationMaster notificationMaster = new NotificationMaster(notificationRequest.sendId(),
+        NotificationMaster notificationMaster = new NotificationMaster(notificationRequest.createBy(),
                 notificationRequest.title(), notificationRequest.description(),
-                notificationRequest.sendingType(), notificationRequest.createBy()
-        );
+                notificationRequest.sendingType());
 
         Notification firebaseNotification = Notification
                 .builder()
@@ -64,7 +63,8 @@ public class NotificationService {
         notificationMaster = notificationRepo.save(notificationMaster);
         if (notificationRequest.sendingType().equals(SendingType.PRIVATE)) {
             for (NotificationDetails n : notificationRequest.notificationDetails()) {
-                notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), n.getCreateBy(), notificationMaster));
+                notificationDetailsRepo.save(new NotificationDetails(notificationRequest.sendingType() != SendingType.PUBLIC
+                                                                        ? n.getUserId() : 0, n.getCreateBy(), notificationMaster));
 
                 Optional<NotificationToken> byToken = notificationTokenRepo.findById(n.getUserId());
 

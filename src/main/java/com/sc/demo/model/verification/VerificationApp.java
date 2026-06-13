@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sc_verification_app")
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VerificationApp {
+
     // تضاف البيانات في هذا الجدول بعد التأكد من رقم الهاتف الصحيح وال Otp تم انشاءه
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +25,19 @@ public class VerificationApp {
 
     private Long secretCode;
 
-    private LocalDate createDate;
-
     private MethodType methodType;
 
     private Integer isUsed = 0;
+
+    private Integer isActive = 1;
+
+    private LocalDateTime createDate;
+
+    private Long createBy;
+
+    private LocalDateTime lastUpdate;
+
+    private String lastUpdateBy;
 
     public VerificationApp(String userIdentifier, Long secretCode, MethodType methodType) {
         this.userIdentifier = userIdentifier;
@@ -38,6 +48,6 @@ public class VerificationApp {
 
     @PrePersist
     public void prePersist(){
-        this.createDate = LocalDate.now();
+        this.createDate = LocalDateTime.now();
     }
 }

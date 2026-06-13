@@ -59,6 +59,7 @@ public class securityConfig {
                         .requestMatchers("/V1/api/sc/getFamilyHousingInformation/**","/getFamilyHousingInformation","/getFamilyHousingInformation/**").permitAll()
                         .requestMatchers("/V1/api/sc/getChildrenAndMailyFamilyMembersResponse/**","/getChildrenAndMailyFamilyMembersResponse","/getChildrenAndMailyFamilyMembersResponse/**").permitAll()
                         .requestMatchers("/V1/api/sc/getPhoneChats/**","/getPhoneChats","/getPhoneChats/**").permitAll()
+                        .requestMatchers("/V1/api/sc/getBranches/**","/getBranches","/getBranches/**").permitAll()
                         .requestMatchers("/V1/api/sc/writeMessages/**","/writeMessages","/writeMessages/**").permitAll()
                         .requestMatchers("/V1/api/sc/getMessagesChat/**","/getMessagesChat","/getMessagesChat/**").permitAll()
                         .requestMatchers("/V1/api/sc/SearchByName/**","/SearchByName","/SearchByName/**").permitAll()
