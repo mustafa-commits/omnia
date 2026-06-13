@@ -48,7 +48,7 @@ public class LoginService implements CommandLineRunner {
         }
 
         Long code = GeneratingVerificationLogin(String.valueOf(phone), MethodType.WHATSAPP);
-        whatsAppService.sendVerificationCode(code);
+        whatsAppService.sendVerificationCode(phone, country_code, code);
 
         return jdbcClient.sql("""
                         SELECT H.HEAD_FAMILY_ID as HeadFamilyId

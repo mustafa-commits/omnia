@@ -70,6 +70,8 @@ public class securityConfig {
                         .requestMatchers("/V1/api/sc/homePagePhotos/**","/homePagePhotos","/homePagePhotos/**").permitAll()
                         .requestMatchers("/V1/api/sc/allAnnouncementsPhotos/**","/allAnnouncementsPhotos","/allAnnouncementsPhotos/**").permitAll()
                         .requestMatchers("/V1/api/sc/getAllAnnouncementsFamily/**","/getAllAnnouncementsFamily","/getAllAnnouncementsFamily/**").permitAll()
+                        .requestMatchers("/V1/api/sc/AddNewPhone/**","/AddNewPhone","/AddNewPhone/**").permitAll()
+                        .requestMatchers("/V1/api/sc/photoChat/**","/photoChat","/photoChat/**").permitAll()
                         .requestMatchers("/V3/api/sc/SearchByNameV3/**","/SearchByNameV3","/SearchByNameV3/**").permitAll()
                         .requestMatchers("/V1/api/sc/arabicDate/**","/arabicDate").permitAll()
                         .requestMatchers("/V1/api/sc/getAllNotificationFamily/**").permitAll()

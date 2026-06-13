@@ -23,10 +23,11 @@ public class AppChatController implements SecuredRestController {
     @Autowired
     private AppChatService appChatService;
 
-//    @Value("#{environment['ATTACHMENT_PATH_VOICE'] = null ? " +
-//            "environment['ATTACHMENT_PATH_CHAT'] : environment['ATTACHMENT_PATH_VOICE']}")
     @Value("${ATTACHMENT_PATH_CHAT}")
     private String uploadDir;
+
+    @Value("${ATTACHMENT_PATH_VOICE}")
+    private String uploadVoice;
 
     // انشاء محادثة
     @PostMapping("/V1/api/sc/createChat")
@@ -55,7 +56,6 @@ public class AppChatController implements SecuredRestController {
     // ارسال رسالة
     @PostMapping("/V1/api/sc/writeMessages")
     public boolean writeMessages(@RequestParam Long chatId,
-//                                 @RequestParam Long userIdSender,
                                  @RequestParam Platform platform,
                                  @RequestParam String messages,
                                  @RequestParam MsgType msgType,
@@ -76,16 +76,24 @@ public class AppChatController implements SecuredRestController {
     @GetMapping("/V1/api/sc/photoChat/{filename:.+}")
     public void serveFile(
             @PathVariable String filename,
+            @RequestParam MsgType msgType,
             HttpServletResponse response
     ) throws IOException {
         var file = Paths.get(uploadDir, filename);
+        var voice = Paths.get(uploadVoice, filename);
         System.out.println("Looking for file at: " + file.toAbsolutePath());
-        if (Files.notExists(file)) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        if (Files.exists(file) && msgType == MsgType.IMAGE) {
+            response.setContentType(Files.probeContentType(file));
+            response.setContentLengthLong(Files.size(file));
+            Files.copy(file, response.getOutputStream());
             return;
         }
-        response.setContentType(Files.probeContentType(file));
-        response.setContentLengthLong(Files.size(file));
-        Files.copy(file, response.getOutputStream());
+        if (Files.exists(voice) && msgType == MsgType.VOICE){
+            response.setContentType(Files.probeContentType(voice));
+            response.setContentLengthLong(Files.size(voice));
+            Files.copy(voice, response.getOutputStream());
+            return;
+        }
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
 }

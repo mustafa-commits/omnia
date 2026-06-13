@@ -126,7 +126,6 @@ public class AppChatService {
         var userId = tokenService.decodeToken(token.substring(7)).getSubject();
         String newFileName = null;
 
-
         if(messagesRequest.msgType() == MsgType.IMAGE) {
             try {
                 String originalFileName = file.getOriginalFilename();
