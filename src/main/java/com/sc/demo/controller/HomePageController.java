@@ -28,8 +28,9 @@ public class HomePageController {
     @PostMapping("/V1/api/sc/addHomePagePhoto")
     public String addHomePagePhoto(@RequestParam String link,
                                    @RequestParam linkType linkType,
-                                   @RequestParam MultipartFile file){
-        return homePageService.addHomePagePhoto(linkType, link, file);
+                                   @RequestParam MultipartFile file,
+                                   @RequestParam Long createBy){
+        return homePageService.addHomePagePhoto(linkType, link, file, createBy);
     }
 
     //  المرفقات في الواجهة

@@ -27,12 +27,12 @@ public class HomePageService {
     @Autowired
     private JdbcClient jdbcClient;
 
-    public String addHomePagePhoto(linkType linkType, String link, MultipartFile file){
+    public String addHomePagePhoto(linkType linkType, String link, MultipartFile file, Long createBy){
 
-                String originalFilename = file.getOriginalFilename();
-                String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
-                String filePath = environment.getProperty("ATTACHMENT_PATH_HOMEPAGE") + newFilename;
-        Long createBy = null;
+        String originalFilename = file.getOriginalFilename();
+        String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
+        String filePath = environment.getProperty("ATTACHMENT_PATH_HOMEPAGE") + newFilename;
+
         photoRepo.save(new homePagePhoto(newFilename, linkType, link, createBy));
 
         try {

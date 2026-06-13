@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sc_homepage_photos")
@@ -30,11 +31,11 @@ public class homePagePhoto {
 
     private Integer isActive = 1;
 
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     private Long createBy;
 
-    private LocalDate lastUpdate;
+    private LocalDateTime lastUpdate;
 
     private String lastUpdateBy;
 
@@ -47,6 +48,6 @@ public class homePagePhoto {
 
     @PrePersist
     public void prePersist(){
-        this.createDate = LocalDate.now();
+        this.createDate = LocalDateTime.now();
     }
 }
