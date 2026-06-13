@@ -6,7 +6,6 @@ import com.sc.demo.repository.chat.MessagesRepo;
 import com.sc.demo.repository.chat.ChatRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;

@@ -14,7 +14,7 @@ public class employeesDashboardController {
     @Autowired
     private EmployeesDashboardService employeesDashboardService;
 
-    @PostMapping("/V1/sc/api/newDashboardAccess")
+    @PostMapping("/V1/api/sc/newDashboardAccess")
     public Boolean addEmployees(@RequestBody EmployeesResponse employeesResponse){
         return employeesDashboardService.addEmployees(employeesResponse);
     }

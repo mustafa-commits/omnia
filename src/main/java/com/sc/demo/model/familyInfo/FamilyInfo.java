@@ -37,8 +37,8 @@ public class FamilyInfo {
 
     private String oldFamilyNo;
 
-    @Column(length = 500)
-    @Enumerated(EnumType.ORDINAL)
+    @Column(length = 50)
+    @Enumerated(EnumType.STRING)
     private Branches branches;
 
     public FamilyInfo(Long headFamilyId, Long requestId, String headFamilyName,

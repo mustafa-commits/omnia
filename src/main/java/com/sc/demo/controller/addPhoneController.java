@@ -14,13 +14,13 @@ public class addPhoneController {
     private AddPhoneService addPhoneService;
 
     // التحقق من وجود رقم الهاتف
-    @GetMapping("/V1/sc/api/checkNumber")
+    @GetMapping("/V1/api/sc/checkNumber")
     public CheckPhoneRequest checkNumber(@RequestParam long phone){
         return addPhoneService.checkForTheNumber(phone);
     }
 
     // اضافة رقم هاتف جديد
-    @PostMapping("/V1/sc/api/AddNewPhone")
+    @PostMapping("/V1/api/sc/AddNewPhone")
     public Boolean addNewPhone(@RequestBody AddPhonRequest addPhonRequest){
         return addPhoneService.addPhone(addPhonRequest);
     }

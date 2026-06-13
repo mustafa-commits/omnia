@@ -33,7 +33,7 @@ public class homePageController {
     }
 
     //  المرفقات في الواجهة
-    @GetMapping("/V1/api/sc/viewHomePagePhotos/{filename:.+}")
+    @GetMapping("/V1/api/sc/homePagePhotos/{filename:.+}")
     public void serveFile(
             @PathVariable String filename,
             HttpServletResponse response
@@ -49,7 +49,7 @@ public class homePageController {
     }
 
     // عرض الصور في واجهة التطبيق
-    @GetMapping("/V1/sc/api/viewHomePagePhotos")
+    @GetMapping("/V1/api/sc/viewHomePagePhotos")
     public List<homePageResponse> viewHomePagePhotos(){
         return homePageService.viewHomePagePhotos();
     }

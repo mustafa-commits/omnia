@@ -29,8 +29,8 @@ public class notificationController implements SecuredRestController {
     }
 
     // جلب اشعارات التلفون
-    @GetMapping("/V1/api/sc/getPHoneNotification")
-    public List<PhoneNotificationRequest> getPHoneNotification(@RequestHeader(name = "authorization") String token){
+    @GetMapping("/V1/api/sc/getPhoneNotification")
+    public List<PhoneNotificationRequest> getPhoneNotification(@RequestHeader(name = "authorization") String token){
         return notificationService.phoneNotification(token);
     }
 

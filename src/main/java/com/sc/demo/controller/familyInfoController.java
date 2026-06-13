@@ -18,20 +18,20 @@ public class familyInfoController implements SecuredRestController {
     private FamilyInfoService familyInfoService;
 
     // جلب البيانات الاساسية للعائلة مثل ال(اسم, عمر, رقم هاتف, الخ .....)
-    @GetMapping("/V1/sc/api/getFamilyBasicInformation")
+    @GetMapping("/V1/api/sc/getFamilyBasicInformation")
     public List<FamilyInfoBasicResponse> getFamilyBasicInformation(@RequestHeader(name = "authorization") String token){
         return familyInfoService.getFamilyBasicInfo(token);
     }
 
     // جلب بيانات سكن العائلة
-    @GetMapping("/V1/sc/api/getFamilyHousingInformation")
+    @GetMapping("/V1/api/sc/getFamilyHousingInformation")
     public List<FamilyInfoHousingResponse> getFamilyHousingInformation(@RequestHeader(name = "authorization") String token){
         return familyInfoService.getFamilyHousingInfo(token);
     }
 
     // عدد افراد العائلة + عدد الايتام
-    @GetMapping("/V1/sc/api/getChildrenAndMailyFamilyMambersResponse")
-    public List<ChildrenAndMailyFamilyMembersResponse> getChildrenAndMailyFamilyMambersResponse(@RequestHeader(name = "authorization") String token){
-        return familyInfoService.getChildrenAndMailyFamilyMambersResponse(token);
+    @GetMapping("/V1/api/sc/getChildrenAndMailyFamilyMembersResponse")
+    public List<ChildrenAndMailyFamilyMembersResponse> getChildrenAndMailyFamilyMembersResponse(@RequestHeader(name = "authorization") String token){
+        return familyInfoService.getChildrenAndMailyFamilyMembersResponse(token);
     }
 }

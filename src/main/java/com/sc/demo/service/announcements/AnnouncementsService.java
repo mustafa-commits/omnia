@@ -3,7 +3,6 @@ package com.sc.demo.service.announcements;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
-import com.sc.demo.model.chat.MsgType;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
@@ -13,12 +12,10 @@ import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -85,7 +82,7 @@ public class AnnouncementsService {
                    WHERE AD.USER_ID = :user_id OR AD.USER_ID = 0
                 """)
                 .param("user_id", userId)
-                .param("path", "http://10.76.233.71:1801/socialCare/V1/api/sc/getPhoneAnnouncements/")
+                .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoAnnouncements/")
                 .query(PhoneAnnouncementsRequest.class)
                 .list();
 
@@ -102,7 +99,7 @@ public class AnnouncementsService {
                    JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
                 """)
-                .param("path", "http://10.76.233.71:1801/socialCare/V1/api/sc/getAllAnnouncementsFamily/")
+                .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/allAnnouncementsPhotos/")
                 .query(AllAnnouncementsFamilyRequest.class)
                 .list();
 

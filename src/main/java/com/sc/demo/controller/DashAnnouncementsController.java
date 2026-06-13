@@ -8,6 +8,7 @@ import com.sc.demo.model.notification.SendingType;
 import com.sc.demo.service.announcements.AnnouncementsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,11 +24,12 @@ public class DashAnnouncementsController {
     @Autowired
     private AnnouncementsService announcementsService;
 
-    String uploadDir = "http://10.76.233.71:1801/socialCare";
+    @Value("${ATTACHMENT_PATH_ANNOUNCEMENTS}")
+    private String uploadDir;
 
     // انشار تبليغ
     @PostMapping("/V1/api/sc/createAnnouncements")
-    public Announcements createAnnouncements(@RequestParam Integer sendId,
+    public Announcements createAnnouncements(@RequestParam Long sendId,
                                              @RequestParam String title,
                                              @RequestParam String description,
                                              @RequestParam(required = false) Branches branches,
@@ -39,7 +41,7 @@ public class DashAnnouncementsController {
     }
 
     //  المرفقات مع التبليغات الداشبورد
-    @GetMapping("/V1/api/sc/getAllAnnouncementsFamily/{filename:.+}")
+    @GetMapping("/V1/api/sc/allAnnouncementsPhotos/{filename:.+}")
     public void serveAllFile(
             @PathVariable String filename,
             HttpServletResponse response

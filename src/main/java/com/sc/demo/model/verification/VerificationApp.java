@@ -25,14 +25,14 @@ public class VerificationApp {
 
     private LocalDateTime createDate;
 
-    private SendingType sendingType;
+    private MethodType methodType;
 
     private Integer isUsed = 0;
 
-    public VerificationApp(String userIdentifier, Long secretCode, SendingType sendingType) {
+    public VerificationApp(String userIdentifier, Long secretCode, MethodType methodType) {
         this.userIdentifier = userIdentifier;
         this.secretCode = secretCode;
-        this.sendingType = sendingType;
+        this.methodType = methodType;
     }
 
 

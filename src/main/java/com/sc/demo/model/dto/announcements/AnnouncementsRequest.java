@@ -7,7 +7,7 @@ import com.sc.demo.model.notification.SendingType;
 import java.util.List;
 
 public record AnnouncementsRequest(
-        Integer sendId,
+        Long sendId,
         String title,
         String description,
         Branches branches,

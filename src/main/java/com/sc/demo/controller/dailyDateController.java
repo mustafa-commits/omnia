@@ -23,7 +23,7 @@ public class dailyDateController {
     String url = "https://www.sistani.org/";
 
     // اظهار تاريخ اليوم بالهجري
-    @GetMapping("/V1/sc/api/arabicDate")
+    @GetMapping("/V1/api/sc/arabicDate")
     public List<String> getHtml2() throws InterruptedException {
         if (data == null) {
             return fetchDataFromSource();

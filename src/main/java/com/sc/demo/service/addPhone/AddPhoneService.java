@@ -23,33 +23,42 @@ public class AddPhoneService {
     public CheckPhoneRequest checkForTheNumber(long phone){
         Optional <CheckPhoneRequest> check = jdbcClient.sql("""
                         SELECT P.PERSON_NAME_FIRST || ' '
-                             || P.PERSON_NAME_SECOND || ' '
-                             || P.PERSON_NAME_THIRD  || ' '
-                             || P.PERSON_NAME_FOURTH || ' '
-                             || ARABIC_VALUE AS headFamilyName
-                             ,P.BIRTH_DATE AS birthDate
-                             ,R.AID_REQUEST_ID AS requestId
-                             ,p.FAMILY_PERSONS_ID AS headFamilyId
-                             ,F.ORG_ID AS branches
-                             ,F.OLD_FAMILY_NO AS oldFamilyNo
-                        FROM AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F
+                               || P.PERSON_NAME_SECOND || ' '
+                               || P.PERSON_NAME_THIRD  || ' '
+                               || P.PERSON_NAME_FOURTH || ' '
+                               || ARABIC_VALUE AS headFamilyName
+                               ,P.BIRTH_DATE AS birthDate
+                               ,R.AID_REQUEST_ID AS requestId
+                               ,p.FAMILY_PERSONS_ID AS headFamilyId
+                               ,F.ORG_ID AS branches
+                               ,F.OLD_FAMILY_NO AS oldFamilyNo
+                        FROM  AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
+                        LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
-                        Left Join AIN_CAPPS.SC_FAMILY_PERSONS p on (R.FAMILY_PERSON_ID = p.FAMILY_PERSONS_ID)
+                        LEFT Join AIN_CAPPS.SC_FAMILY_PERSONS p on (R.FAMILY_PERSON_ID = p.FAMILY_PERSONS_ID)
                         LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES V ON V.LOOKUP_CODE = p.FAMILY_TITLE_ID AND v.LOOKUP_TYPE = 'FAMILY_TITLE'
                         WHERE (F.PHONE1 LIKE '%' || :phone
-                             OR F.PHONE2 LIKE '%' || :phone
-                             OR F.PHONE3 LIKE '%' || :phone)
-    
-                        UNION
-    
+                               OR F.PHONE2 LIKE '%' || :phone
+                               OR F.PHONE3 LIKE '%' || :phone)
+                        AND D.FOLLOW_DESCION_DATE = (SELECT MAX (D1.FOLLOW_DESCION_DATE)
+                                                      FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D1
+                                                           LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F1
+                                                              ON (D1.FOLLOW_ID = F1.FOLLOW_ID)
+                                                          LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R1
+                                                               ON (F1.AID_REQUEST_ID = R1.AID_REQUEST_ID)
+                                                      WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
+                                                          AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
+
+                          UNION
+
                         SELECT HEAD_FAMILY_NAME AS headFamilyName
-                                ,BIRTH_DATE AS birthDate
-                                ,REQUEST_ID AS requestId
-                                ,HEAD_FAMILY_ID AS headFamilyId
-                                ,BRANCHES AS branches
-                                ,OLD_FAMILY_NO AS oldFamilyNo
-                         FROM MOBAPP.SC_FAMILY_INFO FI
-                         WHERE FI.PHONE LIKE '%' || :phone
+                                  ,BIRTH_DATE AS birthDate
+                                  ,REQUEST_ID AS requestId
+                                  ,HEAD_FAMILY_ID AS headFamilyId
+                                  ,BRANCHES AS branches
+                                  ,OLD_FAMILY_NO AS oldFamilyNo
+                        FROM MOBAPP.SC_FAMILY_INFO FI
+                        WHERE FI.PHONE LIKE '%' || :phone
                 """)
                 .param("phone", phone)
                 .query(CheckPhoneRequest.class)

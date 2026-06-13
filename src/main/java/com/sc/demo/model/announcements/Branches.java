@@ -3,7 +3,7 @@ package com.sc.demo.model.announcements;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 
-//@JsonFormat(shape = JsonFormat.Shape.NUMBER)
+@JsonFormat(shape = JsonFormat.Shape.STRING)
 public enum Branches {
     HEADQUARTER("01"),
     MUTHANNA("02"),

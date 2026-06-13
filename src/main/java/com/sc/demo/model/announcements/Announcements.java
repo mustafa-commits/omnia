@@ -22,7 +22,7 @@ public class Announcements {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long announcements_id;
 
-    private Integer sendId;
+    private Long sendId;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "SENDING_TYPE")
@@ -34,8 +34,8 @@ public class Announcements {
 
     private Integer isActive;
 
-//    @Enumerated(EnumType.ORDINAL)
-//    @Column(name = "BRANCHES")
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "BRANCHES")
     private Branches branches;
 
     private LocalDateTime createDate;
@@ -52,7 +52,7 @@ public class Announcements {
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsAttachment> announcementsAttachment = new ArrayList<>();
 
-    public Announcements(Integer sendId, String title, String description, Branches branches, SendingType sendingType) {
+    public Announcements(Long sendId, String title, String description, Branches branches, SendingType sendingType) {
         this.sendId = sendId;
         this.title = title;
         this.description = description;

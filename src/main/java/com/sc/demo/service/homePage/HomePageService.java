@@ -22,9 +22,6 @@ public class HomePageService {
     private PhotoRepo photoRepo;
 
     @Autowired
-    private TokenService tokenService;
-
-    @Autowired
     private Environment environment;
 
     @Autowired
@@ -43,7 +40,7 @@ public class HomePageService {
             throw new RuntimeException(e);
         }
 
-        return "تم,  اضافة الصورة مع الرابط";
+        return "تم اضافة الصورة للواجهة الرئيسية";
     }
 
     public List<homePageResponse> viewHomePagePhotos() {
@@ -55,7 +52,7 @@ public class HomePageService {
                    ORDER BY CREATE_DATE DESC
                    FETCH FIRST 3 ROWS ONLY
                 """)
-                .param("path", "http://10.76.233.71:1801/socialCare/V1/api/viewHomePagePhotos/")
+                .param("path", "http://37.239.42.53:1801/socialCare/V1/api/homePagePhotos/")
                 .query(homePageResponse.class)
                 .list();
 

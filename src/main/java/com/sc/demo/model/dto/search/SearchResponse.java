@@ -1,6 +1,6 @@
 package com.sc.demo.model.dto.search;
 
-public record searchResponse(
+public record SearchResponse(
          long FamilyPersonsId,
          String GuardianName
 ) {

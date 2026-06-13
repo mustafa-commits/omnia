@@ -1,18 +1,12 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.announcements.Announcements;
-import com.sc.demo.model.announcements.Branches;
-import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
-import com.sc.demo.model.notification.SendingType;
 import com.sc.demo.service.announcements.AnnouncementsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -29,7 +23,7 @@ public class AnnouncementsController implements SecuredRestController {
     private String uploadDir;
 
     //  المرفقات مع التبليغات التلفون
-    @GetMapping("/V1/api/sc/getPhoneAnnouncements/{filename:.+}")
+    @GetMapping("/V1/api/sc/photoAnnouncements/{filename:.+}")
     public void serveFile(
             @PathVariable String filename,
             HttpServletResponse response

@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sc_homepage_photo")
+@Table(name = "sc_homepage_photos")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -23,7 +23,7 @@ public class homePagePhoto {
     private String fileName;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "")
+    @Column(name = "LINK_TYPE")
     private linkType linkType;
 
     private String link;

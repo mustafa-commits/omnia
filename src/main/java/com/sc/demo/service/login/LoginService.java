@@ -2,7 +2,7 @@ package com.sc.demo.service.login;
 
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.users.AppUser;
-import com.sc.demo.model.verification.SendingType;
+import com.sc.demo.model.verification.MethodType;
 import com.sc.demo.model.dto.login.ChekLoginRequest;
 import com.sc.demo.model.dto.login.LogInResponse;
 import com.sc.demo.model.verification.VerificationApp;
@@ -47,7 +47,7 @@ public class LoginService implements CommandLineRunner {
             return null;
         }
 
-        Long code = GeneratingVerificationLogin(String.valueOf(phone), SendingType.WHATSAPP);
+        Long code = GeneratingVerificationLogin(String.valueOf(phone), MethodType.WHATSAPP);
         whatsAppService.sendVerificationCode(code);
 
         return jdbcClient.sql("""
@@ -86,10 +86,10 @@ public class LoginService implements CommandLineRunner {
     }
 
     // جلب ال OTP بعد خزنه بالجدول
-    public Long GeneratingVerificationLogin(String userIdentifier, SendingType sendingType) {
+    public Long GeneratingVerificationLogin(String userIdentifier, MethodType methodType) {
         Long code;
         code = ThreadLocalRandom.current().nextLong(100000, 1_000_000);
-        verificationLoginRepo.save(new VerificationApp(userIdentifier, code, sendingType));
+        verificationLoginRepo.save(new VerificationApp(userIdentifier, code, methodType));
         return code;
     }
 

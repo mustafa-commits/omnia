@@ -27,7 +27,7 @@ public class FamilyInfoService {
         return jdbcClient.sql("""
                     SELECT F.OLD_FAMILY_NO AS FamilyNo
                          ,H.FAMILY_PERSONS_ID AS FamilyPersonsId
-                         ,H.PERSON_NAME_FIRST || ' ' ||   H.PERSON_NAME_SECOND || ' ' || H.PERSON_NAME_THIRD || ' ' || H.PERSON_NAME_FOURTH  AS PersonsFullName
+                         ,H.PERSON_NAME_FIRST || ' ' ||   H.PERSON_NAME_SECOND || ' ' || H.PERSON_NAME_THIRD || ' ' || H.PERSON_NAME_FOURTH AS PersonsFullName
                          ,H.RELATION_ID AS RelationId
                          ,L3.ARABIC_VALUE AS RelationshipType
                          ,FLOOR(MONTHS_BETWEEN(SYSDATE, H.BIRTH_DATE) / 12) AS PersonsAge
@@ -85,7 +85,7 @@ public class FamilyInfoService {
                              ,J.JUDGE_NAME AS JudgeName
                              ,C.CITY_ANAME AS CityName
                              ,CH.NEIGHBORHOOD AS Neighborhood
-                             ,CH.NEARSET_ADDRESS AS NearsetAddress
+                             ,CH.NEARSET_ADDRESS AS NearestAddress
                              ,GL.ARABIC_DESCRIPTION AS BranchName
                              ,GL2.ARABIC_DESCRIPTION AS OfficeName
                              ,R.PHONE_1 AS Phone1
@@ -124,26 +124,26 @@ public class FamilyInfoService {
     }
 
     // عدد افراد العائلة + عدد الايتام
-    public List<ChildrenAndMailyFamilyMembersResponse> getChildrenAndMailyFamilyMambersResponse(String token){
+    public List<ChildrenAndMailyFamilyMembersResponse> getChildrenAndMailyFamilyMembersResponse(String token){
 
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
 
         return jdbcClient.sql("""
-                          SELECT SUM (CASE WHEN H.RELATION_ID NOT IN (7, 8, 100) THEN 1 END) MailyMambers,
-                                 SUM (CASE WHEN H.RELATION_ID IN (1, 5) THEN 1 END) FamilyChildren
-                          FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
-                          LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
-                          LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
-                          LEFT JOIN AIN_CAPPS.SC_FAMILY_PERSONS_HIST H ON (H.FOLLOW_ID = F.FOLLOW_ID)
-                          WHERE R.AID_REQUEST_ID = :requestId
-                          AND H.HEAD_FAMILY_ID = :headFamilyId
-                          AND D.FOLLOW_DESCION_DATE = (SELECT MAX (D1.FOLLOW_DESCION_DATE)
-                                                           FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D1
-                                                           LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F1 ON (D1.FOLLOW_ID = F1.FOLLOW_ID)
-                                                           LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R1 ON (F1.AID_REQUEST_ID = R1.AID_REQUEST_ID)
-                                                           WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
-                                                           AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
+                  SELECT SUM (CASE WHEN H.RELATION_ID NOT IN (7, 8, 100) THEN 1 END) MailyMembers,
+                         SUM (CASE WHEN H.RELATION_ID IN (1, 5) THEN 1 END) FamilyChildren
+                  FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
+                  LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
+                  LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
+                  LEFT JOIN AIN_CAPPS.SC_FAMILY_PERSONS_HIST H ON (H.FOLLOW_ID = F.FOLLOW_ID)
+                  WHERE R.AID_REQUEST_ID = :requestId
+                  AND H.HEAD_FAMILY_ID = :headFamilyId
+                  AND D.FOLLOW_DESCION_DATE = (SELECT MAX (D1.FOLLOW_DESCION_DATE)
+                                                   FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D1
+                                                   LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F1 ON (D1.FOLLOW_ID = F1.FOLLOW_ID)
+                                                   LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R1 ON (F1.AID_REQUEST_ID = R1.AID_REQUEST_ID)
+                                                   WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
+                                                   AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
                 """)
                 .param("requestId", requestId)
                 .param("headFamilyId", headFamilyId)
