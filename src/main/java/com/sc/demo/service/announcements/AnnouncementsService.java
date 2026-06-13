@@ -78,15 +78,15 @@ public class AnnouncementsService {
 
         return jdbcClient.sql("""
                    SELECT A.CREATE_DATE AS createDate
-                           ,A.TITLE
-                           ,A.DESCRIPTION
-                           ,TO_CHAR(:path) || AA.FILE_NAME AS fileName
+                          ,A.TITLE
+                          ,A.DESCRIPTION
+                          ,TO_CHAR(:path) || AA.FILE_NAME AS fileName
                    FROM SC_ANNOUNCEMENTS A
-                   JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
+                   LEFT JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
-                   WHERE AD.USER_ID = :user_id OR AD.USER_ID = 0
+                   WHERE AD.USER_ID = :userId OR A.SENDING_TYPE = 0
                 """)
-                .param("user_id", userId)
+                .param("userId", userId)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoAnnouncements/")
                 .query(PhoneAnnouncementsRequest.class)
                 .list();
