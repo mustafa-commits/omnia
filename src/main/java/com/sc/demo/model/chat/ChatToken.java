@@ -8,8 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sc_chat_token")
@@ -28,11 +27,11 @@ public class ChatToken {
 
     private Integer isActive = 1;
 
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     private Long createBy;
 
-    private LocalDate lastUpdate;
+    private LocalDateTime lastUpdate;
 
     private String lastUpdateBy;
 
@@ -45,6 +44,6 @@ public class ChatToken {
 
     @PrePersist
     public void PrePersist(){
-        this.createDate = LocalDate.now();
+        this.createDate = LocalDateTime.now();
     }
 }

@@ -1,11 +1,11 @@
 package com.sc.demo.model.dto.announcements;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record PhoneAnnouncementsRequest(
         String title,
         String description,
-        LocalDate createDate,
+        LocalDateTime createDate,
         String fileName
 ) {
 }

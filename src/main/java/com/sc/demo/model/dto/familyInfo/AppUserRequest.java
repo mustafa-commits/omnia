@@ -4,9 +4,9 @@ import com.sc.demo.model.users.PhoneType;
 
 public record AppUserRequest(
         String phone,
-        Long secretCode,
+        Long secretCode/*,
         Long createBy,
         PhoneType phoneType,
-        String branches
+        String branches*/
 ) {
 }

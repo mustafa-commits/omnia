@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sc_notification_details")
@@ -28,11 +28,11 @@ public class NotificationDetails {
 
     private Integer isActive = 1;
 
-    private LocalDate createDate;
+    private LocalDateTime createDate;
 
     private Long createBy;
 
-    private LocalDate lastUpdate;
+    private LocalDateTime lastUpdate;
 
     private String lastUpdateBy;
 
@@ -44,6 +44,6 @@ public class NotificationDetails {
 
     @PrePersist
     public void prePersist(){
-        this.createDate = LocalDate.now();
+        this.createDate = LocalDateTime.now();
     }
 }

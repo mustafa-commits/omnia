@@ -1,10 +1,10 @@
 package com.sc.demo.model.dto.notification;
 
 import com.sc.demo.model.notification.SendingType;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record AllNotificationFamilyRequest(
-        LocalDate createDate,
+        LocalDateTime createDate,
         String title,
         String description,
         SendingType SendingType

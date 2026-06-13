@@ -1,9 +1,9 @@
 package com.sc.demo.model.dto.announcements;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record AllAnnouncementsFamilyRequest(
-        LocalDate createDate,
+        LocalDateTime createDate,
         String title,
         String fileName,
         String description
