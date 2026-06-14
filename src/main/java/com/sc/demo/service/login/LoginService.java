@@ -176,6 +176,6 @@ public class LoginService implements CommandLineRunner {
 //        Long headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
 //        Long requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
 //
-        System.out.println(tokenService.generateToken("77", 73619L, 506173L));
+        System.out.println(tokenService.generateToken("1", 133L, 828L));
     }
 }

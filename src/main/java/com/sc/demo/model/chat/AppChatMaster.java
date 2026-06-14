@@ -21,8 +21,6 @@ public class AppChatMaster {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long chatId;
 
-    private Long userId;
-
     private String chatTitle;
 
     private Integer isActive = 1;

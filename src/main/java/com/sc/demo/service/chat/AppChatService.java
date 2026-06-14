@@ -33,6 +33,7 @@ public class AppChatService {
     private TokenService tokenService;
 
     public boolean createChat(AppChatRequest appChatRequest){
+
         AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.createBy(), appChatRequest.chatTitle());
 
         appChatMaster = chatRepo.save(appChatMaster);
@@ -93,7 +94,7 @@ public class AppChatService {
                        M.CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_MASTER M
                 JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
-                WHERE M.USER_ID = :user_id
+                WHERE M.CREATE_BY = :user_id
                 AND D.MSG_ACTIVITY = 0
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 """)
@@ -113,11 +114,11 @@ public class AppChatService {
                        M.CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_MASTER M
                 JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
-                WHERE M.USER_ID = :user_id
+                WHERE M.CREATE_BY = :userId
                 AND D.MSG_ACTIVITY = 1
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 """)
-                .param("user_id", userId)
+                .param("userId", userId)
                 .query(AppChatResponse.class)
                 .list();
     }
@@ -170,13 +171,13 @@ public class AppChatService {
                 SELECT CASE WHEN MSG_TYPE in (1,2) THEN TO_CHAR(:path) || MESSAGES
                         ELSE MESSAGES END AS messages,
                         WHO_IS_SENDER AS whoIsSender,
-                        USER_ID_SENDER AS useridSender,
+                        CREATE_BY AS createBy,
                         CREATE_DATE AS createDate
                 FROM MOBAPP.SC_CHAT_DETAILS
-                WHERE CHAT_ID = :chat_id
+                WHERE CHAT_ID = :chatId
                 order by CREATE_DATE desc
                 """)
-                .param("chat_id", chatId)
+                .param("chatId", chatId)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoChat/")
                 .query(MessagesResponse.class)
                 .list();
