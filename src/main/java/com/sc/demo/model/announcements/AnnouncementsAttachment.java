@@ -36,10 +36,10 @@ public class AnnouncementsAttachment {
 
     private String lastUpdateBy;
 
-    public AnnouncementsAttachment(String fileName, Announcements announcements, Long createBy) {
+    public AnnouncementsAttachment(String fileName, Long createBy, Announcements announcements) {
         this.fileName = fileName;
-        this.announcements = announcements;
         this.createBy = createBy;
+        this.announcements = announcements;
     }
 
     @PrePersist

@@ -66,12 +66,16 @@ public class AddPhoneService {
                 .list();
     }
 
-    public Boolean addPhone(AddPhonRequest addPhonRequest){
+    public boolean addPhone(AddPhonRequest addPhonRequest){
         Optional<FamilyInfo> byHeadAndRequestId = addPhoneRepo.findById(addPhonRequest.headFamilyId());
-
-        addPhoneRepo.save(new FamilyInfo(addPhonRequest.headFamilyId(), addPhonRequest.requestId(), addPhonRequest.headFamilyName(),
-                addPhonRequest.createBy(), addPhonRequest.birthDate(), addPhonRequest.phone(), addPhonRequest.oldFamilyNo(), addPhonRequest.branches()));
-
-        return true;
+        if (byHeadAndRequestId.isPresent()){
+            return false;
+        }else {
+            addPhoneRepo.save(new FamilyInfo(addPhonRequest.headFamilyId(), addPhonRequest.requestId(),
+                    addPhonRequest.headFamilyName(), addPhonRequest.createBy(),
+                    addPhonRequest.birthDate(), addPhonRequest.phone(),
+                    addPhonRequest.oldFamilyNo(), addPhonRequest.branches()));
+            return true;
+        }
     }
 }

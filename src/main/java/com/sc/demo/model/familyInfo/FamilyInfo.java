@@ -20,7 +20,7 @@ public class FamilyInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long infoId;
 
-    @Column(unique=true)
+//    @Column(unique=true)
     private Long headFamilyId;
 
     private Long requestId;

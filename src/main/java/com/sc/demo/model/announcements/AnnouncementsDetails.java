@@ -35,10 +35,10 @@ public class AnnouncementsDetails {
 
     private String lastUpdateBy;
 
-    public AnnouncementsDetails(Long userId, Announcements announcements, Long createBy) {
+    public AnnouncementsDetails(Long userId, Long createBy, Announcements announcements) {
         this.userId = userId;
-        this.announcements = announcements;
         this.createBy = createBy;
+        this.announcements = announcements;
     }
 
 

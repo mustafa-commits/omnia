@@ -23,7 +23,7 @@ public class addPhoneController {
 
     // اضافة رقم هاتف جديد
     @PostMapping("/V1/api/sc/AddNewPhone")
-    public Boolean addNewPhone(@RequestBody AddPhonRequest addPhonRequest){
+    public boolean addNewPhone(@RequestBody AddPhonRequest addPhonRequest){
         return addPhoneService.addPhone(addPhonRequest);
     }
 }
