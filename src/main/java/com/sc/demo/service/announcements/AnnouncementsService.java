@@ -7,9 +7,11 @@ import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.model.notification.SendingType;
+import com.sc.demo.model.users.AppUser;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
+import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -41,6 +43,9 @@ public class AnnouncementsService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private AppUserRepo appUserRepo;
+
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
                                              MultipartFile file, List<Long> userId) {
@@ -58,11 +63,24 @@ public class AnnouncementsService {
             for (Long a : userId) {
                 announcementsDetailsRepo.save(new AnnouncementsDetails(a, createBy, announcements));
             }
-        } else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
-            for (Long b : userId ) {
-                announcementsDetailsRepo.save(new AnnouncementsDetails(b, createBy, announcements));
-            }
         }
+//        else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
+//            for (Long b : userId ) {
+//                announcementsDetailsRepo.save(new AnnouncementsDetails(b, createBy, announcements));
+//            }
+//        }
+
+//        else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
+//
+//            String requestBranches = announcementsRequest.branches();
+//            List<AppUser> usersInBranches = appUserRepo.findAllByBranchesIn(requestBranches);
+//
+//            for (AppUser user : usersInBranches) {
+//                announcementsDetailsRepo.save(
+//                        new AnnouncementsDetails(user.getUserId(), createBy, announcements)
+//                );
+//            }
+//        }
         if (file != null) try {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));

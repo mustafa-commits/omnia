@@ -1,7 +1,7 @@
 package com.sc.demo.controller;
 
-import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.addPhoneNumber.AddPhonRequest;
+import com.sc.demo.model.dto.addPhoneNumber.AllPhones;
 import com.sc.demo.model.dto.addPhoneNumber.CheckPhoneRequest;
 import com.sc.demo.service.addPhone.AddPhoneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class addPhoneController {
+public class AddPhoneController {
 
     @Autowired
     private AddPhoneService addPhoneService;
@@ -25,5 +25,12 @@ public class addPhoneController {
     @PostMapping("/V1/api/sc/AddNewPhone")
     public boolean addNewPhone(@RequestBody AddPhonRequest addPhonRequest){
         return addPhoneService.addPhone(addPhonRequest);
+    }
+
+
+    // جلب جميع الاسماء المضافة
+    @PostMapping("/V1/api/sc/allNewPhone")
+    public List<AllPhones> allNewPhone(){
+        return addPhoneService.allNewPhone();
     }
 }

@@ -4,6 +4,8 @@ import com.sc.demo.model.users.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AppUserRepo extends JpaRepository<AppUser, Long> {
     boolean existsByHeadFamilyIdAndRequestId (
@@ -11,4 +13,6 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
             Long requestId
     );
     AppUser findByHeadFamilyIdAndRequestId(Long headFamilyId, Long requestId);
+
+    List<AppUser> findAllByBranchesIn(String requestBranches);
 }

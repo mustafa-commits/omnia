@@ -1,6 +1,7 @@
 package com.sc.demo.service.addPhone;
 
 import com.sc.demo.model.dto.addPhoneNumber.AddPhonRequest;
+import com.sc.demo.model.dto.addPhoneNumber.AllPhones;
 import com.sc.demo.model.dto.addPhoneNumber.CheckPhoneRequest;
 import com.sc.demo.model.familyInfo.FamilyInfo;
 import com.sc.demo.repository.addPhone.AddPhoneRepo;
@@ -77,5 +78,20 @@ public class AddPhoneService {
                     addPhonRequest.oldFamilyNo(), addPhonRequest.branches()));
             return true;
         }
+    }
+
+    public List<AllPhones> allNewPhone(){
+        return jdbcClient.sql("""
+                SELECT INFO_ID AS infoId,
+                       PHONE AS phone,
+                       BIRTH_DATE AS birthDate,
+                       CREATE_BY AS createBy,
+                       CREATE_DATE AS createDate,
+                       HEAD_FAMILY_NAME AS headFamilyName,
+                       OLD_FAMILY_NO AS oldFamilyNo
+                FROM MOBAPP.SC_FAMILY_INFO
+                """)
+                .query(AllPhones.class)
+                .list();
     }
 }
