@@ -114,7 +114,7 @@ public class NotificationService {
 
     // اشعارات التطيق لكل يوزر
     public List<PhoneNotificationRequest> phoneNotification(String token) {
-        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         return jdbcClient.sql("""
                    SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION
@@ -123,7 +123,7 @@ public class NotificationService {
                    WHERE ND.USER_ID = :user_id
                    OR N.SENDING_TYPE = 0
                 """)
-                .param("user_id", userId)
+                .param("user_id", userTokenId)
                 .query(PhoneNotificationRequest.class)
                 .list();
     }

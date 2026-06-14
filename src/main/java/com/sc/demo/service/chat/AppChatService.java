@@ -84,8 +84,8 @@ public class AppChatService {
 
     // جلي المحادثات المفعلة
     public List<AppChatResponse> phoneChats(String token){
-        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
-        System.out.println(userId);
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+        System.out.println(userTokenId);
 
         return jdbcClient.sql("""
                 SELECT M.CHAT_ID AS chatId,
@@ -98,14 +98,14 @@ public class AppChatService {
                 AND D.MSG_ACTIVITY = 0
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 """)
-                .param("user_id", userId)
+                .param("user_id", userTokenId)
                 .query(AppChatResponse.class)
                 .list();
     }
 
     public List<AppChatResponse> PhoneChatsArchived(String token){
-        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
-        System.out.println(userId);
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+        System.out.println(userTokenId);
 
         return jdbcClient.sql("""
                 SELECT M.CHAT_ID AS chatId,
@@ -118,13 +118,13 @@ public class AppChatService {
                 AND D.MSG_ACTIVITY = 1
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 """)
-                .param("userId", userId)
+                .param("userId", userTokenId)
                 .query(AppChatResponse.class)
                 .list();
     }
 
     public boolean writeMessages(MessagesRequest messagesRequest, MultipartFile file, MultipartFile voice, String token) {
-        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
         String newFileName = null;
 
         if(messagesRequest.msgType() == MsgType.IMAGE) {
@@ -156,7 +156,7 @@ public class AppChatService {
                 : WhoIsSender.EMPLOYEE;
 
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
-                Long.parseLong(userId), whoIsSender,
+                Long.parseLong(userTokenId), whoIsSender,
                 messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
                 messagesRequest.msgType());
         Long detailsChatId = messagesRepo.save(appChatDetails).getDetailsChatId();

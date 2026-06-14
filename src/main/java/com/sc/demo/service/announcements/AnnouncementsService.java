@@ -95,7 +95,7 @@ public class AnnouncementsService {
 
     // اشعارات التطيق لكل يززر
     public List<PhoneAnnouncementsRequest> PhoneAnnouncements(String token) {
-        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         return jdbcClient.sql("""
                    SELECT A.CREATE_DATE AS createDate
@@ -107,7 +107,7 @@ public class AnnouncementsService {
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
                    WHERE AD.USER_ID = :userId OR A.SENDING_TYPE = 0
                 """)
-                .param("userId", userId)
+                .param("userId", userTokenId)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoAnnouncements/")
                 .query(PhoneAnnouncementsRequest.class)
                 .list();
