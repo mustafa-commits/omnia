@@ -22,9 +22,6 @@ public class AddPhoneService {
     @Autowired
     private AddPhoneRepo addPhoneRepo;
 
-    @Autowired
-    private TokenService tokenService;
-
     public List<CheckPhoneRequest> checkForTheNumber(long phone){
         return jdbcClient.sql("""
                         SELECT P.PERSON_NAME_FIRST || ' '
@@ -70,21 +67,15 @@ public class AddPhoneService {
                 .list();
     }
 
-    public boolean addPhone(AddPhonRequest addPhonRequest, String token){
-        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
-        Long headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
-        Long requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
-        Long branches = tokenService.decodeToken(token.substring(7)).getClaim("branches");
-
-        Optional<FamilyInfo> byHeadAndRequestId = addPhoneRepo.findById(headFamilyId);
-
+    public boolean addPhone(AddPhonRequest addPhonRequest){
+        Optional<FamilyInfo> byHeadAndRequestId = addPhoneRepo.findById(addPhonRequest.headFamilyId());
         if (byHeadAndRequestId.isPresent()){
             return false;
         }else {
-            addPhoneRepo.save(new FamilyInfo(headFamilyId, requestId,
-                    addPhonRequest.headFamilyName(), Long.valueOf(userTokenId),
+            addPhoneRepo.save(new FamilyInfo(addPhonRequest.headFamilyId(), addPhonRequest.requestId(),
+                    addPhonRequest.headFamilyName(), addPhonRequest.createBy(),
                     addPhonRequest.birthDate(), addPhonRequest.phone(),
-                    addPhonRequest.oldFamilyNo(), String.valueOf(branches)));
+                    addPhonRequest.oldFamilyNo(), addPhonRequest.branches()));
             return true;
         }
     }

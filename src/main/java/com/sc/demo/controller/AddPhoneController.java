@@ -23,9 +23,8 @@ public class AddPhoneController {
 
     // اضافة رقم هاتف جديد
     @PostMapping("/V1/api/sc/AddNewPhone")
-    public boolean addNewPhone(@RequestBody AddPhonRequest addPhonRequest,
-                               @RequestHeader(name = "authorization") String token){
-        return addPhoneService.addPhone(addPhonRequest, token);
+    public boolean addNewPhone(@RequestBody AddPhonRequest addPhonRequest){
+        return addPhoneService.addPhone(addPhonRequest);
     }
 
     // جلب جميع الاسماء المضافة
