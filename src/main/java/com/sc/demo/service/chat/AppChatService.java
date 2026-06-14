@@ -44,13 +44,12 @@ public class AppChatService {
                 ? WhoIsSender.USER
                 : WhoIsSender.EMPLOYEE;
 
-        messagesRepo.save(new AppChatDetails(userIdSender, whoIsSender,
-                                            appChatDetails.getPlatform(), appChatDetails.getMessages(),
-                                            appChatDetails.getCreateBy(), appChatMaster));
+        messagesRepo.save(new AppChatDetails(userIdSender, whoIsSender, appChatDetails.getPlatform(),
+                appChatDetails.getMessages(),appChatMaster));
 
         AppChatDetails welcomeMessage = new AppChatDetails();
         welcomeMessage.setChatApp(appChatMaster);
-        welcomeMessage.setUserIdSender(0L);
+        welcomeMessage.setCreateBy(0L);
         welcomeMessage.setPlatform(Platform.DASHBOARD);
         welcomeMessage.setMessages("""
                 السلام عليكم ورحمة الله وبركاته
@@ -158,7 +157,7 @@ public class AppChatService {
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 Long.parseLong(userId), whoIsSender,
                 messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
-                messagesRequest.msgType(), messagesRequest.createBy());
+                messagesRequest.msgType());
         Long detailsChatId = messagesRepo.save(appChatDetails).getDetailsChatId();
         System.out.println(detailsChatId);
         return true;

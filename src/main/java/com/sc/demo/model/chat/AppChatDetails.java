@@ -20,8 +20,6 @@ public class AppChatDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long detailsChatId;
 
-    private Long userIdSender;
-
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "WHO_IS_SENDER")
     private WhoIsSender whoIsSender;
@@ -57,25 +55,23 @@ public class AppChatDetails {
     @JoinColumn(name = "chat_id")
     private AppChatMaster chatApp;
 
-    public AppChatDetails(Long userIdSender, WhoIsSender whoIsSender, Platform platform,
-                          String messages, Long createBy, AppChatMaster appChatMaster) {
-        this.userIdSender = userIdSender;
+    public AppChatDetails(Long createBy, WhoIsSender whoIsSender, Platform platform,
+                          String messages, AppChatMaster appChatMaster) {
+        this.createBy = createBy;
         this.whoIsSender = whoIsSender;
         this.platform = platform;
         this.messages = messages;
-        this.createBy = createBy;
         this.chatApp = appChatMaster;
     }
 
-    public AppChatDetails(AppChatMaster chatApp, Long userIdSender, WhoIsSender whoIsSender,
-                          Platform platform, String messages, MsgType msgType, Long createBy) {
+    public AppChatDetails(AppChatMaster chatApp, Long createBy, WhoIsSender whoIsSender,
+                          Platform platform, String messages, MsgType msgType) {
         this.chatApp = chatApp;
-        this.userIdSender = userIdSender;
+        this.createBy = createBy;
         this.whoIsSender = whoIsSender;
         this.platform = platform;
         this.messages = messages;
         this.msgType = msgType;
-        this.createBy = createBy;
     }
 
     @PrePersist
