@@ -47,51 +47,53 @@ public class AnnouncementsService {
     private AppUserRepo appUserRepo;
 
     // انشاء تبليغ
-    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
-                                             MultipartFile file, List<Long> userId) {
-
-        Announcements announcements = new Announcements(announcementsRequest.title(),
-                announcementsRequest.description(), announcementsRequest.sendingType() == SendingType.BRANCH ? announcementsRequest.branches() : null,
-                announcementsRequest.sendingType(), announcementsRequest.createBy());
-
-        System.out.println(announcements);
-        announcements = announcementsRepo.save(announcements);
-
-        Long createBy = announcementsRequest.createBy();
-
-        if (announcementsRequest.sendingType() == SendingType.PRIVATE) {
-            for (Long a : userId) {
-                announcementsDetailsRepo.save(new AnnouncementsDetails(a, createBy, announcements));
-            }
-        }
-//        else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
+//    public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
+//                                             MultipartFile file, List<Long> userId) {
+//
+//        Announcements announcements = new Announcements(announcementsRequest.title(),
+//                announcementsRequest.description(), announcementsRequest.sendingType() == SendingType.BRANCH ? announcementsRequest.branches() : null,
+//                announcementsRequest.sendingType(), announcementsRequest.createBy());
+//
+//        System.out.println(announcements);
+//        announcements = announcementsRepo.save(announcements);
+//
+//        Long createBy = announcementsRequest.createBy();
+//
+//        if (announcementsRequest.sendingType() == SendingType.PRIVATE) {
+//            for (Long a : userId) {
+//                announcementsDetailsRepo.save(new AnnouncementsDetails(a, createBy, announcements));
+//            }
+//        }else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
+//            String getUsersInBranche = announcementsRequest.branches();
+//            return jdbcClient.sql("""
+//                    """)
 //            for (Long b : userId ) {
 //                announcementsDetailsRepo.save(new AnnouncementsDetails(b, createBy, announcements));
 //            }
 //        }
-
-//        else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
 //
-//            String requestBranches = announcementsRequest.branches();
-//            List<AppUser> usersInBranches = appUserRepo.findAllByBranchesIn(requestBranches);
-//
-//            for (AppUser user : usersInBranches) {
-//                announcementsDetailsRepo.save(
-//                        new AnnouncementsDetails(user.getUserId(), createBy, announcements)
-//                );
-//            }
+////        else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
+////
+////            String requestBranches = announcementsRequest.branches();
+////            List<AppUser> usersInBranches = appUserRepo.findAllByBranchesIn(requestBranches);
+////
+////            for (AppUser user : usersInBranches) {
+////                announcementsDetailsRepo.save(
+////                        new AnnouncementsDetails(user.getUserId(), createBy, announcements)
+////                );
+////            }
+////        }
+//        if (file != null) try {
+//            String originalFilename = file.getOriginalFilename();
+//            String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
+//            String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
+//            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, createBy, announcements));
+//            file.transferTo(new File(filePath));
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
 //        }
-        if (file != null) try {
-            String originalFilename = file.getOriginalFilename();
-            String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
-            String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
-            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, createBy, announcements));
-            file.transferTo(new File(filePath));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return announcements;
-    }
+//        return announcements;
+//    }
 
     // اشعارات التطيق لكل يززر
     public List<PhoneAnnouncementsRequest> PhoneAnnouncements(String token) {

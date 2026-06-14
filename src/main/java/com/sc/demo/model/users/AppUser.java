@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
 
+// تضاف البيانات في هذا الجدول للاشخاص الي سجلو دخول للتطبيق
 @Entity
 @Table(name = "sc_app_users")
 @Getter
@@ -14,10 +15,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppUser {
-    // تضاف البيانات في هذا الجدول للاشخاص الي سجلو دخول للتطبيق
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long userid;
 
     private Long headFamilyId;
 

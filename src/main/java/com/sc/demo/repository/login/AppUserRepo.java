@@ -13,6 +13,4 @@ public interface AppUserRepo extends JpaRepository<AppUser, Long> {
             Long requestId
     );
     AppUser findByHeadFamilyIdAndRequestId(Long headFamilyId, Long requestId);
-
-    List<AppUser> findAllByBranchesIn(String requestBranches);
 }

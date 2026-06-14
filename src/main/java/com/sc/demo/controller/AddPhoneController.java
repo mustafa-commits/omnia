@@ -27,9 +27,8 @@ public class AddPhoneController {
         return addPhoneService.addPhone(addPhonRequest);
     }
 
-
     // جلب جميع الاسماء المضافة
-    @PostMapping("/V1/api/sc/allNewPhone")
+    @GetMapping("/V1/api/sc/allNewPhone")
     public List<AllPhones> allNewPhone(){
         return addPhoneService.allNewPhone();
     }

@@ -64,6 +64,7 @@ public class securityConfig {
                         .requestMatchers("/V1/api/sc/writeMessages/**","/writeMessages","/writeMessages/**").permitAll()
                         .requestMatchers("/V1/api/sc/getMessagesChat/**","/getMessagesChat","/getMessagesChat/**").permitAll()
                         .requestMatchers("/V1/api/sc/SearchByName/**","/SearchByName","/SearchByName/**").permitAll()
+                        .requestMatchers("/V1/api/sc/allNewPhone/**","/allNewPhone","/allNewPhone/**").permitAll()
                         .requestMatchers("/V2/api/sc/SearchByNameV2/**","/SearchByNameV2","/SearchByNameV2/**").permitAll()
                         .requestMatchers("/V1/api/sc/checkNumber/**","/checkNumber","/checkNumber/**").permitAll()
                         .requestMatchers("/V1/api/sc/addHomePagePhoto/**","/addHomePagePhoto","/addHomePagePhoto/**").permitAll()
