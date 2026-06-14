@@ -40,14 +40,11 @@ public class AppUser {
 
     private String lastUpdateBy;
 
-    public AppUser(String phone, Long requestId, Long headFamilyId/*, Long createBy,
-                   PhoneType phoneType, String branches*/) {
+    public AppUser(String phone, Long requestId, Long headFamilyId, String branches) {
         Phone = phone;
         this.requestId = requestId;
-        this.headFamilyId = headFamilyId;/*
-        this.createBy = createBy;
-        this.phoneType = phoneType;
-        this.branches = branches;*/
+        this.headFamilyId = headFamilyId;
+        this.branches = branches;
     }
 
     @PrePersist

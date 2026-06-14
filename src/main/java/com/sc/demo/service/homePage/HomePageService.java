@@ -53,7 +53,7 @@ public class HomePageService {
                  FROM MOBAPP.SC_HOMEPAGE_PHOTOS
                  ORDER BY CREATE_DATE DESC
                 """)
-                .param("path", "http://37.239.42.53:1801/socialCare/V1/api/homePagePhotos/")
+                .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/homePagePhotos/")
                 .query(homePageResponse.class)
                 .list();
 

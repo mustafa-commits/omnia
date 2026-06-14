@@ -17,7 +17,7 @@ public class TokenService {
     @Autowired
     private JwtDecoder jwtDecoder;
 
-    public String generateToken(String Id, Long requestId, Long headFamilyId) {
+    public String generateToken(String Id, Long requestId, Long headFamilyId, String branches) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
@@ -26,6 +26,7 @@ public class TokenService {
                 .subject(Id)
                 .claim("requestId", requestId)
                 .claim("headFamilyId", headFamilyId)
+                .claim("branches", branches)
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

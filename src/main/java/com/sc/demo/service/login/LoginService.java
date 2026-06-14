@@ -53,6 +53,7 @@ public class LoginService implements CommandLineRunner {
         return jdbcClient.sql("""
                         SELECT H.HEAD_FAMILY_ID as HeadFamilyId
                                ,R.AID_REQUEST_ID as RequestId
+                               ,F.ORG_ID AS branches
                         FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
@@ -75,6 +76,7 @@ public class LoginService implements CommandLineRunner {
 
                         SELECT FI.HEAD_FAMILY_ID as HeadFamilyId
                               ,FI.REQUEST_ID as RequestId
+                              ,FI.BRANCHES AS branches
                         FROM MOBAPP.SC_FAMILY_INFO FI
                         WHERE FI.PHONE LIKE '%' || :phone
                         AND FI.BIRTH_DATE = TO_DATE(:birthDate, 'DD/MM/YYYY')
@@ -109,8 +111,9 @@ public class LoginService implements CommandLineRunner {
         if (logInChek.isPresent()) {
             List<getUserIdWithToken> setGuardianInfo = new ArrayList<>();
             List<LogInResponse> responseList = jdbcClient.sql("""
-                            SELECT H.HEAD_FAMILY_ID as HeadFamilyId
+                        SELECT H.HEAD_FAMILY_ID as HeadFamilyId
                                ,R.AID_REQUEST_ID as RequestId
+                               ,F.ORG_ID AS branches
                         FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
@@ -127,11 +130,12 @@ public class LoginService implements CommandLineRunner {
                         AND (F.PHONE1 LIKE '%' || :phone
                             OR F.PHONE2 LIKE '%' || :phone
                             OR F.PHONE3 LIKE '%' || :phone)
-
+                        
                         UNION
-
+                        
                         SELECT FI.HEAD_FAMILY_ID as HeadFamilyId
                               ,FI.REQUEST_ID as RequestId
+                              ,FI.BRANCHES AS branches
                         FROM MOBAPP.SC_FAMILY_INFO FI
                         WHERE FI.PHONE LIKE '%' || :phone
                         """)
@@ -141,24 +145,25 @@ public class LoginService implements CommandLineRunner {
 
             // بعد التأكد من رقم الهاتف تضيف المعلومات في AppUsers
             for (LogInResponse response : responseList){
-                boolean alreadyExists = appUserRepo.existsByHeadFamilyIdAndRequestId(
+                boolean alreadyExists = appUserRepo.existsByHeadFamilyIdAndRequestIdAndBranches(
                         response.HeadFamilyId(),
-                        response.RequestId()
+                        response.RequestId(),
+                        response.Branches()
                 );
 
-                Long userId;
+                Long loginUser;
 
                 if (!alreadyExists) {
-                    userId = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(),
-                            response.HeadFamilyId()/*, appUserRequest.createBy(),
-                            appUserRequest.phoneType(), appUserRequest.branches()*/)).getUserid();
+                    loginUser = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(),
+                            response.HeadFamilyId(), response.Branches())).getUserid();
                 }else {
-                    userId = appUserRepo.findByHeadFamilyIdAndRequestId(
+                    loginUser = appUserRepo.findByHeadFamilyIdAndRequestId(
                             response.HeadFamilyId(),
                             response.RequestId()
                     ).getUserid();
                 }
-                setGuardianInfo.add(new getUserIdWithToken(userId, tokenService.generateToken(String.valueOf(userId),response.RequestId(), response.HeadFamilyId())));
+                setGuardianInfo.add(new getUserIdWithToken(loginUser, tokenService.generateToken(String.valueOf(loginUser),
+                        response.RequestId(), response.HeadFamilyId(), response.Branches())));
             }
            return ResponseEntity.ok(setGuardianInfo);
         }else
@@ -172,10 +177,11 @@ public class LoginService implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-//        var userId = tokenService.decodeToken(token.substring(7)).getSubject();
+//        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 //        Long headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
 //        Long requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
-//
-        System.out.println(tokenService.generateToken("1", 133L, 828L));
+//        Long branches = tokenService.decodeToken(token.substring(7)).getClaim("branches");
+
+        System.out.println(tokenService.generateToken("1", 133L, 828L, "01"));
     }
 }
