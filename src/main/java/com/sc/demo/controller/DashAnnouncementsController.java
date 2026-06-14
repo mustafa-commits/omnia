@@ -27,17 +27,18 @@ public class DashAnnouncementsController {
     private String uploadDir;
 
     // انشار تبليغ
-//    @PostMapping("/V1/api/sc/createAnnouncements")
-//    public Announcements createAnnouncements(@RequestParam String title,
-//                                             @RequestParam String description,
-//                                             @RequestParam(required = false) String branches,
-//                                             @RequestParam SendingType sendingType,
-//                                             @RequestParam Long createBy,
-//                                             @RequestParam(required = false) List<Long> userId,
-//                                             @RequestParam(required = false) MultipartFile file)  {
-//        return announcementsService.createAnnouncements(new AnnouncementsRequest
-//                (title, description, branches, sendingType, createBy, null), file, userId);
-//    }
+    @PostMapping("/V1/api/sc/createAnnouncements")
+    public Announcements createAnnouncements(@RequestParam String title,
+                                             @RequestParam String description,
+                                             @RequestParam(required = false) String branches,
+                                             @RequestParam SendingType sendingType,
+                                             @RequestParam Long createBy,
+                                             @RequestParam(required = false) List<Long> userId,
+                                             @RequestParam(required = false) MultipartFile file,
+                                             @RequestHeader(name = "authorization") String token)  {
+        return announcementsService.createAnnouncements(new AnnouncementsRequest
+                (title, description, branches, sendingType, createBy, null), file, userId, token);
+    }
 
     //  المرفقات مع التبليغات الداشبورد
     @GetMapping("/V1/api/sc/allAnnouncementsPhotos/{filename:.+}")

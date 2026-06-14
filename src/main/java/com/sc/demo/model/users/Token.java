@@ -1,4 +1,4 @@
-package com.sc.demo.model.notification;
+package com.sc.demo.model.users;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,12 +8,12 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sc_notification_token")
+@Table(name = "sc_token")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotificationToken {
+public class Token {
 
     @Id
     private Long userId;
