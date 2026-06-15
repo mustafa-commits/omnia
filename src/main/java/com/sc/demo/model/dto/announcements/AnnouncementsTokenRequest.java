@@ -1,6 +1,6 @@
 package com.sc.demo.model.dto.announcements;
 
-public record TokenRequest(
+public record AnnouncementsTokenRequest(
         String token,
         Long userId
 ) {

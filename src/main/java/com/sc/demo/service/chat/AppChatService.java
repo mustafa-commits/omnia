@@ -2,6 +2,8 @@ package com.sc.demo.service.chat;
 
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
+import com.sc.demo.model.users.Token;
+import com.sc.demo.repository.chat.ChatTokenRepo;
 import com.sc.demo.repository.chat.MessagesRepo;
 import com.sc.demo.repository.chat.ChatRepo;
 import com.sc.demo.service.token.TokenService;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppChatService {
@@ -31,6 +35,9 @@ public class AppChatService {
 
     @Autowired
     private TokenService tokenService;
+    
+    @Autowired
+    private ChatTokenRepo chatTokenRepo;
 
     public boolean createChat(AppChatRequest appChatRequest){
 
@@ -66,21 +73,21 @@ public class AppChatService {
     }
 
     // حفظ Token القادم من firebase في قاعدة البيانات
-//    public long saveToken(ChatTokenRequest chatTokenRequest) {
-//        Optional<ChatToken> byToken = chatTokenRepo.findById(chatTokenRequest.chatId());
-//
-//        if (byToken.isPresent()){
-//            ChatToken chatToken = byToken.get();
-//            chatToken.setLastUpdate(LocalDate.now());
-//            chatToken.setToken(chatTokenRequest.token());
-//            return chatTokenRepo.save(chatToken).getChatId();
-//        } else {
-//            ChatToken chatToken = byToken.get();
-//            chatToken.setToken(chatTokenRequest.token());
-//            chatToken.setChatId(chatTokenRequest.chatId());
-//            return chatTokenRepo.save(chatToken).getChatId();
-//        }
-//    }
+    public long saveToken(ChatTokenRequest chatTokenRequest) {
+        Optional<Token> byToken = chatTokenRepo.findById(chatTokenRequest.userId());
+
+        if (byToken.isPresent()) {
+            Token token = byToken.get();
+            token.setLastUpdate(LocalDateTime.now());
+            token.setToken(chatTokenRequest.token());
+            return chatTokenRepo.save(token).getUserId();
+        } else {
+            Token token = new Token();
+            token.setToken(chatTokenRequest.token());
+            token.setUserId(chatTokenRequest.userId());
+            return chatTokenRepo.save(token).getUserId();
+        }
+    }
 
     // جلي المحادثات المفعلة
     public List<AppChatResponse> phoneChats(String token){

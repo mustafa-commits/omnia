@@ -6,12 +6,13 @@ import com.sc.demo.model.announcements.AnnouncementsDetails;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
-import com.sc.demo.model.dto.announcements.TokenRequest;
+import com.sc.demo.model.dto.announcements.AnnouncementsTokenRequest;
 import com.sc.demo.model.notification.SendingType;
-import com.sc.demo.model.users.AppUser;
+import com.sc.demo.model.users.Token;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
+import com.sc.demo.repository.announcements.AnnouncementsTokenRepo;
 import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AnnouncementsService {
@@ -45,7 +48,7 @@ public class AnnouncementsService {
     private TokenService tokenService;
 
     @Autowired
-    private AppUserRepo appUserRepo;
+    private AnnouncementsTokenRepo announcementsTokenRepo;
 
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
@@ -66,7 +69,7 @@ public class AnnouncementsService {
             }
         }else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
             String getUsersInBranch = announcementsRequest.branches();
-            List<TokenRequest> gettoken = jdbcClient.sql("""
+            List<AnnouncementsTokenRequest> gettoken = jdbcClient.sql("""
                             SELECT T.TOKEN AS token
                                   ,U.USERID AS userId
                             FROM MOBAPP.SC_APP_USERS U
@@ -74,7 +77,7 @@ public class AnnouncementsService {
                             WHERE U.BRANCHES = :branch
                     """)
                     .param("branch", getUsersInBranch)
-                    .query(TokenRequest.class)
+                    .query(AnnouncementsTokenRequest.class)
                     .list();
             for (Long b : userId ) {
                 announcementsDetailsRepo.save(new AnnouncementsDetails(b, createBy, announcements));
@@ -91,6 +94,23 @@ public class AnnouncementsService {
             throw new RuntimeException(e);
         }
         return announcements;
+    }
+
+    // حفظ Token القادم من firebase في قاعدة البيانات
+    public long saveToken(AnnouncementsTokenRequest announcementsTokenRequest) {
+        Optional<Token> byToken = announcementsTokenRepo.findById(announcementsTokenRequest.userId());
+
+        if (byToken.isPresent()) {
+            Token token = byToken.get();
+            token.setLastUpdate(LocalDateTime.now());
+            token.setToken(announcementsTokenRequest.token());
+            return announcementsTokenRepo.save(token).getUserId();
+        } else {
+            Token token = new Token();
+            token.setToken(announcementsTokenRequest.token());
+            token.setUserId(announcementsTokenRequest.userId());
+            return announcementsTokenRepo.save(token).getUserId();
+        }
     }
 
     // اشعارات التطيق لكل يززر
