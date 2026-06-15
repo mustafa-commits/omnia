@@ -74,6 +74,7 @@ public class AppChatController implements SecuredRestController {
         return appChatService.getMessages(chatId);
     }
 
+    // اظهار الصور والصوت
     @GetMapping("/V1/api/sc/photoChat/{filename:.+}")
     public void serveFile(
             @PathVariable String filename,

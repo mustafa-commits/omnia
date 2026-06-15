@@ -28,9 +28,9 @@ public class LoginController {
 
     // تسجيل الدخول من خلال رقم الهاتف
     @GetMapping("/V1/api/sc/loginByPhone")
-    public List<LogInResponse> login(@RequestParam long phone,
-                                    @RequestParam String country_code,
-                                    @RequestParam String birthDate) {
+    public List<LogInResponse> login(@RequestParam Long phone,
+                                     @RequestParam String country_code,
+                                     @RequestParam String birthDate) {
         return loginService.logIn(phone, country_code, birthDate);
     }
 

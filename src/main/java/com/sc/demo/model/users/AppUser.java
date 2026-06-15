@@ -31,6 +31,9 @@ public class AppUser {
     @Enumerated(EnumType.ORDINAL)
     private PhoneType phoneType;
 
+    @Column(length = 500)
+    private String guardianName;
+
     private Integer isActive = 1;
 
     private LocalDateTime createDate;
@@ -41,11 +44,12 @@ public class AppUser {
 
     private String lastUpdateBy;
 
-    public AppUser(String phone, Long requestId, Long headFamilyId, String branches) {
+    public AppUser(String phone, Long requestId, Long headFamilyId, String branches, String guardianName) {
         Phone = phone;
         this.requestId = requestId;
         this.headFamilyId = headFamilyId;
         this.branches = branches;
+        this.guardianName = guardianName;
     }
 
     @PrePersist

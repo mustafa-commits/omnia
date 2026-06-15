@@ -23,6 +23,7 @@ public class EmployeesDashboardController {
         return employeesDashboardService.addEmployees(employeesResponse);
     }
 
+    // جلب الموضفين المضافين
     @GetMapping("/V1/api/sc/employeesDashboard")
     public List<EmployeesRequest> employeesDashboard(){
         return employeesDashboardService.viewEmployees();

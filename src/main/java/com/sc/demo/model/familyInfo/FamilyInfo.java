@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.parameters.P;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,6 +36,9 @@ public class FamilyInfo {
 
     private String oldFamilyNo;
 
+    @Column(length = 500)
+    private String guardianName;
+
     private String branches;
 
     private Integer isActive = 1;
@@ -47,9 +51,10 @@ public class FamilyInfo {
 
     private String lastUpdateBy;
 
-    public FamilyInfo(Long headFamilyId, Long requestId, String headFamilyName,
+    public FamilyInfo(String guardianName,Long headFamilyId, Long requestId, String headFamilyName,
                       Long createBy, LocalDate birthDate, String phone,
                       String oldFamilyNo, String branches) {
+        this.guardianName = guardianName;
         this.headFamilyId = headFamilyId;
         this.requestId = requestId;
         this.headFamilyName = headFamilyName;

@@ -17,6 +17,7 @@ public class TokenService {
     @Autowired
     private JwtDecoder jwtDecoder;
 
+    // انشاء توكت مستخدمي التطبيق
     public String generateToken(String Id, Long requestId, Long headFamilyId, String branches) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -30,6 +31,19 @@ public class TokenService {
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
+
+    // انشاء توكن مستخدمي الداشبورد
+    public String generateEmployeesToken(String employeesId) {
+        Instant now = Instant.now();
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plus(2, ChronoUnit.DAYS))
+                .subject(employeesId)
+                .build();
+        return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    }
+
     public Jwt decodeToken(String token) {
         return jwtDecoder.decode(token);
     }

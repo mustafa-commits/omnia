@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 public record CheckPhoneRequest(
         String headFamilyName,
+        String guardianName,
         LocalDate birthDate,
         Long requestId,
         Long headFamilyId,

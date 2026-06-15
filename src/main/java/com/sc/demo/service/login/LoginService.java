@@ -1,6 +1,7 @@
 package com.sc.demo.service.login;
 
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
+import com.sc.demo.model.dto.login.GetUserIdWithToken;
 import com.sc.demo.model.users.AppUser;
 import com.sc.demo.model.verification.MethodType;
 import com.sc.demo.model.dto.login.ChekLoginRequest;
@@ -40,7 +41,7 @@ public class LoginService implements CommandLineRunner {
 
     String regex = "^(77|78|79)\\d{8}$";
 
-    // تسجيل دخول من خلال رقم الهاتف
+    // تسجيل دخول من خلال رقم الهاتف زتاريخ الميلاد
     public List<LogInResponse> logIn(long phone, String country_code, String birthDate){
 
         if (!String.valueOf(phone).matches(regex)){
@@ -51,9 +52,10 @@ public class LoginService implements CommandLineRunner {
         whatsAppService.sendVerificationCode(phone, country_code, code);
 
         return jdbcClient.sql("""
-                        SELECT H.HEAD_FAMILY_ID as HeadFamilyId
-                               ,R.AID_REQUEST_ID as RequestId
+                        SELECT H.HEAD_FAMILY_ID AS headFamilyId
+                               ,R.AID_REQUEST_ID AS requestId
                                ,F.ORG_ID AS branches
+                               ,H.PERSON_NAME_FIRST || ' ' ||   H.PERSON_NAME_SECOND || ' ' || H.PERSON_NAME_THIRD || ' ' || H.PERSON_NAME_FOURTH  AS guardianName
                         FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
@@ -74,9 +76,10 @@ public class LoginService implements CommandLineRunner {
 
                         UNION
 
-                        SELECT FI.HEAD_FAMILY_ID as HeadFamilyId
-                              ,FI.REQUEST_ID as RequestId
+                        SELECT FI.HEAD_FAMILY_ID AS headFamilyId
+                              ,FI.REQUEST_ID AS requestId
                               ,FI.BRANCHES AS branches
+                              ,FI.GUARDIAN_NAME AS guardianName
                         FROM MOBAPP.SC_FAMILY_INFO FI
                         WHERE FI.PHONE LIKE '%' || :phone
                         AND FI.BIRTH_DATE = TO_DATE(:birthDate, 'DD/MM/YYYY')
@@ -87,7 +90,7 @@ public class LoginService implements CommandLineRunner {
                 .list();
     }
 
-    // جلب ال OTP بعد خزنه بالجدول
+    // انشاء ال OTP وارساله
     public Long GeneratingVerificationLogin(String userIdentifier, MethodType methodType) {
         Long code;
         code = ThreadLocalRandom.current().nextLong(100000, 1_000_000);
@@ -95,7 +98,7 @@ public class LoginService implements CommandLineRunner {
         return code;
     }
 
-    // التحقق من تاريخ الميلاد وارسال رقم الحاتف
+    // التحقق من ال otp  ورقم الهاتف بعدها حفظ المعلومات في ال AppUsers
     public ResponseEntity<?> ChekLoginApp(AppUserRequest appUserRequest){
         Optional <ChekLoginRequest> logInChek = jdbcClient.sql("""
                     SELECT USER_IDENTIFIER AS userIdentifier
@@ -109,11 +112,12 @@ public class LoginService implements CommandLineRunner {
                 .query(ChekLoginRequest.class).optional();
 
         if (logInChek.isPresent()) {
-            List<getUserIdWithToken> setGuardianInfo = new ArrayList<>();
+            List<GetUserIdWithToken> setGuardianInfo = new ArrayList<>();
             List<LogInResponse> responseList = jdbcClient.sql("""
-                        SELECT H.HEAD_FAMILY_ID as HeadFamilyId
-                               ,R.AID_REQUEST_ID as RequestId
+                        SELECT H.HEAD_FAMILY_ID AS headFamilyId
+                               ,R.AID_REQUEST_ID AS requestId
                                ,F.ORG_ID AS branches
+                               ,H.PERSON_NAME_FIRST || ' ' ||   H.PERSON_NAME_SECOND || ' ' || H.PERSON_NAME_THIRD || ' ' || H.PERSON_NAME_FOURTH  AS guardianName
                         FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
                         LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
@@ -130,12 +134,13 @@ public class LoginService implements CommandLineRunner {
                         AND (F.PHONE1 LIKE '%' || :phone
                             OR F.PHONE2 LIKE '%' || :phone
                             OR F.PHONE3 LIKE '%' || :phone)
-                        
+
                         UNION
-                        
-                        SELECT FI.HEAD_FAMILY_ID as HeadFamilyId
-                              ,FI.REQUEST_ID as RequestId
+
+                        SELECT FI.HEAD_FAMILY_ID AS headFamilyId
+                              ,FI.REQUEST_ID AS requestId
                               ,FI.BRANCHES AS branches
+                              ,FI.GUARDIAN_NAME AS guardianName
                         FROM MOBAPP.SC_FAMILY_INFO FI
                         WHERE FI.PHONE LIKE '%' || :phone
                         """)
@@ -145,33 +150,31 @@ public class LoginService implements CommandLineRunner {
 
             // بعد التأكد من رقم الهاتف تضيف المعلومات في AppUsers
             for (LogInResponse response : responseList){
-                boolean alreadyExists = appUserRepo.existsByHeadFamilyIdAndRequestIdAndBranches(
-                        response.HeadFamilyId(),
-                        response.RequestId(),
-                        response.Branches()
+                boolean alreadyExists = appUserRepo.existsByHeadFamilyIdAndRequestIdAndBranchesAndGuardianName(
+                        response.headFamilyId(),
+                        response.requestId(),
+                        response.Branches(),
+                        response.guardianName()
+
                 );
 
                 Long loginUser;
 
                 if (!alreadyExists) {
-                    loginUser = appUserRepo.save(new AppUser(appUserRequest.phone(), response.RequestId(),
-                            response.HeadFamilyId(), response.Branches())).getUserid();
+                    loginUser = appUserRepo.save(new AppUser(appUserRequest.phone(), response.requestId(),
+                            response.headFamilyId(), response.Branches(), response.guardianName())).getUserid();
                 }else {
                     loginUser = appUserRepo.findByHeadFamilyIdAndRequestId(
-                            response.HeadFamilyId(),
-                            response.RequestId()
+                            response.headFamilyId(),
+                            response.requestId()
                     ).getUserid();
                 }
-                setGuardianInfo.add(new getUserIdWithToken(loginUser, tokenService.generateToken(String.valueOf(loginUser),
-                        response.RequestId(), response.HeadFamilyId(), response.Branches())));
+                setGuardianInfo.add(new GetUserIdWithToken(loginUser, tokenService.generateToken(String.valueOf(loginUser),
+                        response.requestId(), response.headFamilyId(), response.Branches())));
             }
            return ResponseEntity.ok(setGuardianInfo);
         }else
             return ResponseEntity.badRequest().body("WRONG CRED");
-    }
-
-    public record getUserIdWithToken (Long userId, String token){
-
     }
 
     @Override

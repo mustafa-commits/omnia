@@ -7,5 +7,4 @@ public enum PrivilegesName {
     ADMINISTRATION,
     SUPPORTANSWERS,
     PUBLISHING
-
 }

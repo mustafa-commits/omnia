@@ -13,7 +13,6 @@ import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsTokenRepo;
-import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -137,10 +136,12 @@ public class AnnouncementsService {
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
     public List<AllAnnouncementsFamilyRequest> AllAnnouncementsFamily() {
         return jdbcClient.sql("""
-                   SELECT A.CREATE_DATE AS createDate
-                          ,A.TITLE
-                          ,TO_CHAR(:path) || AA.FILE_NAME AS fileName
-                          ,A.DESCRIPTION
+                   SELECT A.ANNOUNCEMENTS_ID AS announcementsId
+                         ,A.CREATE_DATE AS createDate
+                         ,A.TITLE
+                         ,TO_CHAR(:path) || AA.FILE_NAME AS fileName
+                         ,A.DESCRIPTION
+                         ,A.SENDING_TYPE AS sendingType
                    FROM SC_ANNOUNCEMENTS A
                    LEFT JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
