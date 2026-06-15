@@ -58,6 +58,7 @@ public class securityConfig {
                         .requestMatchers("/V1/api/sc/getDashPhoneChatsArchived/**","/getDashPhoneChatsArchived","/getDashPhoneChatsArchived/**").permitAll()
                         .requestMatchers("/V1/api/sc/createChat/**","/createChat","/createChat/**").permitAll()
                         .requestMatchers("/V1/api/sc/getFamilyBasicInformation/**","/getFamilyBasicInformation","/getFamilyBasicInformation/**").permitAll()
+                        .requestMatchers("/V1/api/sc/checkedEmployee/**","/checkedEmployee","/checkedEmployee/**").permitAll()
                         .requestMatchers("/V1/api/sc/getFamilyHousingInformation/**","/getFamilyHousingInformation","/getFamilyHousingInformation/**").permitAll()
                         .requestMatchers("/V1/api/sc/getChildrenAndMailyFamilyMembersResponse/**","/getChildrenAndMailyFamilyMembersResponse","/getChildrenAndMailyFamilyMembersResponse/**").permitAll()
                         .requestMatchers("/V1/api/sc/getPhoneChats/**","/getPhoneChats","/getPhoneChats/**").permitAll()

@@ -2,12 +2,11 @@ package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.employees.EmployeesRequest;
 import com.sc.demo.model.dto.employees.EmployeesResponse;
+import com.sc.demo.model.dto.login.GetUserIdWithToken;
 import com.sc.demo.service.employees.EmployeesDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,4 +28,10 @@ public class EmployeesDashboardController {
         return employeesDashboardService.viewEmployees();
     }
 
+    // تأكد من تسجيل دخول المستخدم الى الداش بورد
+    @PostMapping("/V1/api/sc/checkedEmployee")
+    public GetUserIdWithToken checkedEmployee(@RequestParam String userName,
+                                              @RequestParam String password){
+        return employeesDashboardService.checkedEmployee(userName, password);
+    }
 }
