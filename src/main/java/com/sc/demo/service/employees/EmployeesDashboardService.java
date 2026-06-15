@@ -14,8 +14,8 @@ public class EmployeesDashboardService {
 
     public Boolean addEmployees(EmployeesResponse employeesResponse){
         addEmployeesRepo.save(new AccessToDashboard(employeesResponse.phone(), employeesResponse.departmentId(),
-                employeesResponse.password(), employeesResponse.userName(), employeesResponse.privilegesName(),
-                employeesResponse.createBy()));
+                employeesResponse.password(), employeesResponse.userName(), employeesResponse.fullName(),
+                employeesResponse.privilegesName(), employeesResponse.createBy()));
 
         return true;
     }

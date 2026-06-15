@@ -28,6 +28,9 @@ public class AccessToDashboard {
     @Column(length = 50)
     private String userName;
 
+    @Column(length = 100)
+    private String fullName;
+
     private String Phone;
 
     private String password;
@@ -48,12 +51,13 @@ public class AccessToDashboard {
     private String lastUpdateBy;
 
     public AccessToDashboard(String phone, Department departmentId, String password,
-                             String userName, PrivilegesName privilegesName,
+                             String userName, String fullName, PrivilegesName privilegesName,
                              Long createBy) {
         Phone = phone;
         this.departmentId = departmentId;
         this.password = password;
         this.userName = userName;
+        this.fullName = fullName;
         this.privilegesName = privilegesName;
         this.createBy = createBy;
     }

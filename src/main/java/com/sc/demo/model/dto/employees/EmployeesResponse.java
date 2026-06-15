@@ -8,6 +8,7 @@ public record EmployeesResponse(
         Department departmentId,
         String password,
         String userName,
+        String fullName,
         PrivilegesName privilegesName,
         Long createBy
 ) {
