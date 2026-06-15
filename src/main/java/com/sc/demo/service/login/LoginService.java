@@ -3,6 +3,7 @@ package com.sc.demo.service.login;
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.dto.login.GetUserIdWithToken;
 import com.sc.demo.model.users.AppUser;
+import com.sc.demo.model.users.PhoneType;
 import com.sc.demo.model.verification.MethodType;
 import com.sc.demo.model.dto.login.ChekLoginRequest;
 import com.sc.demo.model.dto.login.LogInResponse;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,13 +44,14 @@ public class LoginService implements CommandLineRunner {
     String regex = "^(77|78|79)\\d{8}$";
 
     // تسجيل دخول من خلال رقم الهاتف زتاريخ الميلاد
-    public List<LogInResponse> logIn(long phone, String country_code, String birthDate){
+    public List<LogInResponse> logIn(Long phone, PhoneType phoneType, LocalDateTime timeUsed,
+                                     String country_code, String birthDate){
 
         if (!String.valueOf(phone).matches(regex)){
             return null;
         }
 
-        Long code = GeneratingVerificationLogin(String.valueOf(phone), MethodType.WHATSAPP);
+        Long code = GeneratingVerificationLogin(String.valueOf(phone), MethodType.WHATSAPP, phoneType, timeUsed);
         whatsAppService.sendVerificationCode(phone, country_code, code);
 
         return jdbcClient.sql("""
@@ -91,18 +94,19 @@ public class LoginService implements CommandLineRunner {
     }
 
     // انشاء ال OTP وارساله
-    public Long GeneratingVerificationLogin(String userIdentifier, MethodType methodType) {
+    public Long GeneratingVerificationLogin(String userIdentifier, MethodType methodType,
+                                            PhoneType phoneType, LocalDateTime timeUsed) {
         Long code;
         code = ThreadLocalRandom.current().nextLong(100000, 1_000_000);
-        verificationLoginRepo.save(new VerificationApp(userIdentifier, code, methodType));
+        verificationLoginRepo.save(new VerificationApp(userIdentifier, code, methodType, phoneType, timeUsed));
         return code;
     }
 
-    // التحقق من ال otp  ورقم الهاتف بعدها حفظ المعلومات في ال AppUsers
+    // التحقق من ال otp  ورقم الهاتف بعدها حفظ المعلومات في ال AppUser
     public ResponseEntity<?> ChekLoginApp(AppUserRequest appUserRequest){
         Optional <ChekLoginRequest> logInChek = jdbcClient.sql("""
                     SELECT USER_IDENTIFIER AS userIdentifier
-                    FROM MOBAPP.SC_VERIFICATION_APP V
+                    FROM MOBAPP.SC_VERIFICATION_APPS V
                     WHERE V.USER_IDENTIFIER = :phone
                     AND V.SECRET_CODE = :secretCode
                     and Sysdate <= CREATE_DATE + interval '10' minute
@@ -148,7 +152,7 @@ public class LoginService implements CommandLineRunner {
                     .query(LogInResponse.class)
                     .list();
 
-            // بعد التأكد من رقم الهاتف تضيف المعلومات في AppUsers
+            // بعد التأكد من رقم الهاتف تضيف المعلومات في AppUser
             for (LogInResponse response : responseList){
                 boolean alreadyExists = appUserRepo.existsByHeadFamilyIdAndRequestIdAndBranchesAndGuardianName(
                         response.headFamilyId(),
@@ -162,12 +166,12 @@ public class LoginService implements CommandLineRunner {
 
                 if (!alreadyExists) {
                     loginUser = appUserRepo.save(new AppUser(appUserRequest.phone(), response.requestId(),
-                            response.headFamilyId(), response.Branches(), response.guardianName())).getUserid();
+                            response.headFamilyId(), response.Branches(), response.guardianName())).getUserId();
                 }else {
                     loginUser = appUserRepo.findByHeadFamilyIdAndRequestId(
                             response.headFamilyId(),
                             response.requestId()
-                    ).getUserid();
+                    ).getUserId();
                 }
                 setGuardianInfo.add(new GetUserIdWithToken(loginUser, tokenService.generateToken(String.valueOf(loginUser),
                         response.requestId(), response.headFamilyId(), response.Branches())));

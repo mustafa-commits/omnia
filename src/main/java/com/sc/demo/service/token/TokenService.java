@@ -18,13 +18,13 @@ public class TokenService {
     private JwtDecoder jwtDecoder;
 
     // انشاء توكت مستخدمي التطبيق
-    public String generateToken(String Id, Long requestId, Long headFamilyId, String branches) {
+    public String generateToken(String userId, Long requestId, Long headFamilyId, String branches) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
                 .expiresAt(now.plus(2, ChronoUnit.DAYS))
-                .subject(Id)
+                .subject(userId)
                 .claim("requestId", requestId)
                 .claim("headFamilyId", headFamilyId)
                 .claim("branches", branches)

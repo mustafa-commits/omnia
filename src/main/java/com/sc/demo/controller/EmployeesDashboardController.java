@@ -5,7 +5,6 @@ import com.sc.demo.model.dto.employees.EmployeesResponse;
 import com.sc.demo.model.dto.login.GetUserIdWithToken;
 import com.sc.demo.service.employees.EmployeesDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

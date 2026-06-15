@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 // تضاف البيانات في هذا الجدول للاشخاص الي سجلو دخول للتطبيق
 @Entity
-@Table(name = "sc_app_users")
+@Table(name = "sc_app_user")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userid;
+    private Long userId;
 
     private Long headFamilyId;
 
