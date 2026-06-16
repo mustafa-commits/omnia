@@ -3,10 +3,12 @@ package com.sc.demo.service.login;
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.dto.login.GetUserIdWithToken;
 import com.sc.demo.model.users.AppUser;
+import com.sc.demo.model.users.PhoneType;
 import com.sc.demo.model.verification.MethodType;
 import com.sc.demo.model.dto.login.ChekLoginRequest;
 import com.sc.demo.model.dto.login.LogInResponse;
 import com.sc.demo.model.verification.VerificationApp;
+import com.sc.demo.repository.familyInfo.FamilyInfoRepo;
 import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.repository.login.VerificationLoginRepo;
 import com.sc.demo.service.token.TokenService;
@@ -15,6 +17,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +41,9 @@ public class LoginService implements CommandLineRunner {
 
     @Autowired
     private AppUserRepo appUserRepo;
+
+    @Autowired
+    private FamilyInfoRepo familyInfoRepo;
 
     String regex = "^(77|78|79)\\d{8}$";
 
@@ -98,7 +105,7 @@ public class LoginService implements CommandLineRunner {
     }
 
     // التحقق من ال otp  ورقم الهاتف بعدها حفظ المعلومات في ال AppUser
-    public ResponseEntity<?> ChekLoginApp(AppUserRequest appUserRequest){
+    public ResponseEntity<?> ChekLoginApp(AppUserRequest appUserRequest, PhoneType phoneType){
         Optional <ChekLoginRequest> logInChek = jdbcClient.sql("""
                     SELECT USER_IDENTIFIER AS userIdentifier
                     FROM MOBAPP.SC_VERIFICATION_APPS V
@@ -108,10 +115,12 @@ public class LoginService implements CommandLineRunner {
                 """)
                 .param("phone",appUserRequest.phone())
                 .param("secretCode", appUserRequest.secretCode())
-                .query(ChekLoginRequest.class).optional();
+                .query(ChekLoginRequest.class)
+                .optional();
 
         if (logInChek.isPresent()) {
             List<GetUserIdWithToken> setGuardianInfo = new ArrayList<>();
+            familyInfoRepo.save(new VerificationApp(phoneType));
             List<LogInResponse> responseList = jdbcClient.sql("""
                         SELECT H.HEAD_FAMILY_ID AS headFamilyId
                                ,R.AID_REQUEST_ID AS requestId
@@ -154,7 +163,6 @@ public class LoginService implements CommandLineRunner {
                         response.requestId(),
                         response.Branches(),
                         response.guardianName()
-
                 );
 
                 Long loginUser;
@@ -167,6 +175,7 @@ public class LoginService implements CommandLineRunner {
                             response.headFamilyId(),
                             response.requestId()
                     ).getUserId();
+
                 }
                 setGuardianInfo.add(new GetUserIdWithToken(loginUser, tokenService.generateToken(String.valueOf(loginUser),
                         response.requestId(), response.headFamilyId(), response.Branches())));

@@ -22,16 +22,11 @@ public class FamilyInfoService {
     @Autowired
     private TokenService tokenService;
 
-    @Autowired
-    private FamilyInfoRepo familyInfoRepo;
-
     // المعلومات العائلة الاساسية
-    public List<FamilyInfoBasicResponse> getFamilyBasicInfo(String token, PhoneType phoneType){
+    public List<FamilyInfoBasicResponse> getFamilyBasicInfo(String token){
 
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
-
-        familyInfoRepo.save(new VerificationApp(phoneType));
 
         return jdbcClient.sql("""
                     SELECT F.OLD_FAMILY_NO AS FamilyNo

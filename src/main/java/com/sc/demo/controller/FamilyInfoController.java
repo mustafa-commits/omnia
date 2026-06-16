@@ -20,9 +20,8 @@ public class FamilyInfoController implements SecuredRestController {
 
     // جلب البيانات الاساسية للعائلة مثل ال(اسم, عمر, رقم هاتف, الخ .....)
     @GetMapping("/V1/api/sc/getFamilyBasicInformation")
-    public List<FamilyInfoBasicResponse> getFamilyBasicInformation(@RequestHeader(name = "authorization") String token,
-                                                                   @RequestParam PhoneType phoneType){
-        return familyInfoService.getFamilyBasicInfo(token, phoneType);
+    public List<FamilyInfoBasicResponse> getFamilyBasicInformation(@RequestHeader(name = "authorization") String token){
+        return familyInfoService.getFamilyBasicInfo(token);
     }
 
     // جلب بيانات سكن العائلة
