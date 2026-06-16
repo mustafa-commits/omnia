@@ -28,9 +28,6 @@ public class AppUser {
 
     private String branches;
 
-    @Enumerated(EnumType.ORDINAL)
-    private PhoneType phoneType;
-
     @Column(length = 500)
     private String guardianName;
 

@@ -66,8 +66,7 @@ public class DashAppChatService {
                             AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
                             """)
                     .param("chatId", chatId)
-                    .query(Boolean.class)
-                    .optional();
+                    .update();
             return true;
         }
         return false;

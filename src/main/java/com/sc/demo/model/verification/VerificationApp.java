@@ -54,6 +54,11 @@ public class VerificationApp {
         this.methodType = methodType;
     }
 
+    public VerificationApp(PhoneType phoneType) {
+        this.phoneType = phoneType;
+        this.timeUsed = LocalDateTime.now();
+    }
+
 
     @PrePersist
     public void prePersist(){

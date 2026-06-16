@@ -3,11 +3,18 @@ package com.sc.demo.service.users;
 import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMembersResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
+import com.sc.demo.model.users.PhoneType;
+import com.sc.demo.model.users.Token;
+import com.sc.demo.model.verification.VerificationApp;
+import com.sc.demo.repository.familyInfo.FamilyInfoRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FamilyInfoService {
@@ -18,11 +25,25 @@ public class FamilyInfoService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private FamilyInfoRepo familyInfoRepo;
+
     // المعلومات العائلة الاساسية
-    public List<FamilyInfoBasicResponse> getFamilyBasicInfo(String token){
+    public List<FamilyInfoBasicResponse> getFamilyBasicInfo(String token, PhoneType phoneType){
 
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
+
+        Optional<VerificationApp> byHeadFamilyId = familyInfoRepo.findById(Long.parseLong(headFamilyId.toString()));
+        System.out.println(byHeadFamilyId);
+        Optional<VerificationApp> byRequestId = familyInfoRepo.findById(Long.parseLong(requestId.toString()));
+        System.out.println(byRequestId);
+
+        if (byHeadFamilyId.isPresent() && byRequestId.isPresent()) {
+            VerificationApp newInfo = byHeadFamilyId.get();
+            newInfo.setPhoneType(phoneType);
+            familyInfoRepo.save(newInfo);
+        }
 
         return jdbcClient.sql("""
                     SELECT F.OLD_FAMILY_NO AS FamilyNo
