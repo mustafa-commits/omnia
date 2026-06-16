@@ -1,6 +1,7 @@
 package com.sc.demo.service.Statistics;
 
 import com.sc.demo.model.dto.statistics.AppUserStatisticsResponse;
+import com.sc.demo.model.dto.statistics.StatisticsUsesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -31,20 +32,16 @@ public class AppUserStatisticsService {
     }
 
     // جلب المحادثات المؤرشفة
-//    public List<DashAppChatResponse> dashPhoneChatsArchived(){
-//        return jdbcClient.sql("""
-//            SELECT M.CHAT_ID AS chatId
-//                   ,U.GUARDIAN_NAME AS guardianName
-//                    ,M.CHAT_TITLE AS chatTitle
-//                    ,D.MESSAGES AS messages
-//                    ,D.CREATE_DATE AS createDate
-//            FROM MOBAPP.SC_CHAT_MASTER M
-//            JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
-//            JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
-//            WHERE D.MSG_ACTIVITY = 1
-//            AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
-//            """)
-//                .query(DashAppChatResponse.class)
-//                .list();
-//    }
+    public List<StatisticsUsesResponse> getStatisticsUses(){
+        return jdbcClient.sql("""
+            SELECT COUNT(U.USER_ID) AS totalUsers,
+                   COUNT(CASE WHEN TRUNC(U.CREATE_DATE) = TRUNC(SYSDATE) THEN 1 END) AS usersToday,
+                   COUNT(CASE WHEN TRUNC(U.TIME_USED) = TRUNC(SYSDATE) THEN 1 END) AS downloadsToday,
+                   ROUND(COUNT(CASE WHEN UPPER(U.PHONE_TYPE) = 'IOS' THEN 1 END) * 100.0 / NULLIF(COUNT(U.USER_ID), 0), 2) AS iosPct,
+                   ROUND(COUNT(CASE WHEN UPPER(U.PHONE_TYPE) = 'ANDROID' THEN 1 END) * 100.0 / NULLIF(COUNT(U.USER_ID), 0), 2) AS androidPct
+            FROM MOBAPP.SC_APP_USER U
+            """)
+                .query(StatisticsUsesResponse.class)
+                .list();
+    }
 }
