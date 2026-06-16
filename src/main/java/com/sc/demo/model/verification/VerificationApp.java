@@ -48,14 +48,10 @@ public class VerificationApp {
 
     private String lastUpdateBy;
 
-    public VerificationApp(String userIdentifier, Long secretCode,
-                           MethodType methodType, PhoneType phoneType,
-                           LocalDateTime timeUsed) {
+    public VerificationApp(String userIdentifier, Long secretCode, MethodType methodType) {
         this.userIdentifier = userIdentifier;
         this.secretCode = secretCode;
         this.methodType = methodType;
-        this.phoneType = phoneType;
-        this.timeUsed = timeUsed;
     }
 
 

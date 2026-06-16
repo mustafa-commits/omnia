@@ -3,7 +3,6 @@ package com.sc.demo.service.login;
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.dto.login.GetUserIdWithToken;
 import com.sc.demo.model.users.AppUser;
-import com.sc.demo.model.users.PhoneType;
 import com.sc.demo.model.verification.MethodType;
 import com.sc.demo.model.dto.login.ChekLoginRequest;
 import com.sc.demo.model.dto.login.LogInResponse;
@@ -44,14 +43,13 @@ public class LoginService implements CommandLineRunner {
     String regex = "^(77|78|79)\\d{8}$";
 
     // تسجيل دخول من خلال رقم الهاتف زتاريخ الميلاد
-    public List<LogInResponse> logIn(Long phone, PhoneType phoneType, LocalDateTime timeUsed,
-                                     String country_code, String birthDate){
+    public List<LogInResponse> logIn(Long phone, String country_code, String birthDate){
 
         if (!String.valueOf(phone).matches(regex)){
             return null;
         }
 
-        Long code = GeneratingVerificationLogin(String.valueOf(phone), MethodType.WHATSAPP, phoneType, timeUsed);
+        Long code = GeneratingVerificationLogin(String.valueOf(phone), MethodType.WHATSAPP);
         whatsAppService.sendVerificationCode(phone, country_code, code);
 
         return jdbcClient.sql("""
@@ -94,11 +92,10 @@ public class LoginService implements CommandLineRunner {
     }
 
     // انشاء ال OTP وارساله
-    public Long GeneratingVerificationLogin(String userIdentifier, MethodType methodType,
-                                            PhoneType phoneType, LocalDateTime timeUsed) {
+    public Long GeneratingVerificationLogin(String userIdentifier, MethodType methodType) {
         Long code;
         code = ThreadLocalRandom.current().nextLong(100000, 1_000_000);
-        verificationLoginRepo.save(new VerificationApp(userIdentifier, code, methodType, phoneType, timeUsed));
+        verificationLoginRepo.save(new VerificationApp(userIdentifier, code, methodType));
         return code;
     }
 

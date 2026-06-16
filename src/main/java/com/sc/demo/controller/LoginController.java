@@ -2,15 +2,12 @@ package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.dto.login.LogInResponse;
-import com.sc.demo.model.users.PhoneType;
 import com.sc.demo.service.login.LoginService;
 import com.sc.demo.service.token.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -31,11 +28,9 @@ public class LoginController {
     // تسجيل الدخول من خلال رقم الهاتف
     @GetMapping("/V1/api/sc/loginByPhone")
     public List<LogInResponse> login(@RequestParam Long phone,
-                                     @RequestParam PhoneType phoneType,
-                                     @RequestParam LocalDateTime timeUsed,
                                      @RequestParam String country_code,
                                      @RequestParam String birthDate) {
-        return loginService.logIn(phone, phoneType, timeUsed, country_code, birthDate);
+        return loginService.logIn(phone, country_code, birthDate);
     }
 
     // جلب ال OTP بعد خزنه بالجدول

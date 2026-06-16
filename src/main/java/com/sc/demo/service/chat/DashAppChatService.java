@@ -1,16 +1,24 @@
 package com.sc.demo.service.chat;
 
+import com.sc.demo.model.chat.AppChatDetails;
+import com.sc.demo.model.chat.AppChatMaster;
 import com.sc.demo.model.dto.chat.*;
+import com.sc.demo.model.familyInfo.FamilyInfo;
+import com.sc.demo.repository.chat.ChatRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DashAppChatService {
 
     @Autowired
     private JdbcClient jdbcClient;
+
+    @Autowired
+    private ChatRepo chatRepo;
 
     // جلب المحادثات المفعلة
     public List<DashAppChatResponse> dashPhoneChats(){
@@ -48,8 +56,21 @@ public class DashAppChatService {
                 .list();
     }
 
-    public Boolean changeChatActivity(){
-        return true;
+    public Boolean changeChatActivity(Long chatId){
+        Optional<AppChatMaster> byChatId = chatRepo.findById(chatId);
+        if (byChatId.isPresent()) {
+            jdbcClient.sql("""
+                            UPDATE MOBAPP.SC_CHAT_DETAILS D
+                            SET D.MSG_ACTIVITY = 1
+                            WHERE D.CHAT_ID = :chatId
+                            AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
+                            """)
+                    .param("chatId", chatId)
+                    .query(Boolean.class)
+                    .optional();
+            return true;
+        }
+        return false;
     }
 
 }

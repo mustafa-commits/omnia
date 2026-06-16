@@ -27,8 +27,8 @@ public class DashAppChatController {
 
     // تحويل المحادثات من فعالة الى مؤرشفة
     @PutMapping("/V1/api/sc/changeChatActivity")
-    public Boolean changeChatActivity(){
-        return dashAppChatService.changeChatActivity();
+    public Boolean changeChatActivity(@RequestParam Long chatId){
+        return dashAppChatService.changeChatActivity(chatId);
     }
 }
 
