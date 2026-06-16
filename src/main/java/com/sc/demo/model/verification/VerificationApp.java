@@ -35,8 +35,6 @@ public class VerificationApp {
 
     private Integer isUsed = 0;
 
-    private LocalDateTime timeUsed;
-
     private Integer isActive = 1;
 
     @CreatedDate
@@ -53,12 +51,6 @@ public class VerificationApp {
         this.secretCode = secretCode;
         this.methodType = methodType;
     }
-
-    public VerificationApp(PhoneType phoneType) {
-        this.phoneType = phoneType;
-        this.timeUsed = LocalDateTime.now();
-    }
-
 
     @PrePersist
     public void prePersist(){

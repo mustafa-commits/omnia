@@ -18,7 +18,8 @@ public class AddressService {
                 SELECT GL_BRAN.VALUE_CODE AS code
                       ,GL_BRAN.ARABIC_DESCRIPTION AS name
                 FROM AIN_CAPPS.GL_ACC_DETAILS GL_BRAN
-                WHERE GL_BRAN.SEGMENT_ID = 1
+                WHERE GL_BRAN.SEGMENT_ID = 10
+                AND GL_BRAN.PARENT_CODE <= 19
                 """)
                 .query(Branches.class)
                 .list();

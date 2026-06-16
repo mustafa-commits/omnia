@@ -3,15 +3,11 @@ package com.sc.demo.service.users;
 import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMembersResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
-import com.sc.demo.model.users.PhoneType;
-import com.sc.demo.model.verification.VerificationApp;
-import com.sc.demo.repository.familyInfo.FamilyInfoRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FamilyInfoService {

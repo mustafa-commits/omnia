@@ -28,6 +28,11 @@ public class AppUser {
 
     private String branches;
 
+    @Enumerated(EnumType.ORDINAL)
+    private PhoneType phoneType;
+
+    private LocalDateTime timeUsed;
+
     @Column(length = 500)
     private String guardianName;
 

@@ -8,7 +8,6 @@ import com.sc.demo.model.verification.MethodType;
 import com.sc.demo.model.dto.login.ChekLoginRequest;
 import com.sc.demo.model.dto.login.LogInResponse;
 import com.sc.demo.model.verification.VerificationApp;
-import com.sc.demo.repository.familyInfo.FamilyInfoRepo;
 import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.repository.login.VerificationLoginRepo;
 import com.sc.demo.service.token.TokenService;
@@ -42,8 +41,6 @@ public class LoginService implements CommandLineRunner {
     @Autowired
     private AppUserRepo appUserRepo;
 
-    @Autowired
-    private FamilyInfoRepo familyInfoRepo;
 
     String regex = "^(77|78|79)\\d{8}$";
 
@@ -120,7 +117,6 @@ public class LoginService implements CommandLineRunner {
 
         if (logInChek.isPresent()) {
             List<GetUserIdWithToken> setGuardianInfo = new ArrayList<>();
-            familyInfoRepo.save(new VerificationApp(phoneType));
             List<LogInResponse> responseList = jdbcClient.sql("""
                         SELECT H.HEAD_FAMILY_ID AS headFamilyId
                                ,R.AID_REQUEST_ID AS requestId
