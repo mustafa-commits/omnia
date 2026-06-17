@@ -1,5 +1,7 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.SecuredRestController;
+import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.dto.notification.AllNotificationFamilyRequest;
 import com.sc.demo.model.dto.notification.NotificationByType;
 import com.sc.demo.model.dto.notification.NotificationRequest;
@@ -12,7 +14,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class DashNotificationController {
+public class DashNotificationController implements SecuredRestController {
 
     @Autowired
     private NotificationService notificationService;
@@ -40,5 +42,12 @@ public class DashNotificationController {
     public Boolean deleteNotification(@RequestParam Long notificationId){
         return notificationService.deleteNotification(notificationId);
     }
-
+    // تعديل اشعار
+    @PutMapping("/V1/api/sc/editNotification")
+    public Boolean editNotification(@RequestParam Long notificationId,
+                                               @RequestParam(required = false) String title,
+                                               @RequestParam(required = false) String description,
+                                               @RequestHeader(name = "authorization") String token){
+        return notificationService.editNotification(notificationId, title, description, token);
+    }
 }

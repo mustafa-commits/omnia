@@ -29,9 +29,9 @@ public class EmployeesDashboardController {
     }
 
     // تأكد من تسجيل دخول المستخدم الى الداش بورد
-    @PostMapping("/V1/api/sc/checkedEmployee")
-    public GetUserIdWithToken checkedEmployee(@RequestParam String userName,
+    @PostMapping("/V1/api/sc/loginEmployee")
+    public GetUserIdWithToken loginEmployee(@RequestParam String userName,
                                               @RequestParam String password){
-        return employeesDashboardService.checkedEmployee(userName, password);
+        return employeesDashboardService.loginEmployee(userName, password);
     }
 }

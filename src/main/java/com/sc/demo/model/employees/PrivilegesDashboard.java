@@ -36,7 +36,7 @@ public class PrivilegesDashboard {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     public PrivilegesDashboard(AccessToDashboard dashboardUserId, String userPrivilege,
                                String privilegeName, Long createBy) {

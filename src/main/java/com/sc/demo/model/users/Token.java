@@ -31,7 +31,7 @@ public class Token {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     @PrePersist
     public void PrePersist(){

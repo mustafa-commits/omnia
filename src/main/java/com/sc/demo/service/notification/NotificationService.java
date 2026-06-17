@@ -1,6 +1,7 @@
 package com.sc.demo.service.notification;
 
 import com.google.firebase.messaging.*;
+import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.dto.notification.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
@@ -165,6 +166,20 @@ public class NotificationService {
         return false;
     }
 
+    // تعديل اشعار
+    public Boolean editNotification(Long notificationId, String title, String description, String token){
+
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+
+        NotificationMaster updateNotification = notificationRepo.findById(notificationId).get();
+        updateNotification.setTitle(title);
+        updateNotification.setDescription(description);
+        updateNotification.setLastUpdateBy(Long.parseLong(employeesId));
+        updateNotification.setLastUpdate(LocalDateTime.now());
+
+        notificationRepo.save(updateNotification);
+        return true;
+    }
 
     private ApnsConfig getApnsConfig() {
         Map<String, Object> map2 = new HashMap<>();

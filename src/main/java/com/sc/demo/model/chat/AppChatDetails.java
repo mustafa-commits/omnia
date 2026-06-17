@@ -49,7 +49,7 @@ public class AppChatDetails {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     @ManyToOne
     @JoinColumn(name = "chat_id")

@@ -40,7 +40,7 @@ public class Announcements {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsDetails> announcementsDetails = new ArrayList<>();

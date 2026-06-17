@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class DashAnnouncementsController {
+public class DashAnnouncementsController implements SecuredRestController {
 
     @Autowired
     private AnnouncementsService announcementsService;
@@ -66,6 +66,17 @@ public class DashAnnouncementsController {
     @DeleteMapping("/V1/api/sc/deleteAnnouncement")
     public Boolean deleteAnnouncement(@RequestParam Long announcementsId){
         return announcementsService.deleteAnnouncement(announcementsId);
+    }
+
+    // تعديل تبليغ
+    @PutMapping("/V1/api/sc/editAnnouncement")
+    public Announcements editAnnouncement(@RequestParam Long announcementId,
+                                          @RequestParam(required = false) String title,
+                                          @RequestParam(required = false) String description,
+                                          @RequestParam(required = false) String branches,
+                                          @RequestParam(required = false) MultipartFile file,
+                                          @RequestHeader(name = "authorization") String token){
+        return announcementsService.editAnnouncement(announcementId, title, description, branches, file, token);
     }
 
 }

@@ -31,7 +31,7 @@ public class AppChatMaster {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     @OneToMany(mappedBy = "chatApp", cascade = CascadeType.ALL)
     private List<AppChatDetails> appChatDetails = new ArrayList<>();

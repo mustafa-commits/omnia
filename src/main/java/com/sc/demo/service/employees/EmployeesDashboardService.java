@@ -46,7 +46,7 @@ public class EmployeesDashboardService {
                 .list();
     }
 
-    public GetUserIdWithToken checkedEmployee(String userName, String password){
+    public GetUserIdWithToken loginEmployee(String userName, String password){
         Optional<AccessToDashboard> dashboardCheck = jdbcClient.sql("""
                 SELECT DASHBOARD_USER_ID AS dashboardUserId
                 FROM MOBAPP.SC_DASHBOARD_USERS

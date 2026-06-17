@@ -34,7 +34,7 @@ public class NotificationDetails {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     public NotificationDetails(Long userId, Long createBy, NotificationMaster notificationMaster) {
         this.userId = userId;

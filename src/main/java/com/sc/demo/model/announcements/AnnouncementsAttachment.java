@@ -34,7 +34,7 @@ public class AnnouncementsAttachment {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     public AnnouncementsAttachment(String fileName, Long createBy, Announcements announcements) {
         this.fileName = fileName;

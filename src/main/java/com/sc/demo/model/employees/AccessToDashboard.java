@@ -48,7 +48,7 @@ public class AccessToDashboard {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     public AccessToDashboard(String phone, Department departmentId, String password,
                              String userName, String fullName, PrivilegesName privilegesName,

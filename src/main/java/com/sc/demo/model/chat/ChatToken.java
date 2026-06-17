@@ -33,7 +33,7 @@ public class ChatToken {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     public ChatToken(Long chatId, String token, Long tokenType, Long createBy) {
         this.chatId = chatId;

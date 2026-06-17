@@ -49,7 +49,7 @@ public class FamilyInfo {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     public FamilyInfo(String guardianName,Long headFamilyId, Long requestId, String headFamilyName,
                       Long createBy, LocalDate birthDate, String phone,

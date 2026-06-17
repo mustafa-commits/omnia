@@ -33,7 +33,7 @@ public class AnnouncementsDetails {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     public AnnouncementsDetails(Long userId, Long createBy, Announcements announcements) {
         this.userId = userId;

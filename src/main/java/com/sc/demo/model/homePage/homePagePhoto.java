@@ -36,7 +36,7 @@ public class homePagePhoto {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     public homePagePhoto(String fileName, linkType linkType, String link, Long createBy) {
         this.fileName = fileName;

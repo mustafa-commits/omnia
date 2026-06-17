@@ -41,7 +41,7 @@ public class VerificationApp {
 
     private LocalDateTime lastUpdate;
 
-    private String lastUpdateBy;
+    private Long lastUpdateBy;
 
     public VerificationApp(String userIdentifier, Long secretCode, MethodType methodType) {
         this.userIdentifier = userIdentifier;

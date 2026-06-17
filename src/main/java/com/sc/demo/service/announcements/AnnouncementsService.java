@@ -160,4 +160,38 @@ public class AnnouncementsService {
         }
         return false;
     }
+
+    // تعديل تبليغ
+    public Announcements editAnnouncement(Long announcementId, String title, String description,
+                                          String branches, MultipartFile file, String token){
+
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+
+        Announcements updateAnnouncement = announcementsRepo.findById(announcementId).get();
+        updateAnnouncement.setTitle(title);
+        updateAnnouncement.setBranches(branches);
+        updateAnnouncement.setDescription(description);
+        updateAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
+        updateAnnouncement.setLastUpdate(LocalDateTime.now());
+
+        AnnouncementsAttachment updateAnnouncementAttachment = announcementsAttachmentRepo.findById(announcementId).get();
+        String originalFilename = file.getOriginalFilename();
+        String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
+        String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
+
+        updateAnnouncementAttachment.setFileName(newFilename);
+        updateAnnouncementAttachment.setLastUpdate(LocalDateTime.now());
+        updateAnnouncementAttachment.setLastUpdateBy(Long.parseLong(employeesId));
+        updateAnnouncementAttachment.setAnnouncements(updateAnnouncement);
+        announcementsAttachmentRepo.save(updateAnnouncementAttachment);
+
+        try {
+            file.transferTo(new File(filePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        announcementsRepo.save(updateAnnouncement);
+        return updateAnnouncement;
+    }
 }
