@@ -6,4 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AnnouncementsAttachmentRepo extends JpaRepository<AnnouncementsAttachment, Long> {
+    AnnouncementsAttachment findByIdAnnouncementId(
+            Long announcementId
+    );
+
 }

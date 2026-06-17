@@ -112,7 +112,7 @@ public class AnnouncementsService {
         }
     }
 
-    // اشعارات التطيق لكل يززر
+    // اشعارات التطيق لكل يوزر
     public List<PhoneAnnouncementsRequest> PhoneAnnouncements(String token) {
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
@@ -130,7 +130,6 @@ public class AnnouncementsService {
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoAnnouncements/")
                 .query(PhoneAnnouncementsRequest.class)
                 .list();
-
     }
 
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
@@ -174,7 +173,7 @@ public class AnnouncementsService {
         updateAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
         updateAnnouncement.setLastUpdate(LocalDateTime.now());
 
-        AnnouncementsAttachment updateAnnouncementAttachment = announcementsAttachmentRepo.findById(announcementId).get();
+        AnnouncementsAttachment updateAnnouncementAttachment = announcementsAttachmentRepo.findByIdAnnouncementId(announcementId);
         String originalFilename = file.getOriginalFilename();
         String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
         String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;

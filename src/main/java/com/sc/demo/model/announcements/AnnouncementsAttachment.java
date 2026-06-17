@@ -24,7 +24,7 @@ public class AnnouncementsAttachment {
     private String fileName;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "announcements_id")
     private Announcements announcements;
 
