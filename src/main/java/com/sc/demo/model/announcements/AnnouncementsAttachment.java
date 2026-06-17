@@ -1,5 +1,6 @@
 package com.sc.demo.model.announcements;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class AnnouncementsAttachment {
 
     private String fileName;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "announcements_id")
     private Announcements announcements;

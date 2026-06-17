@@ -1,5 +1,6 @@
 package com.sc.demo.model.announcements;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sc.demo.model.notification.SendingType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,7 @@ public class Announcements {
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsDetails> announcementsDetails = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "announcements", cascade = CascadeType.ALL)
     private List<AnnouncementsAttachment> announcementsAttachment = new ArrayList<>();
 

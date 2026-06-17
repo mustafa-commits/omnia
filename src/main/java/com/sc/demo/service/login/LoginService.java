@@ -104,7 +104,7 @@ public class LoginService implements CommandLineRunner {
     }
 
     // التحقق من ال otp  ورقم الهاتف بعدها حفظ المعلومات في ال AppUser
-    public ResponseEntity<?> ChekLoginApp(AppUserRequest appUserRequest, PhoneType phoneType){
+    public ResponseEntity<?> ChekLoginApp(AppUserRequest appUserRequest){
         Optional <ChekLoginRequest> logInChek = jdbcClient.sql("""
                     SELECT USER_IDENTIFIER AS userIdentifier
                     FROM MOBAPP.SC_VERIFICATIONS_APP V
@@ -167,7 +167,7 @@ public class LoginService implements CommandLineRunner {
 
                 if (!alreadyExists) {
                     loginUser = appUserRepo.save(new AppUser(appUserRequest.phone(), response.requestId(),
-                            response.headFamilyId(), response.Branches(), response.guardianName(), phoneType)).getUserId();
+                            response.headFamilyId(), response.Branches(), response.guardianName(), appUserRequest.phoneType())).getUserId();
                 }else {
                     loginUser = appUserRepo.findByHeadFamilyIdAndRequestId(
                             response.headFamilyId(),

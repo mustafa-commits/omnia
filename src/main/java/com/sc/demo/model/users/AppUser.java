@@ -52,6 +52,7 @@ public class AppUser {
         this.headFamilyId = headFamilyId;
         this.branches = branches;
         this.guardianName = guardianName;
+        this.phoneType = phoneType;
     }
 
     @PrePersist

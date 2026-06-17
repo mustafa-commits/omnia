@@ -36,8 +36,7 @@ public class LoginController {
 
     // جلب ال OTP بعد خزنه بالجدول
     @PostMapping("/V1/api/sc/ChekLogin")
-    public ResponseEntity<?> ChekLogin(@RequestBody AppUserRequest appUserRequest,
-                                       @RequestParam PhoneType phoneType){
-        return loginService.ChekLoginApp(appUserRequest, phoneType);
+    public ResponseEntity<?> ChekLogin(@RequestBody AppUserRequest appUserRequest){
+        return loginService.ChekLoginApp(appUserRequest);
     }
 }
