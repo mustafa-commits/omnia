@@ -10,13 +10,13 @@ import com.sc.demo.model.dto.login.LogInResponse;
 import com.sc.demo.model.verification.VerificationApp;
 import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.repository.login.VerificationLoginRepo;
+import com.sc.demo.repository.login.VerificationRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +41,8 @@ public class LoginService implements CommandLineRunner {
     @Autowired
     private AppUserRepo appUserRepo;
 
+    @Autowired
+    private VerificationRepo verificationRepo;
 
     String regex = "^(77|78|79)\\d{8}$";
 
@@ -105,7 +107,7 @@ public class LoginService implements CommandLineRunner {
     public ResponseEntity<?> ChekLoginApp(AppUserRequest appUserRequest, PhoneType phoneType){
         Optional <ChekLoginRequest> logInChek = jdbcClient.sql("""
                     SELECT USER_IDENTIFIER AS userIdentifier
-                    FROM MOBAPP.SC_VERIFICATION_APPS V
+                    FROM MOBAPP.SC_VERIFICATIONS_APP V
                     WHERE V.USER_IDENTIFIER = :phone
                     AND V.SECRET_CODE = :secretCode
                     and Sysdate <= CREATE_DATE + interval '10' minute
@@ -165,7 +167,7 @@ public class LoginService implements CommandLineRunner {
 
                 if (!alreadyExists) {
                     loginUser = appUserRepo.save(new AppUser(appUserRequest.phone(), response.requestId(),
-                            response.headFamilyId(), response.Branches(), response.guardianName())).getUserId();
+                            response.headFamilyId(), response.Branches(), response.guardianName(), phoneType)).getUserId();
                 }else {
                     loginUser = appUserRepo.findByHeadFamilyIdAndRequestId(
                             response.headFamilyId(),
@@ -183,12 +185,6 @@ public class LoginService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
-//        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
-//        Long headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
-//        Long requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
-//        Long branches = tokenService.decodeToken(token.substring(7)).getClaim("branches");
-
-        System.out.println(tokenService.generateToken("1", 133L, 828L, "01"));
+        System.out.println(tokenService.generateToken("5", 10272L, 71120L, "07"));
     }
 }

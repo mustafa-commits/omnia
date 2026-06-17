@@ -23,7 +23,7 @@ public class AppUserStatisticsController {
 
     // احصائية نسبة الاستخدام
     @GetMapping("/V1/api/sc/getStatisticsUses")
-    public List<StatisticsUsesResponse> getStatisticsUses(){
+    public StatisticsUsesResponse getStatisticsUses(){
         return appUserStatisticsService.getStatisticsUses();
     }
 }

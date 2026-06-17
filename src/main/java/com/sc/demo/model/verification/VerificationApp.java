@@ -11,7 +11,7 @@ import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sc_verification_apps")
+@Table(name = "sc_verifications_app")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,9 +22,6 @@ public class VerificationApp {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long verificationId;
-
-    @Enumerated(EnumType.ORDINAL)
-    private PhoneType phoneType;
 
     private String userIdentifier;
 

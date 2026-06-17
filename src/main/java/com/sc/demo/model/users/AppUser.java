@@ -46,7 +46,7 @@ public class AppUser {
 
     private String lastUpdateBy;
 
-    public AppUser(String phone, Long requestId, Long headFamilyId, String branches, String guardianName) {
+    public AppUser(String phone, Long requestId, Long headFamilyId, String branches, String guardianName, PhoneType phoneType) {
         Phone = phone;
         this.requestId = requestId;
         this.headFamilyId = headFamilyId;

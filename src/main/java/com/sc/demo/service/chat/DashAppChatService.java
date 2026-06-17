@@ -24,15 +24,16 @@ public class DashAppChatService {
     public List<DashAppChatResponse> dashPhoneChats(){
         return jdbcClient.sql("""
              SELECT M.CHAT_ID AS chatId
-                    ,U.GUARDIAN_NAME AS guardianName
-                     ,M.CHAT_TITLE AS chatTitle
-                     ,D.MESSAGES AS messages
-                     ,D.CREATE_DATE AS createDate
+                   ,U.GUARDIAN_NAME AS guardianName
+                   ,M.CHAT_TITLE AS chatTitle
+                   ,D.MESSAGES AS messages
+                   ,D.CREATE_DATE AS createDate
              FROM MOBAPP.SC_CHAT_MASTER M
              JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
              JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
              WHERE D.MSG_ACTIVITY = 0
              AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
+             ORDER BY M.CHAT_ID DESC
             """)
             .query(DashAppChatResponse.class)
             .list();
@@ -42,15 +43,16 @@ public class DashAppChatService {
     public List<DashAppChatResponse> dashPhoneChatsArchived(){
         return jdbcClient.sql("""
             SELECT M.CHAT_ID AS chatId
-                   ,U.GUARDIAN_NAME AS guardianName
-                    ,M.CHAT_TITLE AS chatTitle
-                    ,D.MESSAGES AS messages
-                    ,D.CREATE_DATE AS createDate
+                  ,U.GUARDIAN_NAME AS guardianName
+                  ,M.CHAT_TITLE AS chatTitle
+                  ,D.MESSAGES AS messages
+                  ,D.CREATE_DATE AS createDate
             FROM MOBAPP.SC_CHAT_MASTER M
             JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
             JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
             WHERE D.MSG_ACTIVITY = 1
             AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
+            ORDER BY M.CHAT_ID DESC
             """)
                 .query(DashAppChatResponse.class)
                 .list();
