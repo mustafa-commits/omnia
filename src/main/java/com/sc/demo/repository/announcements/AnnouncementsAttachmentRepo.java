@@ -1,13 +1,14 @@
 package com.sc.demo.repository.announcements;
 
+import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AnnouncementsAttachmentRepo extends JpaRepository<AnnouncementsAttachment, Long> {
-    AnnouncementsAttachment findByIdAnnouncementId(
-            Long announcementId
+    AnnouncementsAttachment findByAnnouncements(
+            Announcements announcement
     );
 
 }

@@ -173,7 +173,7 @@ public class AnnouncementsService {
         updateAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
         updateAnnouncement.setLastUpdate(LocalDateTime.now());
 
-        AnnouncementsAttachment updateAnnouncementAttachment = announcementsAttachmentRepo.findByIdAnnouncementId(announcementId);
+        AnnouncementsAttachment updateAnnouncementAttachment = announcementsAttachmentRepo.findByAnnouncements(updateAnnouncement);
         String originalFilename = file.getOriginalFilename();
         String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
         String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
