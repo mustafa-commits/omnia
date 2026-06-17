@@ -156,6 +156,15 @@ public class NotificationService {
                 """).query(AllNotificationFamilyRequest.class).list();
     }
 
+    // حذف اشعار
+    public Boolean deleteNotification(Long notificationId){
+        if (!notificationRepo.findById(notificationId).equals(Optional.empty())){
+            notificationRepo.deleteById(notificationId);
+            return true;
+        }
+        return false;
+    }
+
 
     private ApnsConfig getApnsConfig() {
         Map<String, Object> map2 = new HashMap<>();
@@ -164,4 +173,5 @@ public class NotificationService {
         return ApnsConfig.builder()
                 .setAps(Aps.builder().setSound("1").putAllCustomData(map2).setAlert(apsAlert).build()).build();
     }
+
 }

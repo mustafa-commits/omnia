@@ -153,7 +153,7 @@ public class AnnouncementsService {
     }
 
     // حذف تبليغ
-    public Boolean deleteAnnouncements(Long announcementsId){
+    public Boolean deleteAnnouncement(Long announcementsId){
         if (!announcementsRepo.findById(announcementsId).equals(Optional.empty())){
             announcementsRepo.deleteById(announcementsId);
             return true;

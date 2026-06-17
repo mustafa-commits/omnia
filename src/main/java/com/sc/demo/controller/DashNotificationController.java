@@ -34,4 +34,11 @@ public class DashNotificationController {
     public List<AllNotificationFamilyRequest> getAllNotificationFamily(){
         return notificationService.AllNotificationFamily();
     }
+
+    // حذف اشعار
+    @DeleteMapping("/V1/api/sc/deleteNotification")
+    public Boolean deleteNotification(@RequestParam Long notificationId){
+        return notificationService.deleteNotification(notificationId);
+    }
+
 }

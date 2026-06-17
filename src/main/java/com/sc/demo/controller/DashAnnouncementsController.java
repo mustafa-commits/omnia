@@ -63,9 +63,9 @@ public class DashAnnouncementsController {
     }
 
     // حذف تبليغ
-    @DeleteMapping("/V1/api/sc/deleteAnnouncements")
-    public Boolean deleteAnnouncements(@RequestParam Long announcementsId){
-        return announcementsService.deleteAnnouncements(announcementsId);
+    @DeleteMapping("/V1/api/sc/deleteAnnouncement")
+    public Boolean deleteAnnouncement(@RequestParam Long announcementsId){
+        return announcementsService.deleteAnnouncement(announcementsId);
     }
 
 }
