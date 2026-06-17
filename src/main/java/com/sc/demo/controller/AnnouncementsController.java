@@ -51,5 +51,4 @@ public class AnnouncementsController implements SecuredRestController {
     public long setAnnouncementsToken(@RequestBody AnnouncementsTokenRequest announcementsTokenRequest){
         return announcementsService.saveToken(announcementsTokenRequest);
     }
-
 }

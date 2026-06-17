@@ -151,4 +151,13 @@ public class AnnouncementsService {
                 .list();
 
     }
+
+    // حذف تبليغ
+    public Boolean deleteAnnouncements(Long announcementsId){
+        if (!announcementsRepo.findById(announcementsId).equals(Optional.empty())){
+            announcementsRepo.deleteById(announcementsId);
+            return true;
+        }
+        return false;
+    }
 }

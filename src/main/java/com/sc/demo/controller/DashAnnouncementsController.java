@@ -61,4 +61,11 @@ public class DashAnnouncementsController {
     public List<AllAnnouncementsFamilyRequest> getAllAnnouncementsFamily(){
         return announcementsService.AllAnnouncementsFamily();
     }
+
+    // حذف تبليغ
+    @DeleteMapping("/V1/api/sc/deleteAnnouncements")
+    public Boolean deleteAnnouncements(@RequestParam Long announcementsId){
+        return announcementsService.deleteAnnouncements(announcementsId);
+    }
+
 }

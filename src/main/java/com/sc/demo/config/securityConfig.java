@@ -66,6 +66,7 @@ public class securityConfig {
                         .requestMatchers("/V1/api/sc/getPhoneChats/**","/getPhoneChats","/getPhoneChats/**").permitAll()
                         .requestMatchers("/V1/api/sc/changeChatActivity/**","/changeChatActivity","/changeChatActivity/**").permitAll()
                         .requestMatchers("/V1/api/sc/dashGetMessagesChat/**","/dashGetMessagesChat","/dashGetMessagesChat/**").permitAll()
+                        .requestMatchers("/V1/api/sc/deleteAnnouncements/**","/deleteAnnouncements","/deleteAnnouncements/**").permitAll()
                         .requestMatchers("/V1/api/sc/dashPhotoChat/**","/dashPhotoChat","/dashPhotoChat/**").permitAll()
                         .requestMatchers("/V1/api/sc/getPhoneAnnouncements/**","/getPhoneAnnouncements","/getPhoneAnnouncements/**").permitAll()
                         .requestMatchers("/V1/api/sc/writeMessages/**","/writeMessages","/writeMessages/**").permitAll()
