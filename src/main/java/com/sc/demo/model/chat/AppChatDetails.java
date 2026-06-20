@@ -46,8 +46,6 @@ public class AppChatDetails {
 
     private LocalDateTime dateCloseRequest;
 
-    private Integer isActive = 1;
-
     private LocalDateTime createDate;
 
     private Long createBy;

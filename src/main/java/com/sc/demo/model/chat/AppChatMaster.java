@@ -23,8 +23,6 @@ public class AppChatMaster {
 
     private String chatTitle;
 
-    private Integer isActive = 1;
-
     private LocalDateTime createDate;
 
     private Long createBy;

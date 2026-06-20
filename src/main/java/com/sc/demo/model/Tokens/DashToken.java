@@ -1,22 +1,22 @@
-package com.sc.demo.model.users;
+package com.sc.demo.model.Tokens;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sc_token")
+@Table(name = "sc_dash_token")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Token {
-
+public class DashToken {
     @Id
-    private Long userId;
+    private Long employeeId;
 
     @Column(length = 4000)
     private String token;

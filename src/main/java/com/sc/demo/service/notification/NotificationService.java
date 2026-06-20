@@ -1,10 +1,10 @@
 package com.sc.demo.service.notification;
 
 import com.google.firebase.messaging.*;
+import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.dto.notification.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
-import com.sc.demo.model.users.Token;
 import com.sc.demo.model.notification.SendingType;
 import com.sc.demo.repository.notifications.NotificationDetailsRepo;
 import com.sc.demo.repository.notifications.NotificationRepo;
@@ -65,7 +65,7 @@ public class NotificationService {
             for (NotificationDetails n : notificationRequest.notificationDetails()) {
                 notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), n.getCreateBy(), notificationMaster));
 
-                Optional<Token> byToken = notificationTokenRepo.findById(n.getUserId());
+                Optional<AppToken> byToken = notificationTokenRepo.findById(n.getUserId());
 
                 if (byToken.isPresent()) {
                     messageList.add(Message.builder()
@@ -97,18 +97,18 @@ public class NotificationService {
 
     // حفظ Token القادم من firebase في قاعدة البيانات
     public long saveToken(NotificationTokenRequest notificationTokenRequest) {
-        Optional<Token> byToken = notificationTokenRepo.findById(notificationTokenRequest.userId());
+        Optional<AppToken> byToken = notificationTokenRepo.findById(notificationTokenRequest.userId());
 
         if (byToken.isPresent()) {
-            Token token = byToken.get();
-            token.setLastUpdate(LocalDateTime.now());
-            token.setToken(notificationTokenRequest.token());
-            return notificationTokenRepo.save(token).getUserId();
+            AppToken appToken = byToken.get();
+            appToken.setLastUpdate(LocalDateTime.now());
+            appToken.setToken(notificationTokenRequest.token());
+            return notificationTokenRepo.save(appToken).getUserId();
         } else {
-            Token token = new Token();
-            token.setToken(notificationTokenRequest.token());
-            token.setUserId(notificationTokenRequest.userId());
-            return notificationTokenRepo.save(token).getUserId();
+            AppToken appToken = new AppToken();
+            appToken.setToken(notificationTokenRequest.token());
+            appToken.setUserId(notificationTokenRequest.userId());
+            return notificationTokenRepo.save(appToken).getUserId();
         }
     }
 

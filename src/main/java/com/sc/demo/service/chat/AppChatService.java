@@ -1,8 +1,8 @@
 package com.sc.demo.service.chat;
 
+import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
-import com.sc.demo.model.users.Token;
 import com.sc.demo.repository.chat.ChatTokenRepo;
 import com.sc.demo.repository.chat.MessagesRepo;
 import com.sc.demo.repository.chat.ChatRepo;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -72,18 +71,18 @@ public class AppChatService {
 
     // حفظ Token القادم من firebase في قاعدة البيانات
     public long saveToken(ChatTokenRequest chatTokenRequest) {
-        Optional<Token> byToken = chatTokenRepo.findById(chatTokenRequest.userId());
+        Optional<AppToken> byToken = chatTokenRepo.findById(chatTokenRequest.userId());
 
         if (byToken.isPresent()) {
-            Token token = byToken.get();
-            token.setLastUpdate(LocalDateTime.now());
-            token.setToken(chatTokenRequest.token());
-            return chatTokenRepo.save(token).getUserId();
+            AppToken appToken = byToken.get();
+            appToken.setLastUpdate(LocalDateTime.now());
+            appToken.setToken(chatTokenRequest.token());
+            return chatTokenRepo.save(appToken).getUserId();
         } else {
-            Token token = new Token();
-            token.setToken(chatTokenRequest.token());
-            token.setUserId(chatTokenRequest.userId());
-            return chatTokenRepo.save(token).getUserId();
+            AppToken appToken = new AppToken();
+            appToken.setToken(chatTokenRequest.token());
+            appToken.setUserId(chatTokenRequest.userId());
+            return chatTokenRepo.save(appToken).getUserId();
         }
     }
 

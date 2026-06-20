@@ -1,5 +1,6 @@
 package com.sc.demo.service.announcements;
 
+import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
@@ -8,7 +9,6 @@ import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsTokenRequest;
 import com.sc.demo.model.notification.SendingType;
-import com.sc.demo.model.users.Token;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
@@ -51,8 +51,8 @@ public class AnnouncementsService {
 
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
-                                             MultipartFile file, List<Long> userId, String token) {
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+                                             MultipartFile file, List<Long> userId, String appToken) {
+        var employeesId = tokenService.decodeToken(appToken.substring(7)).getSubject();
 
         Announcements announcements = new Announcements(announcementsRequest.title(),
                 announcementsRequest.description(), announcementsRequest.sendingType() == SendingType.BRANCH ? announcementsRequest.branches() : null,
@@ -69,7 +69,7 @@ public class AnnouncementsService {
         }else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
             String getUsersInBranch = announcementsRequest.branches();
             List<AnnouncementsTokenRequest> getToken = jdbcClient.sql("""
-                    SELECT T.TOKEN AS token
+                    SELECT T.TOKEN AS appToken
                           ,U.USER_ID AS userId
                     FROM MOBAPP.SC_APP_USER U
                     LEFT JOIN MOBAPP.SC_TOKEN T on (U.USER_ID = T.USER_ID)
@@ -97,24 +97,24 @@ public class AnnouncementsService {
 
     // حفظ Token القادم من firebase في قاعدة البيانات
     public long saveToken(AnnouncementsTokenRequest announcementsTokenRequest) {
-        Optional<Token> byToken = announcementsTokenRepo.findById(announcementsTokenRequest.userId());
+        Optional<AppToken> byToken = announcementsTokenRepo.findById(announcementsTokenRequest.userId());
 
         if (byToken.isPresent()) {
-            Token token = byToken.get();
-            token.setLastUpdate(LocalDateTime.now());
-            token.setToken(announcementsTokenRequest.token());
-            return announcementsTokenRepo.save(token).getUserId();
+            AppToken appToken = byToken.get();
+            appToken.setLastUpdate(LocalDateTime.now());
+            appToken.setToken(announcementsTokenRequest.token());
+            return announcementsTokenRepo.save(appToken).getUserId();
         } else {
-            Token token = new Token();
-            token.setToken(announcementsTokenRequest.token());
-            token.setUserId(announcementsTokenRequest.userId());
-            return announcementsTokenRepo.save(token).getUserId();
+            AppToken appToken = new AppToken();
+            appToken.setToken(announcementsTokenRequest.token());
+            appToken.setUserId(announcementsTokenRequest.userId());
+            return announcementsTokenRepo.save(appToken).getUserId();
         }
     }
 
     // اشعارات التطيق لكل يوزر
-    public List<PhoneAnnouncementsRequest> PhoneAnnouncements(String token) {
-        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+    public List<PhoneAnnouncementsRequest> PhoneAnnouncements(String appToken) {
+        var userTokenId = tokenService.decodeToken(appToken.substring(7)).getSubject();
 
         return jdbcClient.sql("""
                    SELECT A.CREATE_DATE AS createDate
@@ -162,9 +162,9 @@ public class AnnouncementsService {
 
     // تعديل تبليغ
     public Announcements editAnnouncement(Long announcementId, String title, String description,
-                                          String branches, MultipartFile file, String token){
+                                          String branches, MultipartFile file, String appToken){
 
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var employeesId = tokenService.decodeToken(appToken.substring(7)).getSubject();
 
         Announcements updateAnnouncement = announcementsRepo.findById(announcementId).get();
         updateAnnouncement.setTitle(title);

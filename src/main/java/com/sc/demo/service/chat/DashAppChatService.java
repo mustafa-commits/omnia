@@ -78,6 +78,25 @@ public class DashAppChatService {
         return true;
     }
 
+    // جلب الرسائل
+    public List<MessagesResponse> getDashMessages(Long chatId){
+        System.out.println(chatId);
+        return jdbcClient.sql("""
+                SELECT CASE WHEN MSG_TYPE in (1,2) THEN TO_CHAR(:path) || MESSAGES
+                        ELSE MESSAGES END AS messages,
+                        WHO_IS_SENDER AS whoIsSender,
+                        CREATE_BY AS createBy,
+                        CREATE_DATE AS createDate
+                FROM MOBAPP.SC_CHAT_DETAILS
+                WHERE CHAT_ID = :chatId
+                order by CREATE_DATE desc
+                """)
+                .param("chatId", chatId)
+                .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoChat/")
+                .query(MessagesResponse.class)
+                .list();
+    }
+
     // جلب المحادثات المفعلة
     public List<DashAppChatResponse> dashPhoneChats(){
         return jdbcClient.sql("""
@@ -116,15 +135,10 @@ public class DashAppChatService {
                 .list();
     }
 
+    // طلب ارشفة المحادثات
     public Boolean requestArchivedChat(Long chatId){
         Optional<AppChatMaster> byChatId = chatRepo.findById(chatId);
-//        boolean equalTo12Hours = Duration.between(closeChatRequest.createDate(), LocalDateTime.now())
-//                .toHours() >= 12;
-//        welcomeMessage.setMessages("""
-//                نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة)
-//                في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم)
-//                وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
-//                """);
+        AppChatDetails closeMessage = new AppChatDetails();
         if (byChatId.isPresent()) {
             jdbcClient.sql("""
                     UPDATE MOBAPP.SC_CHAT_DETAILS D
@@ -132,11 +146,31 @@ public class DashAppChatService {
                     WHERE D.CHAT_ID = :chatId
                     AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
                     """)
-                    .param("chatId", chatId)
+                    .param("chatId", byChatId)
                     .update();
-            return true;
+
+            closeMessage.setMessages("""
+                نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة)
+                في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم)
+                وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
+                """);
+            closeMessage.setDateCloseRequest(LocalDateTime.now());
+        }else {
+            boolean equalTo12Hours = Duration.between(dateCloseRequest, LocalDateTime.now())
+                    .toHours() >= 12;
+            if (equalTo12Hours) {
+                jdbcClient.sql("""
+                                UPDATE MOBAPP.SC_CHAT_DETAILS D
+                                SET D.MSG_ACTIVITY = 2
+                                WHERE D.CHAT_ID = :chatId
+                                AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
+                                """)
+                        .param("chatId", byChatId)
+                        .update();
+            }
+            closeMessage.setConfirmProcedure(ConfirmProcedure.YES);
         }
-        return false;
+        return true;
     }
 
 }
