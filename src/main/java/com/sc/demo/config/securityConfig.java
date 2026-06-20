@@ -70,7 +70,7 @@ public class securityConfig {
                         .requestMatchers("/V1/api/sc/getFamilyHousingInformation/**","/getFamilyHousingInformation","/getFamilyHousingInformation/**").permitAll()
                         .requestMatchers("/V1/api/sc/getChildrenAndMailyFamilyMembersResponse/**","/getChildrenAndMailyFamilyMembersResponse","/getChildrenAndMailyFamilyMembersResponse/**").permitAll()
                         .requestMatchers("/V1/api/sc/getPhoneChats/**","/getPhoneChats","/getPhoneChats/**").permitAll()
-                        .requestMatchers("/V1/api/sc/changeChatActivity/**","/changeChatActivity","/changeChatActivity/**").permitAll()
+                        .requestMatchers("/V1/api/sc/requestArchivedChat/**","/requestArchivedChat","/requestArchivedChat/**").permitAll()
                         .requestMatchers("/V1/api/sc/dashGetMessagesChat/**","/dashGetMessagesChat","/dashGetMessagesChat/**").permitAll()
                         .requestMatchers("/V1/api/sc/deleteAnnouncement/**","/deleteAnnouncement","/deleteAnnouncement/**").permitAll()
                         .requestMatchers("/V1/api/sc/dashPhotoChat/**","/dashPhotoChat","/dashPhotoChat/**").permitAll()

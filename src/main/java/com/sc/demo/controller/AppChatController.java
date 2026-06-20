@@ -97,10 +97,4 @@ public class AppChatController implements SecuredRestController {
         }
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
-
-    // ارسال رسالة بعد 12 ساعة لطلب اغلاق المحادثة
-    @PostMapping("/V1/api/sc/requestCloseChat")
-    public boolean requestCloseChat(@RequestBody CloseChatRequest closeChatRequest){
-        return appChatService.requestCloseChat(closeChatRequest);
-    }
 }

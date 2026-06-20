@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -114,15 +116,22 @@ public class DashAppChatService {
                 .list();
     }
 
-    public Boolean changeChatActivity(Long chatId){
+    public Boolean requestArchivedChat(Long chatId){
         Optional<AppChatMaster> byChatId = chatRepo.findById(chatId);
+//        boolean equalTo12Hours = Duration.between(closeChatRequest.createDate(), LocalDateTime.now())
+//                .toHours() >= 12;
+//        welcomeMessage.setMessages("""
+//                نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة)
+//                في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم)
+//                وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
+//                """);
         if (byChatId.isPresent()) {
             jdbcClient.sql("""
-                            UPDATE MOBAPP.SC_CHAT_DETAILS D
-                            SET D.MSG_ACTIVITY = 1
-                            WHERE D.CHAT_ID = :chatId
-                            AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
-                            """)
+                    UPDATE MOBAPP.SC_CHAT_DETAILS D
+                    SET D.MSG_ACTIVITY = 1
+                    WHERE D.CHAT_ID = :chatId
+                    AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
+                    """)
                     .param("chatId", chatId)
                     .update();
             return true;

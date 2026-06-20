@@ -44,6 +44,8 @@ public class AppChatDetails {
 
     private ConfirmProcedure confirmProcedure;
 
+    private LocalDateTime dateCloseRequest;
+
     private Integer isActive = 1;
 
     private LocalDateTime createDate;

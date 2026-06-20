@@ -190,27 +190,4 @@ public class AppChatService {
                 .list();
     }
 
-    public boolean requestCloseChat(CloseChatRequest closeChatRequest){
-        AppChatDetails byChatId = messagesRepo.findById(closeChatRequest.chatId()).get();
-        boolean equalTo12Hours = Duration.between(closeChatRequest.createDate(), LocalDateTime.now())
-                .toHours() >= 12;
-
-        AppChatDetails welcomeMessage = new AppChatDetails();
-        welcomeMessage.setChatApp(byChatId.getChatApp());
-        welcomeMessage.setCreateBy(0L);
-        welcomeMessage.setPlatform(Platform.DASHBOARD);
-        welcomeMessage.setMessages("""
-                نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة)
-                في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم)
-                وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
-                """);
-
-        messagesRepo.save(welcomeMessage);
-        if (equalTo12Hours || closeChatRequest.confirmProcedure() == ConfirmProcedure.YES){
-            welcomeMessage.setMsgActivity(MsgActivity.ARCHIVED);
-        }else {
-            welcomeMessage.setMsgActivity(MsgActivity.ACTIVE);
-        }
-        return true;
-    }
 }
