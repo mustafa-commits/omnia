@@ -3,10 +3,11 @@ package com.sc.demo.model.dto.notification;
 import java.time.LocalDateTime;
 
 public record NotificationByType(
-        Integer sendId,
+        Long notificationId,
         LocalDateTime createDate,
         String title,
         String description,
-        String UserListing
+        Long sendingType,
+        Long userId
 ) {
 }

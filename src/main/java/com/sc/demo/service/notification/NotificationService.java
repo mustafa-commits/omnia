@@ -1,7 +1,6 @@
 package com.sc.demo.service.notification;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.dto.notification.*;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
@@ -129,31 +128,18 @@ public class NotificationService {
                 .list();
     }
 
-    // جلب اشعارات الداشبورد حسب النوع (عامة او خاصة)
-    public List<NotificationByType> NotificationByType(long notification_type) {
-        return jdbcClient.sql("""
-                   SELECT SEND_ID as sendId
-                          ,TITLE
-                          ,DESCRIPTION
-                          ,CREATE_DATE as createDate
-                          ,(SELECT LISTAGG(USER_ID, ', ') WITHIN GROUP (ORDER BY NOTIFICATION_ID) as UserListing
-                   FROM MOBAPP.SC_NOTIFICATION_DETAILS ND
-                   WHERE ND.NOTIFICATION_ID = N.NOTIFICATION_ID) AS USER_ID
-                   FROM SC_NOTIFICATION N
-                   where SENDING_TYPE = :notification_type
-                """)
-                .param("notification_type",notification_type)
-                .query(NotificationByType.class)
-                .list();
-    }
-
     // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
     public List<AllNotificationFamilyRequest> AllNotificationFamily() {
 
         return jdbcClient.sql("""
-                   SELECT N.CREATE_DATE AS createDate, N.TITLE, N.DESCRIPTION, N.SENDING_TYPE AS sendingType
-                   FROM SC_NOTIFICATION N
-                   LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
+                 SELECT N.NOTIFICATION_ID AS notificationId
+                        ,N.CREATE_DATE AS createDate
+                        ,N.TITLE
+                        ,N.DESCRIPTION
+                        ,N.SENDING_TYPE AS sendingType
+                 FROM SC_NOTIFICATION N
+                 LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
+                 ORDER BY N.NOTIFICATION_ID DESC
                 """).query(AllNotificationFamilyRequest.class).list();
     }
 

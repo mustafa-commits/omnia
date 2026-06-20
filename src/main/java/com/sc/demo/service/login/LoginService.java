@@ -10,7 +10,6 @@ import com.sc.demo.model.dto.login.LogInResponse;
 import com.sc.demo.model.verification.VerificationApp;
 import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.repository.login.VerificationLoginRepo;
-import com.sc.demo.repository.login.VerificationRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -40,9 +39,6 @@ public class LoginService implements CommandLineRunner {
 
     @Autowired
     private AppUserRepo appUserRepo;
-
-    @Autowired
-    private VerificationRepo verificationRepo;
 
     String regex = "^(77|78|79)\\d{8}$";
 
@@ -185,6 +181,6 @@ public class LoginService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(tokenService.generateToken("5", 10272L, 71120L, "07"));
+        System.out.println(tokenService.generateToken("34", 10272L, 71120L, "07"));
     }
 }

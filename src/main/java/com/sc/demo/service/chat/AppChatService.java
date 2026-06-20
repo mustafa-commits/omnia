@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,11 +49,8 @@ public class AppChatService {
         Long userIdSender = appChatRequest.createBy();
 
         AppChatDetails appChatDetails = appChatRequest.appChatDetails();
-        WhoIsSender whoIsSender = Platform.APP.equals(appChatRequest.appChatDetails().getPlatform())
-                ? WhoIsSender.USER
-                : WhoIsSender.EMPLOYEE;
 
-        messagesRepo.save(new AppChatDetails(userIdSender, whoIsSender, appChatDetails.getPlatform(),
+        messagesRepo.save(new AppChatDetails(userIdSender, WhoIsSender.USER, Platform.APP,
                 appChatDetails.getMessages(),appChatMaster));
 
         AppChatDetails welcomeMessage = new AppChatDetails();
@@ -89,7 +87,7 @@ public class AppChatService {
         }
     }
 
-    // جلب المحادثات المفعلة
+    // جلب المحادثات المفعلة في التطبيق
     public List<AppChatResponse> phoneChats(String token){
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
         System.out.println(userTokenId);
@@ -110,6 +108,7 @@ public class AppChatService {
                 .list();
     }
 
+    // جلب المحادثات المؤرشفة في التطبيق
     public List<AppChatResponse> PhoneChatsArchived(String token){
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
         System.out.println(userTokenId);
@@ -130,6 +129,7 @@ public class AppChatService {
                 .list();
     }
 
+    // ارسال رسالة في التطبيق
     public boolean writeMessages(MessagesRequest messagesRequest, MultipartFile file, MultipartFile voice, String token) {
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
         String newFileName = null;
@@ -188,5 +188,29 @@ public class AppChatService {
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoChat/")
                 .query(MessagesResponse.class)
                 .list();
+    }
+
+    public boolean requestCloseChat(CloseChatRequest closeChatRequest){
+        AppChatDetails byChatId = messagesRepo.findById(closeChatRequest.chatId()).get();
+        boolean equalTo12Hours = Duration.between(closeChatRequest.createDate(), LocalDateTime.now())
+                .toHours() >= 12;
+
+        AppChatDetails welcomeMessage = new AppChatDetails();
+        welcomeMessage.setChatApp(byChatId.getChatApp());
+        welcomeMessage.setCreateBy(0L);
+        welcomeMessage.setPlatform(Platform.DASHBOARD);
+        welcomeMessage.setMessages("""
+                نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة)
+                في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم)
+                وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
+                """);
+
+        messagesRepo.save(welcomeMessage);
+        if (equalTo12Hours || closeChatRequest.confirmProcedure() == ConfirmProcedure.YES){
+            welcomeMessage.setMsgActivity(MsgActivity.ARCHIVED);
+        }else {
+            welcomeMessage.setMsgActivity(MsgActivity.ACTIVE);
+        }
+        return true;
     }
 }

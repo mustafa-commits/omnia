@@ -3,10 +3,14 @@ package com.sc.demo.service.users;
 import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMembersResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
+import com.sc.demo.model.users.AppUser;
+import com.sc.demo.repository.login.AppTimeUsedRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,11 +22,17 @@ public class FamilyInfoService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private AppTimeUsedRepo appTimeUsedRepo;
+
     // المعلومات العائلة الاساسية
     public List<FamilyInfoBasicResponse> getFamilyBasicInfo(String token){
 
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
+
+        LocalDateTime timeUsed = LocalDateTime.now();
+//        appTimeUsedRepo.save(timeUsed);
 
         return jdbcClient.sql("""
                     SELECT F.OLD_FAMILY_NO AS FamilyNo

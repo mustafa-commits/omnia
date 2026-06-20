@@ -7,7 +7,6 @@ public record MessagesRequest(
         Long chatId,
         Platform platform,
         String messages,
-        MsgType msgType,
-        Long createBy
+        MsgType msgType
 ) {
 }

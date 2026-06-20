@@ -25,12 +25,6 @@ public class DashNotificationController implements SecuredRestController {
         return notificationService.createNotification(notificationRequest);
     }
 
-    // جلب اشعارات الداشبورد حسب النوع الاشعار خاص او عام
-    @GetMapping("/V1/api/sc/getNotificationByType")
-    public List<NotificationByType> getPNotificationByType(@RequestParam long notification_type){
-        return notificationService.NotificationByType(notification_type);
-    }
-
     // جلب جميع اشعارات الداشبورد للعائلة
     @GetMapping("/V1/api/sc/getAllNotificationFamily")
     public List<AllNotificationFamilyRequest> getAllNotificationFamily(){

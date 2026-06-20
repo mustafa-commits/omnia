@@ -1,13 +1,18 @@
 package com.sc.demo.service.chat;
 
-import com.sc.demo.model.chat.AppChatDetails;
-import com.sc.demo.model.chat.AppChatMaster;
+import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
-import com.sc.demo.model.familyInfo.FamilyInfo;
 import com.sc.demo.repository.chat.ChatRepo;
+import com.sc.demo.repository.chat.MessagesRepo;
+import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +24,57 @@ public class DashAppChatService {
 
     @Autowired
     private ChatRepo chatRepo;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private MessagesRepo messagesRepo;
+
+    // ارسال رسالة في الداش بورد
+    public boolean dashWriteMessages(MessagesRequest messagesRequest, MultipartFile file, MultipartFile voice, String token) {
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        String newFileName = null;
+
+        if(messagesRequest.msgType() == MsgType.IMAGE) {
+            try {
+                String originalFileName = file.getOriginalFilename();
+                newFileName = System.nanoTime() + originalFileName.substring(originalFileName.lastIndexOf("."));
+                String filePath = environment.getProperty("ATTACHMENT_PATH_CHAT") + newFileName;
+                file.transferTo(new File(filePath));
+                System.out.println(filePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        if(messagesRequest.msgType() == MsgType.VOICE) {
+            try {
+                String originalVoiceName = voice.getOriginalFilename();
+                newFileName = System.nanoTime() + originalVoiceName.substring(originalVoiceName.lastIndexOf("."));
+                String filePath = environment.getProperty("ATTACHMENT_PATH_VOICE") + newFileName;
+                voice.transferTo(new File(filePath));
+                System.out.println(filePath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        WhoIsSender whoIsSender = Platform.APP.equals(messagesRequest.platform())
+                ? WhoIsSender.USER
+                : WhoIsSender.EMPLOYEE;
+
+        AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
+                Long.parseLong(employeesId), whoIsSender, messagesRequest.platform(),
+                messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
+                messagesRequest.msgType());
+        Long detailsChatId = messagesRepo.save(appChatDetails).getDetailsChatId();
+        System.out.println(detailsChatId);
+        return true;
+    }
 
     // جلب المحادثات المفعلة
     public List<DashAppChatResponse> dashPhoneChats(){

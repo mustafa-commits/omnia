@@ -59,12 +59,11 @@ public class AppChatController implements SecuredRestController {
                                  @RequestParam Platform platform,
                                  @RequestParam String messages,
                                  @RequestParam MsgType msgType,
-                                 @RequestParam Long createBy,
                                  @RequestParam(required = false) MultipartFile file,
                                  @RequestParam(required = false) MultipartFile voice,
                                  @RequestHeader(name = "authorization") String token){
         return appChatService.writeMessages(new MessagesRequest(chatId,
-                platform, messages, msgType, createBy), file, voice, token);
+                platform, messages, msgType), file, voice, token);
     }
 
     // اظهار الرسائل في المحادثات
@@ -97,5 +96,11 @@ public class AppChatController implements SecuredRestController {
             return;
         }
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+    // ارسال رسالة بعد 12 ساعة لطلب اغلاق المحادثة
+    @PostMapping("/V1/api/sc/requestCloseChat")
+    public boolean requestCloseChat(@RequestBody CloseChatRequest closeChatRequest){
+        return appChatService.requestCloseChat(closeChatRequest);
     }
 }
