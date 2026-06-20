@@ -32,12 +32,11 @@ public class DashAnnouncementsController implements SecuredRestController {
                                              @RequestParam String description,
                                              @RequestParam(required = false) String branches,
                                              @RequestParam SendingType sendingType,
-                                             @RequestParam Long createBy,
                                              @RequestParam(required = false) List<Long> userId,
                                              @RequestParam(required = false) MultipartFile file,
                                              @RequestHeader(name = "authorization") String token)  {
         return announcementsService.createAnnouncements(new AnnouncementsRequest
-                (title, description, branches, sendingType, createBy, null), file, userId, token);
+                (title, description, branches, sendingType, null), file, userId, token);
     }
 
     //  المرفقات مع التبليغات الداشبورد

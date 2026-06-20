@@ -52,34 +52,34 @@ public class AnnouncementsService {
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
                                              MultipartFile file, List<Long> userId, String token) {
-        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+
         Announcements announcements = new Announcements(announcementsRequest.title(),
                 announcementsRequest.description(), announcementsRequest.sendingType() == SendingType.BRANCH ? announcementsRequest.branches() : null,
-                announcementsRequest.sendingType(), announcementsRequest.createBy());
+                announcementsRequest.sendingType(), Long.parseLong(employeesId));
 
         System.out.println(announcements);
         announcements = announcementsRepo.save(announcements);
 
-        Long createBy = Long.valueOf(userTokenId);
 
         if (announcementsRequest.sendingType() == SendingType.PRIVATE) {
             for (Long a : userId) {
-                announcementsDetailsRepo.save(new AnnouncementsDetails(a, createBy, announcements));
+                announcementsDetailsRepo.save(new AnnouncementsDetails(a, Long.parseLong(employeesId), announcements));
             }
         }else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
             String getUsersInBranch = announcementsRequest.branches();
-            List<AnnouncementsTokenRequest> gettoken = jdbcClient.sql("""
-                            SELECT T.TOKEN AS token
-                                  ,U.USERID AS userId
-                            FROM MOBAPP.SC_APP_USERS U
-                            LEFT JOIN MOBAPP.SC_TOKEN T on (U.USERID = T.USER_ID)
-                            WHERE U.BRANCHES = :branch
+            List<AnnouncementsTokenRequest> getToken = jdbcClient.sql("""
+                    SELECT T.TOKEN AS token
+                          ,U.USER_ID AS userId
+                    FROM MOBAPP.SC_APP_USER U
+                    LEFT JOIN MOBAPP.SC_TOKEN T on (U.USER_ID = T.USER_ID)
+                    WHERE U.BRANCHES = :branch
                     """)
                     .param("branch", getUsersInBranch)
                     .query(AnnouncementsTokenRequest.class)
                     .list();
-            for (Long b : userId ) {
-                announcementsDetailsRepo.save(new AnnouncementsDetails(b, createBy, announcements));
+            for (AnnouncementsTokenRequest b : getToken ) {
+                announcementsDetailsRepo.save(new AnnouncementsDetails(b.userId(), Long.parseLong(employeesId), announcements));
             }
         }
 
@@ -87,7 +87,7 @@ public class AnnouncementsService {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
             String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
-            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, createBy, announcements));
+            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, Long.parseLong(employeesId), announcements));
             file.transferTo(new File(filePath));
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -10,7 +10,6 @@ public record AnnouncementsRequest(
         String description,
         String branches,
         SendingType sendingType,
-        Long createBy,
         List<AnnouncementsDetails> announcementsDetails
 ) {
 }
