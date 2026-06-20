@@ -1,5 +1,6 @@
 package com.sc.demo.model.announcements;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,8 @@ public class AnnouncementsDetails {
 
     private Long userId;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "announcements_id")
     private Announcements announcements;
 

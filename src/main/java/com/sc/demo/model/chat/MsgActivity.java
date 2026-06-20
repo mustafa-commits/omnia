@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 public enum MsgActivity {
+    NOT_ACTIVE,
     ACTIVE,
-    PENDING,
-    ARCHIVED
+    CLOSE_REQUEST
 }

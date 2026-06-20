@@ -36,7 +36,7 @@ public class AppChatController implements SecuredRestController {
     }
 
     // تخزين Token
-    @PostMapping("/V1/api/sc/setChatToken")
+    @PostMapping("/V1/api/sc/setDashboardToken")
     public long setChatToken(@RequestBody ChatTokenRequest chatTokenRequest){
         return appChatService.saveToken(chatTokenRequest);
     }

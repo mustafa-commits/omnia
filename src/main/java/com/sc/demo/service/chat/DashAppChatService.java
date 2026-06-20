@@ -8,6 +8,7 @@ import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -141,36 +142,45 @@ public class DashAppChatService {
         AppChatDetails closeMessage = new AppChatDetails();
         if (byChatId.isPresent()) {
             jdbcClient.sql("""
-                    UPDATE MOBAPP.SC_CHAT_DETAILS D
+                    UPDATE MOBAPP.SC_CHAT M
                     SET D.MSG_ACTIVITY = 1
                     WHERE D.CHAT_ID = :chatId
-                    AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
+                    -- AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
                     """)
                     .param("chatId", byChatId)
-                    .update();
+                    .update();// edit
 
             closeMessage.setMessages("""
                 نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة)
                 في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم)
                 وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
                 """);
-            closeMessage.setDateCloseRequest(LocalDateTime.now());
         }else {
-            boolean equalTo12Hours = Duration.between(dateCloseRequest, LocalDateTime.now())
-                    .toHours() >= 12;
-            if (equalTo12Hours) {
-                jdbcClient.sql("""
-                                UPDATE MOBAPP.SC_CHAT_DETAILS D
-                                SET D.MSG_ACTIVITY = 2
-                                WHERE D.CHAT_ID = :chatId
-                                AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
-                                """)
-                        .param("chatId", byChatId)
-                        .update();
-            }
-            closeMessage.setConfirmProcedure(ConfirmProcedure.YES);
+//            boolean equalTo12Hours = Duration.between(dateCloseRequest, LocalDateTime.now())
+//                    .toHours() >= 12;
+//            if (equalTo12Hours) {
+//                jdbcClient.sql("""
+//                                UPDATE MOBAPP.SC_CHAT_DETAILS D
+//                                SET D.MSG_ACTIVITY = 2
+//                                WHERE D.CHAT_ID = :chatId
+//                                AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
+//                                """)
+//                        .param("chatId", byChatId)
+//                        .update();
+//            }
+//            closeMessage.setConfirmProcedure(ConfirmProcedure.YES);
         }
         return true;
+    }
+
+    @Scheduled(cron = "0 0 */6 * * *")
+    private void archiveChat(){
+
+        // select chatMaster active = pending
+        // get chatDetails with status CLOSE_REQUEST and check createDate is after  now
+        // change chatMaster status to archive
+
+
     }
 
 }
