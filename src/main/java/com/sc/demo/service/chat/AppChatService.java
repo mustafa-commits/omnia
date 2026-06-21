@@ -55,7 +55,7 @@ public class AppChatService {
         AppChatDetails welcomeMessage = new AppChatDetails();
         welcomeMessage.setChatApp(appChatMaster);
         welcomeMessage.setCreateBy(0L);
-        welcomeMessage.setPlatform(Platform.DASHBOARD);
+        welcomeMessage.setPlatform(Platform.SYSTEM);
         welcomeMessage.setMessages("""
                 السلام عليكم ورحمة الله وبركاته
                 نود أن نلفت عنايتكم ألى ان كادر الدعم الفني متواجدين للإجابة على استفساراتكم من الساعة ( 8:00 )

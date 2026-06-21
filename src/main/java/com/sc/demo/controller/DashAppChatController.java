@@ -1,6 +1,7 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
+import com.sc.demo.model.chat.ConfirmProcedure;
 import com.sc.demo.model.chat.MsgType;
 import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.chat.*;
@@ -87,8 +88,9 @@ public class DashAppChatController implements SecuredRestController {
 
     // تحويل المحادثات من فعالة الى مؤرشفة
     @PutMapping("/V1/api/sc/requestArchivedChat")
-    public Boolean requestArchivedChat(@RequestParam Long chatId){
-        return dashAppChatService.requestArchivedChat(chatId);
+    public Boolean requestArchivedChat(@RequestParam Long chatId,
+                                       @RequestParam ConfirmProcedure confirmProcedure){
+        return dashAppChatService.requestArchivedChat(chatId, confirmProcedure);
     }
 }
 
