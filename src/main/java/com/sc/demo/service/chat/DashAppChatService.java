@@ -144,11 +144,10 @@ public class DashAppChatService {
         Optional<AppChatMaster> byChatId = chatRepo.findById(chatId);
 
         List<AppChatMaster> chatPending = jdbcClient.sql("""
-                SELECT M.CHAT_ID, D.DETAILS_CHAT_ID
-                FROM MOBAPP.SC_CHAT_MASTER M
-                LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON M.CHAT_ID = D.CHAT_ID
-                WHERE M.MSG_ACTIVE = 1
-                AND D.CREATE_DATE <= SYSDATE - (43200/86400)
+                SELECT CHAT_ID, MAX(DETAILS_CHAT_ID)
+                FROM MOBAPP.SC_CHAT_DETAILS
+                WHERE CREATE_DATE <= SYSDATE - (43200/86400)
+                GROUP BY CHAT_ID
                 """)
                 .query(AppChatMaster.class)
                 .list();
@@ -163,8 +162,8 @@ public class DashAppChatService {
             closeMessage.setConfirmProcedure(confirmProcedure);
             closeMessage.setCreateDate(LocalDateTime.now());
             closeMessage.setPlatform(Platform.SYSTEM);
-            closeMessage.setMsgActivity(MsgActivity.CLOSE_REQUEST); // CLOSE_REQUEST — important, your archive UPDATE depends on this
-
+            closeMessage.setMsgActivity(MsgActivity.CLOSE_REQUEST);
+            closeMessage.setChatApp(byChatId);
             messagesRepo.save(closeMessage);
 
             if (chatPending.equals(byChatId)) {

@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Entity
@@ -76,5 +77,4 @@ public class AppChatDetails {
 
     @PrePersist
     public void prePersist(){this.createDate = LocalDateTime.now(); }
-
 }
