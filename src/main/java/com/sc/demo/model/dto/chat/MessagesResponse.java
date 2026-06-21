@@ -8,6 +8,7 @@ public record MessagesResponse(
         String messages,
         WhoIsSender whoIsSender,
         Long createBy,
-        LocalDateTime createDate
+        LocalDateTime createDate,
+        Long platForm
 ) {
 }

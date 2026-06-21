@@ -87,7 +87,8 @@ public class DashAppChatService {
                         ELSE MESSAGES END AS messages,
                         WHO_IS_SENDER AS whoIsSender,
                         CREATE_BY AS createBy,
-                        CREATE_DATE AS createDate
+                        CREATE_DATE AS createDate,
+                        PLATFORM AS platForm
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chatId
                 order by CREATE_DATE desc
