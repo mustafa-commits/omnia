@@ -143,44 +143,49 @@ public class DashAppChatService {
     public Boolean requestArchivedChat(Long chatId, ConfirmProcedure confirmProcedure){
         Optional<AppChatMaster> byChatId = chatRepo.findById(chatId);
 
-        List<AppChatMaster> chatPending = jdbcClient.sql("""
-                SELECT CHAT_ID, MAX(DETAILS_CHAT_ID)
-                FROM MOBAPP.SC_CHAT_DETAILS
-                WHERE CREATE_DATE <= SYSDATE - (43200/86400)
-                GROUP BY CHAT_ID
-                """)
-                .query(AppChatMaster.class)
-                .list();
-
-        if (!chatPending.isEmpty()) {
-            AppChatDetails closeMessage = new AppChatDetails();
-            closeMessage.setMessages("""
+//        List<AppChatMaster> chatPending = jdbcClient.sql("""
+//                SELECT CHAT_ID, MAX(DETAILS_CHAT_ID)
+//                FROM MOBAPP.SC_CHAT_DETAILS
+//                WHERE CREATE_DATE <= SYSDATE - (43200/86400)
+//                GROUP BY CHAT_ID
+//                """)
+//                .query(AppChatMaster.class)
+//                .list();
+//
+//        if (!chatPending.isEmpty()) {
+        if (byChatId.isPresent()) {
+            if (byChatId.get().getMsgActive().equals(MsgActive.ACTIVE)) {
+                AppChatDetails closeMessage = new AppChatDetails();
+                closeMessage.setMessages("""
                         نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة)
                         في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم)
                         وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
                         """);
-            closeMessage.setConfirmProcedure(confirmProcedure);
-            closeMessage.setCreateDate(LocalDateTime.now());
-            closeMessage.setPlatform(Platform.SYSTEM);
-            closeMessage.setMsgActivity(MsgActivity.CLOSE_REQUEST);
-            closeMessage.setChatApp(byChatId);
-            messagesRepo.save(closeMessage);
+                closeMessage.setConfirmProcedure(confirmProcedure);
+                closeMessage.setCreateDate(LocalDateTime.now());
+                closeMessage.setPlatform(Platform.SYSTEM);
+                closeMessage.setMsgActivity(MsgActivity.CLOSE_REQUEST);
+                closeMessage.setChatApp(byChatId.get());
+                messagesRepo.save(closeMessage);
+                byChatId.get().setMsgActive(MsgActive.PENDING);
+                chatRepo.save(byChatId.get());
 
-            if (chatPending.equals(byChatId)) {
-                jdbcClient.sql("""
-                     UPDATE MOBAPP.SC_CHAT_MASTER M
-                     SET M.MSG_ACTIVE = 2
-                     WHERE M.CHAT_ID = :chatId
-                     AND M.MSG_ACTIVE = 1
-                     AND EXISTS (
-                        SELECT 1
-                        FROM MOBAPP.SC_CHAT_DETAILS D
-                        WHERE D.CHAT_ID = M.CHAT_ID
-                        AND D.MSG_ACTIVITY = 0
-                     )
-                   """)
-                .param("chatId", chatId)
-                .update();
+//                if (chatPending.equals(byChatId)) {
+//                    jdbcClient.sql("""
+//                     UPDATE MOBAPP.SC_CHAT_MASTER M
+//                     SET M.MSG_ACTIVE = 2
+//                     WHERE M.CHAT_ID = :chatId
+//                     AND M.MSG_ACTIVE = 1
+//                     AND EXISTS (
+//                        SELECT 1
+//                        FROM MOBAPP.SC_CHAT_DETAILS D
+//                        WHERE D.CHAT_ID = M.CHAT_ID
+//                        AND D.MSG_ACTIVITY = 0
+//                     )
+//                   """)
+//                            .param("chatId", chatId)
+//                            .update();
+//                }
             }
         }
         return true;
