@@ -29,7 +29,9 @@ public class AppChatMaster {
 
     private LocalDateTime lastUpdate;
 
-    // private
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "")
+    private MsgActive msgActive = MsgActive.ACTIVE;
 
     private Long lastUpdateBy;
 

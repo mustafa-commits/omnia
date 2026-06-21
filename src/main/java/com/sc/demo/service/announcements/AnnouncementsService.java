@@ -173,6 +173,7 @@ public class AnnouncementsService {
         updateAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
         updateAnnouncement.setLastUpdate(LocalDateTime.now());
 
+        if (file != null) try {
         AnnouncementsAttachment updateAnnouncementAttachment = announcementsAttachmentRepo.findByAnnouncements(updateAnnouncement);
         String originalFilename = file.getOriginalFilename();
         String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
@@ -184,8 +185,7 @@ public class AnnouncementsService {
         updateAnnouncementAttachment.setAnnouncements(updateAnnouncement);
         announcementsAttachmentRepo.save(updateAnnouncementAttachment);
 
-        try {
-            file.transferTo(new File(filePath));
+        file.transferTo(new File(filePath));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

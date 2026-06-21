@@ -29,6 +29,7 @@ public class Announcements {
 
     private String title;
 
+    @Column(length = 4000)
     private String description;
 
     private String branches;

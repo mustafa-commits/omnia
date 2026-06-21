@@ -11,11 +11,8 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -176,6 +173,20 @@ public class DashAppChatService {
 
     @Scheduled(cron = "0 0 */6 * * *")
     private void archiveChat(){
+        Optional<Long> chatPending = jdbcClient.sql("""
+            UPDATE MOBAPP.SC_CHAT_MASTER M
+            SET M.MSG_ACTIVE = 2
+            WHERE M.MSG_ACTIVE = 1
+            AND EXISTS (
+                SELECT 1
+                FROM MOBAPP.SC_CHAT_DETAILS D
+                WHERE D.CHAT_ID = M.CHAT_ID
+                AND D.MSG_ACTIVITY = 0
+                AND D.CREATE_DATE <= SYSDATE - (43200/86400)
+            )
+            """)
+            .query(Long.class)
+            .optional();
 
         // select chatMaster active = pending
         // get chatDetails with status CLOSE_REQUEST and check createDate is after  now

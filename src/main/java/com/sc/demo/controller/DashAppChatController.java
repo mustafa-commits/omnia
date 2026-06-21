@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -87,9 +86,9 @@ public class DashAppChatController implements SecuredRestController {
     }
 
     // تحويل المحادثات من فعالة الى مؤرشفة
-//    @PutMapping("/V1/api/sc/requestArchivedChat")
-//    public Boolean requestArchivedChat(@RequestParam Long chatId){
-//        return dashAppChatService.requestArchivedChat(chatId);
-//    }
+    @PutMapping("/V1/api/sc/requestArchivedChat")
+    public Boolean requestArchivedChat(@RequestParam Long chatId){
+        return dashAppChatService.requestArchivedChat(chatId);
+    }
 }
 
