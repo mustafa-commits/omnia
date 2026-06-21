@@ -1,5 +1,6 @@
 package com.sc.demo.service.chat;
 
+import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.repository.chat.ChatRepo;
@@ -140,19 +141,11 @@ public class DashAppChatService {
     // change chatMaster status to archive
 
     // طلب ارشفة المحادثات
-    public Boolean requestArchivedChat(Long chatId, ConfirmProcedure confirmProcedure){
+    public Boolean requestArchivedChat(Long chatId, String token){
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
         Optional<AppChatMaster> byChatId = chatRepo.findById(chatId);
+        System.out.println(byChatId);
 
-//        List<AppChatMaster> chatPending = jdbcClient.sql("""
-//                SELECT CHAT_ID, MAX(DETAILS_CHAT_ID)
-//                FROM MOBAPP.SC_CHAT_DETAILS
-//                WHERE CREATE_DATE <= SYSDATE - (43200/86400)
-//                GROUP BY CHAT_ID
-//                """)
-//                .query(AppChatMaster.class)
-//                .list();
-//
-//        if (!chatPending.isEmpty()) {
         if (byChatId.isPresent()) {
             if (byChatId.get().getMsgActive().equals(MsgActive.ACTIVE)) {
                 AppChatDetails closeMessage = new AppChatDetails();
@@ -161,39 +154,40 @@ public class DashAppChatService {
                         في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم)
                         وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
                         """);
-                closeMessage.setConfirmProcedure(confirmProcedure);
                 closeMessage.setCreateDate(LocalDateTime.now());
+                closeMessage.setCreateBy(Long.parseLong(employeesId));
                 closeMessage.setPlatform(Platform.SYSTEM);
                 closeMessage.setMsgActivity(MsgActivity.CLOSE_REQUEST);
                 closeMessage.setChatApp(byChatId.get());
                 messagesRepo.save(closeMessage);
                 byChatId.get().setMsgActive(MsgActive.PENDING);
+                byChatId.get().setLastUpdate(LocalDateTime.now());
+                byChatId.get().setLastUpdateBy(Long.parseLong(employeesId));
                 chatRepo.save(byChatId.get());
-
-//                if (chatPending.equals(byChatId)) {
-//                    jdbcClient.sql("""
-//                     UPDATE MOBAPP.SC_CHAT_MASTER M
-//                     SET M.MSG_ACTIVE = 2
-//                     WHERE M.CHAT_ID = :chatId
-//                     AND M.MSG_ACTIVE = 1
-//                     AND EXISTS (
-//                        SELECT 1
-//                        FROM MOBAPP.SC_CHAT_DETAILS D
-//                        WHERE D.CHAT_ID = M.CHAT_ID
-//                        AND D.MSG_ACTIVITY = 0
-//                     )
-//                   """)
-//                            .param("chatId", chatId)
-//                            .update();
-//                }
             }
         }
         return true;
     }
 
-    @Scheduled(cron = "0 0 */6 * * *")
-    private void archiveChat(Long chatId, ConfirmProcedure confirmProcedure) throws InterruptedException {
-        requestArchivedChat(chatId, confirmProcedure);
+    // الموافقة على اغلاق المحادثة او لا
+    public Boolean askArchivedChat(Long chatId, ConfirmProcedure confirmProcedure, String token){
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+        Optional<AppChatMaster> byChatId = chatRepo.findById(chatId);
+
+        AppChatDetails updateCloseChat = messagesRepo.findById(chatId).get();
+        updateCloseChat.setConfirmProcedure(confirmProcedure);
+        updateCloseChat.setMsgActivity(MsgActivity.NOT_ACTIVE);
+        updateCloseChat.setLastUpdate(LocalDateTime.now());
+//        updateCloseChat.getLastUpdateBy(Long.parseLong(userTokenId));
+        messagesRepo.save(updateCloseChat);
+        byChatId.get().setMsgActive(MsgActive.ARCHIVED);
+        byChatId.get().setLastUpdate(LocalDateTime.now());
+        byChatId.get().setLastUpdateBy(Long.parseLong(userTokenId));
+        chatRepo.save(byChatId.get());
+
+        return true;
     }
+
+
 
 }

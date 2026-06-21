@@ -87,10 +87,18 @@ public class DashAppChatController implements SecuredRestController {
     }
 
     // تحويل المحادثات من فعالة الى مؤرشفة
-    @PutMapping("/V1/api/sc/requestArchivedChat")
+    @PostMapping("/V1/api/sc/requestArchivedChat")
     public Boolean requestArchivedChat(@RequestParam Long chatId,
-                                       @RequestParam ConfirmProcedure confirmProcedure){
-        return dashAppChatService.requestArchivedChat(chatId, confirmProcedure);
+                                       @RequestHeader(name = "authorization") String token){
+        return dashAppChatService.requestArchivedChat(chatId, token);
+    }
+
+    // الموافقة على اغلاق المحادثة او لا
+    @PutMapping("/V1/api/sc/askArchivedChat")
+    public Boolean askArchivedChat(@RequestParam Long chatId,
+                                   @RequestParam ConfirmProcedure confirmProcedure,
+                                   @RequestHeader(name = "authorization") String token){
+        return dashAppChatService.askArchivedChat(chatId, confirmProcedure, token);
     }
 }
 
