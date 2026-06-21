@@ -19,8 +19,8 @@ public class ArchiveChat {
                 SELECT 1
                 FROM MOBAPP.SC_CHAT_DETAILS D
                 WHERE D.CHAT_ID = M.CHAT_ID
-                AND D.MSG_ACTIVITY = 0
-                AND D.CREATE_DATE <= SYSDATE - (43200/86400)
+                AND D.MSG_ACTIVITY = 2
+                AND MAX(D.CREATE_DATE) <= SYSDATE + interval '1' day
             )
             """)
                 .update();

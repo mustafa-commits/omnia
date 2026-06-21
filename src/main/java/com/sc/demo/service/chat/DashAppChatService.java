@@ -174,17 +174,37 @@ public class DashAppChatService {
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
         Optional<AppChatMaster> byChatId = chatRepo.findById(chatId);
 
-        AppChatDetails updateCloseChat = messagesRepo.findById(chatId).get();
-        updateCloseChat.setConfirmProcedure(confirmProcedure);
-        updateCloseChat.setMsgActivity(MsgActivity.NOT_ACTIVE);
-        updateCloseChat.setLastUpdate(LocalDateTime.now());
-//        updateCloseChat.getLastUpdateBy(Long.parseLong(userTokenId));
-        messagesRepo.save(updateCloseChat);
-        byChatId.get().setMsgActive(MsgActive.ARCHIVED);
-        byChatId.get().setLastUpdate(LocalDateTime.now());
-        byChatId.get().setLastUpdateBy(Long.parseLong(userTokenId));
-        chatRepo.save(byChatId.get());
-
+        if (confirmProcedure.equals(ConfirmProcedure.YES)) {
+            AppChatDetails closeChat = new AppChatDetails();
+            closeChat.setMessages("""
+                        تم اغلاق المحادثة
+                        """);
+            closeChat.setCreateDate(LocalDateTime.now());
+            closeChat.setCreateBy(Long.parseLong(userTokenId));
+            closeChat.setPlatform(Platform.SYSTEM);
+            closeChat.setMsgActivity(MsgActivity.NOT_ACTIVE);
+            closeChat.setChatApp(byChatId.get());
+            messagesRepo.save(closeChat);
+            byChatId.get().setMsgActive(MsgActive.ARCHIVED);
+            byChatId.get().setLastUpdate(LocalDateTime.now());
+            byChatId.get().setLastUpdateBy(Long.parseLong(userTokenId));
+            chatRepo.save(byChatId.get());
+        }else {
+            AppChatDetails openChat = new AppChatDetails();
+            openChat.setMessages("""
+                        تفضلوا بطرح استفساركم
+                        """);
+            openChat.setCreateDate(LocalDateTime.now());
+            openChat.setCreateBy(Long.parseLong(userTokenId));
+            openChat.setPlatform(Platform.SYSTEM);
+            openChat.setMsgActivity(MsgActivity.ACTIVE);
+            openChat.setChatApp(byChatId.get());
+            messagesRepo.save(openChat);
+            byChatId.get().setMsgActive(MsgActive.ACTIVE);
+            byChatId.get().setLastUpdate(LocalDateTime.now());
+            byChatId.get().setLastUpdateBy(Long.parseLong(userTokenId));
+            chatRepo.save(byChatId.get());
+        }
         return true;
     }
 
