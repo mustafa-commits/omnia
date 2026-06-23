@@ -1,11 +1,10 @@
 package com.sc.demo.service.users;
 
-import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMembersResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
 import com.sc.demo.model.users.AppUser;
-import com.sc.demo.repository.login.AppTimeUsedRepo;
+import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -25,18 +24,22 @@ public class FamilyInfoService {
     private TokenService tokenService;
 
     @Autowired
-    private AppTimeUsedRepo appTimeUsedRepo;
+    private AppUserRepo appUserRepo;
 
     // المعلومات العائلة الاساسية
     public List<FamilyInfoBasicResponse> getFamilyBasicInfo(String token){
 
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
-        Optional<AppUser> byHeadFamilyId = appTimeUsedRepo.findById(Long.parseLong(headFamilyId.toString()));
-        LocalDateTime timeUsed = LocalDateTime.now();
-        if (byHeadFamilyId.isPresent()) {
-            appTimeUsedRepo.save(timeUsed);
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+
+        Optional<AppUser> byUserId = appUserRepo.findById(Long.parseLong(userTokenId));
+
+        if (byUserId.isPresent()) {
+            byUserId.get().setLastUse(LocalDateTime.now());
+            appUserRepo.save(byUserId.get());
         }
+
         return jdbcClient.sql("""
                     SELECT F.OLD_FAMILY_NO AS FamilyNo
                          ,H.FAMILY_PERSONS_ID AS FamilyPersonsId

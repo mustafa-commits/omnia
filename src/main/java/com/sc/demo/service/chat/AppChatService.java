@@ -3,6 +3,7 @@ package com.sc.demo.service.chat;
 import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
+import com.sc.demo.model.users.AppUser;
 import com.sc.demo.repository.chat.ChatTokenRepo;
 import com.sc.demo.repository.chat.MessagesRepo;
 import com.sc.demo.repository.chat.ChatRepo;
@@ -176,7 +177,16 @@ public class AppChatService {
     }
 
 
-    public List<MessagesResponse> getMessages(long chatId){
+    public List<MessagesResponse> getMessages(Long chatId, String token){
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+
+        Optional<AppChatDetails> byUserId = messagesRepo.findById(Long.parseLong(userTokenId));
+
+        if (byUserId.isPresent()) {
+            byUserId.get().setSeenAt(LocalDateTime.now());
+            messagesRepo.save(byUserId.get());
+        }
+
         System.out.println(chatId);
         return jdbcClient.sql("""
                 SELECT CASE WHEN MSG_TYPE in (1,2) THEN TO_CHAR(:path) || MESSAGES

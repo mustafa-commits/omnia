@@ -31,7 +31,7 @@ public class AppUser {
     @Enumerated(EnumType.ORDINAL)
     private PhoneType phoneType;
 
-    private LocalDateTime timeUsed;
+    private LocalDateTime lastUse;
 
     @Column(length = 500)
     private String guardianName;
