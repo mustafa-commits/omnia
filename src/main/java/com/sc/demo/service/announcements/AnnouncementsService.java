@@ -113,7 +113,7 @@ public class AnnouncementsService {
         }
     }
 
-    // اشعارات التطيق لكل يوزر
+    // تبليغات التطبيق لكل يوزر
     public List<PhoneAnnouncementsRequest> PhoneAnnouncements(String token) {
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
@@ -126,6 +126,7 @@ public class AnnouncementsService {
                    LEFT JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
                    WHERE AD.USER_ID = :userId OR A.SENDING_TYPE = 0
+                   ORDER BY A.CREATE_DATE DESC
                 """)
                 .param("userId", userTokenId)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoAnnouncements/")
@@ -133,7 +134,7 @@ public class AnnouncementsService {
                 .list();
     }
 
-    // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
+    // الداشبورد جميع التبليغات التي تصل للعائلة اذا كانت خاصة او عامة
     public List<AllAnnouncementsFamilyRequest> AllAnnouncementsFamily() {
         return jdbcClient.sql("""
                    SELECT A.ANNOUNCEMENTS_ID AS announcementsId
@@ -145,6 +146,7 @@ public class AnnouncementsService {
                    FROM SC_ANNOUNCEMENTS A
                    LEFT JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
+                   ORDER BY A.CREATE_DATE DESC
                 """)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/allAnnouncementsPhotos/")
                 .query(AllAnnouncementsFamilyRequest.class)

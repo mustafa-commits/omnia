@@ -44,6 +44,7 @@ public class HomePageService {
         return "تم اضافة الصورة للواجهة الرئيسية";
     }
 
+    // جلب الصورد في الشاشة الرئيسية
     public List<homePageResponse> viewHomePagePhotos() {
         return jdbcClient.sql("""
                  SELECT PHOTO_ID AS photoId

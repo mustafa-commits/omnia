@@ -33,6 +33,7 @@ public class EmployeesDashboardService {
         return true;
     }
 
+    // جميع مستخدمي الداش بورد
     public List<EmployeesRequest> viewEmployees(){
         return jdbcClient.sql("""
                 SELECT DASHBOARD_USER_ID AS dashboardUserId,
@@ -46,6 +47,7 @@ public class EmployeesDashboardService {
                 .list();
     }
 
+    // التحقق من مستخدم الداشبورد
     public GetUserIdWithToken loginEmployee(String userName, String password){
         Optional<AccessToDashboard> dashboardCheck = jdbcClient.sql("""
                 SELECT DASHBOARD_USER_ID AS dashboardUserId

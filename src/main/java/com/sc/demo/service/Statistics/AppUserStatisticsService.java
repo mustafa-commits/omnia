@@ -15,7 +15,7 @@ public class AppUserStatisticsService {
     @Autowired
     private JdbcClient jdbcClient;
 
-    // جلب المحادثات المفعلة
+    // احصائية مستخدمي التطبيق
     public List<AppUserStatisticsResponse> getStatisticsPhoneUsers(){
         return jdbcClient.sql("""
             SELECT U.PHONE AS phone,
@@ -34,7 +34,7 @@ public class AppUserStatisticsService {
                 .list();
     }
 
-    // جلب المحادثات المؤرشفة
+    // احصائية نسبة الاستخدام
     public StatisticsUsesResponse getStatisticsUses(){
 
         Optional<StatisticsUsesResponse> statistic = jdbcClient.sql("""

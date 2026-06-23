@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 public record CloseChatRequest(
         Long chatId,
-//        @JsonFormat(pattern = "M/d/yyyy h:mm:ss.SSSSSSSSS a")
         LocalDateTime createDate,
         ConfirmProcedure confirmProcedure
 ) {

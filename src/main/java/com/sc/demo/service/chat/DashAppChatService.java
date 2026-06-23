@@ -90,7 +90,7 @@ public class DashAppChatService {
                         PLATFORM AS platForm
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chatId
-                order by CREATE_DATE desc
+                ORDER BY CREATE_DATE DESC
                 """)
                 .param("chatId", chatId)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoChat/")
@@ -101,17 +101,19 @@ public class DashAppChatService {
     // جلب المحادثات المفعلة
     public List<DashAppChatResponse> dashPhoneChats(){
         return jdbcClient.sql("""
-             SELECT M.CHAT_ID AS chatId
-                   ,U.GUARDIAN_NAME AS guardianName
-                   ,M.CHAT_TITLE AS chatTitle
-                   ,D.MESSAGES AS messages
-                   ,D.CREATE_DATE AS createDate
-             FROM MOBAPP.SC_CHAT_MASTER M
-             LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
-             LEFT JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
-             WHERE D.MSG_ACTIVITY = 0
-             AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
-             ORDER BY M.CHAT_ID DESC
+            SELECT M.CHAT_ID AS chatId
+                  ,U.GUARDIAN_NAME AS guardianName
+                  ,M.CHAT_TITLE AS chatTitle
+                  ,D.MESSAGES AS messages
+                  ,D.CREATE_DATE AS createDate
+                  ,M.MSG_ACTIVE AS msgActive
+                  ,D.MSG_ACTIVITY
+            FROM MOBAPP.SC_CHAT_MASTER M
+            LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
+            LEFT JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
+            WHERE M.MSG_ACTIVE = 0
+            AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
+            ORDER BY M.CREATE_DATE DESC
             """)
             .query(DashAppChatResponse.class)
             .list();
@@ -125,12 +127,14 @@ public class DashAppChatService {
                   ,M.CHAT_TITLE AS chatTitle
                   ,D.MESSAGES AS messages
                   ,D.CREATE_DATE AS createDate
+                  ,M.MSG_ACTIVE AS msgActive
+                  ,D.MSG_ACTIVITY
             FROM MOBAPP.SC_CHAT_MASTER M
             LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
             LEFT JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
-            WHERE D.MSG_ACTIVITY = 1
+            WHERE M.MSG_ACTIVE IN (1, 2)
             AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
-            ORDER BY M.CHAT_ID DESC
+            ORDER BY M.CREATE_DATE DESC
             """)
                 .query(DashAppChatResponse.class)
                 .list();
@@ -158,6 +162,7 @@ public class DashAppChatService {
                 closeMessage.setCreateBy(Long.parseLong(employeesId));
                 closeMessage.setPlatform(Platform.SYSTEM);
                 closeMessage.setMsgActivity(MsgActivity.CLOSE_REQUEST);
+                closeMessage.setWhoIsSender(WhoIsSender.SYSTEM);
                 closeMessage.setChatApp(byChatId.get());
                 messagesRepo.save(closeMessage);
                 byChatId.get().setMsgActive(MsgActive.PENDING);

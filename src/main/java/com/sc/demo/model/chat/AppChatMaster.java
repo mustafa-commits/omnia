@@ -30,7 +30,7 @@ public class AppChatMaster {
     private LocalDateTime lastUpdate;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "")
+    @Column(name = "MSG_ACTIVE")
     private MsgActive msgActive = MsgActive.ACTIVE;
 
     private Long lastUpdateBy;

@@ -122,24 +122,25 @@ public class NotificationService {
                    LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
                    WHERE ND.USER_ID = :user_id
                    OR N.SENDING_TYPE = 0
+                   ORDER BY N.CREATE_DATE DESC
                 """)
                 .param("user_id", userTokenId)
                 .query(PhoneNotificationRequest.class)
                 .list();
     }
 
-    // في الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
+    // الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
     public List<AllNotificationFamilyRequest> AllNotificationFamily() {
 
         return jdbcClient.sql("""
-                 SELECT N.NOTIFICATION_ID AS notificationId
-                        ,N.CREATE_DATE AS createDate
-                        ,N.TITLE
-                        ,N.DESCRIPTION
-                        ,N.SENDING_TYPE AS sendingType
-                 FROM SC_NOTIFICATION N
-                 LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
-                 ORDER BY N.NOTIFICATION_ID DESC
+                SELECT N.NOTIFICATION_ID AS notificationId
+                       ,N.CREATE_DATE AS createDate
+                       ,N.TITLE
+                       ,N.DESCRIPTION
+                       ,N.SENDING_TYPE AS sendingType
+                FROM SC_NOTIFICATION N
+                LEFT JOIN SC_NOTIFICATION_DETAILS ND ON N.NOTIFICATION_ID = ND.NOTIFICATION_ID
+                ORDER BY N.CREATE_DATE DESC
                 """).query(AllNotificationFamilyRequest.class).list();
     }
 
