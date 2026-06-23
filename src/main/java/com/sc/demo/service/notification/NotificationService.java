@@ -160,8 +160,12 @@ public class NotificationService {
         var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         NotificationMaster updateNotification = notificationRepo.findById(notificationId).get();
-        updateNotification.setTitle(title);
-        updateNotification.setDescription(description);
+        if (title != null) {
+            updateNotification.setTitle(title);
+        }
+        if (description != null) {
+            updateNotification.setDescription(description);
+        }
         updateNotification.setLastUpdateBy(Long.parseLong(employeesId));
         updateNotification.setLastUpdate(LocalDateTime.now());
 

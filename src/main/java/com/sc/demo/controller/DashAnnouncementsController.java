@@ -69,13 +69,12 @@ public class DashAnnouncementsController implements SecuredRestController {
 
     // تعديل تبليغ
     @PutMapping("/V1/api/sc/editAnnouncement")
-    public Announcements editAnnouncement(@RequestParam Long announcementId,
+    public Boolean editAnnouncement(@RequestParam Long announcementId,
                                           @RequestParam(required = false) String title,
                                           @RequestParam(required = false) String description,
-                                          @RequestParam(required = false) String branches,
                                           @RequestParam(required = false) MultipartFile file,
                                           @RequestHeader(name = "authorization") String token){
-        return announcementsService.editAnnouncement(announcementId, title, description, branches, file, token);
+        return announcementsService.editAnnouncement(announcementId, title, description, file, token);
     }
 
     // تثبيت او الغاء تثبيت التبليغ

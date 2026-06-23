@@ -166,15 +166,18 @@ public class AnnouncementsService {
     }
 
     // تعديل تبليغ
-    public Announcements editAnnouncement(Long announcementId, String title, String description,
-                                          String branches, MultipartFile file, String token){
+    public Boolean editAnnouncement(Long announcementId, String title, String description,
+                                          MultipartFile file, String token){
 
         var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Announcements updateAnnouncement = announcementsRepo.findById(announcementId).get();
-        updateAnnouncement.setTitle(title != null && !title.isEmpty() ? title : updateAnnouncement.getTitle());
-        updateAnnouncement.setBranches(branches != null && !branches.isEmpty() ? branches : updateAnnouncement.getBranches());
-        updateAnnouncement.setDescription(description != null && !description.isEmpty() ? description : updateAnnouncement.getDescription());
+        if (title != null) {
+            updateAnnouncement.setTitle(title);
+        }
+        if (description != null) {
+            updateAnnouncement.setDescription(description);
+        }
         updateAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
         updateAnnouncement.setLastUpdate(LocalDateTime.now());
 
@@ -196,7 +199,7 @@ public class AnnouncementsService {
         }
 
         announcementsRepo.save(updateAnnouncement);
-        return updateAnnouncement;
+        return true;
     }
 
     // تثبيت او الغاء تثبيت التبليغ
