@@ -4,6 +4,7 @@ import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
+import com.sc.demo.model.announcements.Pin;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
@@ -126,7 +127,7 @@ public class AnnouncementsService {
                    LEFT JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
                    WHERE AD.USER_ID = :userId OR A.SENDING_TYPE = 0
-                   ORDER BY A.CREATE_DATE DESC
+                   ORDER BY A.PIN DESC, A.CREATE_DATE DESC
                 """)
                 .param("userId", userTokenId)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoAnnouncements/")
@@ -147,7 +148,7 @@ public class AnnouncementsService {
                    FROM SC_ANNOUNCEMENTS A
                    LEFT JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
-                   ORDER BY A.CREATE_DATE DESC
+                   ORDER BY A.PIN DESC, A.CREATE_DATE DESC
                 """)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/allAnnouncementsPhotos/")
                 .query(AllAnnouncementsFamilyRequest.class)
@@ -196,5 +197,19 @@ public class AnnouncementsService {
 
         announcementsRepo.save(updateAnnouncement);
         return updateAnnouncement;
+    }
+
+    // تثبيت او الغاء تثبيت التبليغ
+    public Boolean editAnnouncementPin(Long announcementId, String token){
+
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+
+        Announcements pinAnnouncement = announcementsRepo.findById(announcementId).get();
+        pinAnnouncement.setPin(Pin.PIN);
+        pinAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
+        pinAnnouncement.setLastUpdate(LocalDateTime.now());
+
+        announcementsRepo.save(pinAnnouncement);
+        return true;
     }
 }

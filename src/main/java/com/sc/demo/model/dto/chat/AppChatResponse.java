@@ -6,6 +6,8 @@ public record AppChatResponse(
         Long chatId,
         String chatTitle,
         String messages,
-        LocalDateTime createDate
+        LocalDateTime createDate,
+        Long msgActive,
+        Long msgActivity
 ) {
 }

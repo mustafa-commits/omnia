@@ -7,6 +7,8 @@ public record DashAppChatResponse(
         String guardianName,
         String chatTitle,
         String messages,
-        LocalDateTime createDate
+        LocalDateTime createDate,
+        Long msgActive,
+        Long msgActivity
 ) {
 }

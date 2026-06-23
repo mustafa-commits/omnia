@@ -107,7 +107,7 @@ public class DashAppChatService {
                   ,D.MESSAGES AS messages
                   ,D.CREATE_DATE AS createDate
                   ,M.MSG_ACTIVE AS msgActive
-                  ,D.MSG_ACTIVITY
+                  ,D.MSG_ACTIVITY AS msgActivity
             FROM MOBAPP.SC_CHAT_MASTER M
             LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
             LEFT JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
@@ -128,7 +128,7 @@ public class DashAppChatService {
                   ,D.MESSAGES AS messages
                   ,D.CREATE_DATE AS createDate
                   ,M.MSG_ACTIVE AS msgActive
-                  ,D.MSG_ACTIVITY
+                  ,D.MSG_ACTIVITY AS msgActivity
             FROM MOBAPP.SC_CHAT_MASTER M
             LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
             LEFT JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)

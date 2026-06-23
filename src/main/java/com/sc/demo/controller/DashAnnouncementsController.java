@@ -78,4 +78,11 @@ public class DashAnnouncementsController implements SecuredRestController {
         return announcementsService.editAnnouncement(announcementId, title, description, branches, file, token);
     }
 
+    // تثبيت او الغاء تثبيت التبليغ
+    @PutMapping("/V1/api/sc/editAnnouncementPin")
+    public Boolean editAnnouncementPin(@RequestParam Long announcementId,
+                                             @RequestHeader(name = "authorization") String token){
+        return announcementsService.editAnnouncementPin(announcementId, token);
+    }
+
 }

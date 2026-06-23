@@ -92,17 +92,20 @@ public class AppChatService {
         System.out.println(userTokenId);
 
         return jdbcClient.sql("""
-                SELECT M.CHAT_ID AS chatId,
-                       M.CHAT_TITLE AS chatTitle,
-                       D.MESSAGES AS messages,
-                       M.CREATE_DATE AS createDate
+                SELECT M.CHAT_ID AS chatId
+                      ,M.CHAT_TITLE AS chatTitle
+                      ,D.MESSAGES AS messages
+                      ,M.CREATE_DATE AS createDate
+                      ,M.MSG_ACTIVE AS msgActive
+                      ,D.MSG_ACTIVITY AS msgActivity
                 FROM MOBAPP.SC_CHAT_MASTER M
                 JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
-                WHERE M.CREATE_BY = :user_id
-                AND D.MSG_ACTIVITY = 0
+                WHERE M.CREATE_BY = :userId
+                AND M.MSG_ACTIVE = 0
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
+                ORDER BY M.CREATE_DATE DESC
                 """)
-                .param("user_id", userTokenId)
+                .param("userId", userTokenId)
                 .query(AppChatResponse.class)
                 .list();
     }
@@ -113,15 +116,18 @@ public class AppChatService {
         System.out.println(userTokenId);
 
         return jdbcClient.sql("""
-                SELECT M.CHAT_ID AS chatId,
-                       M.CHAT_TITLE AS chatTitle,
-                       D.MESSAGES AS messages,
-                       M.CREATE_DATE AS createDate
+                SELECT M.CHAT_ID AS chatId
+                      ,M.CHAT_TITLE AS chatTitle
+                      ,D.MESSAGES AS messages
+                      ,M.CREATE_DATE AS createDate
+                      ,M.MSG_ACTIVE AS msgActive
+                      ,D.MSG_ACTIVITY AS msgActivity
                 FROM MOBAPP.SC_CHAT_MASTER M
                 JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
                 WHERE M.CREATE_BY = :userId
-                AND D.MSG_ACTIVITY = 1
+                AND M.MSG_ACTIVE IN (1, 2)
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
+                ORDER BY M.CREATE_DATE DESC
                 """)
                 .param("userId", userTokenId)
                 .query(AppChatResponse.class)
@@ -182,7 +188,7 @@ public class AppChatService {
                         PLATFORM AS platForm
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chatId
-                order by CREATE_DATE desc
+                ORDER BY CREATE_DATE DESC
                 """)
                 .param("chatId", chatId)
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoChat/")
