@@ -7,7 +7,7 @@ public record AllPhones(
         Long infoId,
         String phone,
         LocalDate birthDate,
-        Long createBy,
+        String createBy,
         LocalDateTime createDate,
         String headFamilyName,
         String oldFamilyNo

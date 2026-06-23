@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.homePage.homePageResponse;
 import com.sc.demo.model.homePage.linkType;
 import com.sc.demo.service.homePage.HomePageService;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class HomePageController {
+public class HomePageController implements SecuredRestController {
 
     @Autowired
     private HomePageService homePageService;
@@ -29,8 +30,8 @@ public class HomePageController {
     public String addHomePagePhoto(@RequestParam String link,
                                    @RequestParam linkType linkType,
                                    @RequestParam MultipartFile file,
-                                   @RequestParam Long createBy){
-        return homePageService.addHomePagePhoto(linkType, link, file, createBy);
+                                   @RequestHeader(name = "authorization") String token){
+        return homePageService.addHomePagePhoto(linkType, link, file, token);
     }
 
     //  المرفقات في الواجهة

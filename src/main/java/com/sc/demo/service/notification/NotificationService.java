@@ -75,6 +75,7 @@ public class NotificationService {
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
+                    System.out.println(messageList);
                     notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), n.getCreateBy(), notificationMaster));
                 }
             }
@@ -90,6 +91,7 @@ public class NotificationService {
                 .setNotification(firebaseNotification)
                 .setApnsConfig(apnsConfig)
                 .build();
+        System.out.println(message);
         firebaseMessaging.sendAsync(message);
 
         return notificationMaster;

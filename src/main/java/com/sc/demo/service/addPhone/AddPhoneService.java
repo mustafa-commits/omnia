@@ -22,6 +22,9 @@ public class AddPhoneService {
     @Autowired
     private AddPhoneRepo addPhoneRepo;
 
+    @Autowired
+    private TokenService tokenService;
+
     public List<CheckPhoneRequest> checkForTheNumber(long phone){
         return jdbcClient.sql("""
                 SELECT P.PERSON_NAME_FIRST || ' '
@@ -45,7 +48,7 @@ public class AddPhoneService {
                 LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
                 LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
                 LEFT Join AIN_CAPPS.SC_FAMILY_PERSONS P on (R.FAMILY_PERSON_ID = p.FAMILY_PERSONS_ID)
-                LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES V ON V.LOOKUP_CODE = p.FAMILY_TITLE_ID AND v.LOOKUP_TYPE = FAMILY_TITLE'
+                LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES V ON V.LOOKUP_CODE = p.FAMILY_TITLE_ID AND v.LOOKUP_TYPE = 'FAMILY_TITLE'
                 WHERE (F.PHONE1 LIKE '%' || :phone
                    OR F.PHONE2 LIKE '%' || :phone
                    OR F.PHONE3 LIKE '%' || :phone)
@@ -74,30 +77,37 @@ public class AddPhoneService {
                 .list();
     }
 
-    public boolean addPhone(AddPhonRequest addPhonRequest){
-        Optional<FamilyInfo> byHeadAndRequestId = addPhoneRepo.findById(addPhonRequest.headFamilyId());
+    // اضافة رقم هاتف
+    public boolean addPhone(AddPhonRequest addPhonRequest, String token){
+        Optional<FamilyInfo> byHeadAndRequestId = addPhoneRepo.findById(Long.parseLong(addPhonRequest.oldFamilyNo()));
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
+        var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
+        var branches = tokenService.decodeToken(token.substring(7)).getClaim("branches");
+
         if (byHeadAndRequestId.isPresent()){
             return false;
         }else {
-            addPhoneRepo.save(new FamilyInfo(addPhonRequest.guardianName(), addPhonRequest.headFamilyId(), addPhonRequest.requestId(),
-                    addPhonRequest.headFamilyName(), addPhonRequest.createBy(),
+            addPhoneRepo.save(new FamilyInfo(addPhonRequest.guardianName(), Long.parseLong(headFamilyId.toString()), Long.parseLong(requestId.toString()),
+                    addPhonRequest.headFamilyName(), Long.parseLong(employeesId),
                     addPhonRequest.birthDate(), addPhonRequest.phone(),
-                    addPhonRequest.oldFamilyNo(), addPhonRequest.branches()));
+                    addPhonRequest.oldFamilyNo(), String.valueOf(branches)));
             return true;
         }
     }
 
     public List<AllPhones> allNewPhone(){
         return jdbcClient.sql("""
-                SELECT INFO_ID AS infoId,
-                       PHONE AS phone,
-                       BIRTH_DATE AS birthDate,
-                       CREATE_BY AS createBy,
-                       CREATE_DATE AS createDate,
-                       HEAD_FAMILY_NAME AS headFamilyName,
-                       OLD_FAMILY_NO AS oldFamilyNo
-                FROM MOBAPP.SC_FAMILY_INFO
-                ORDER BY CREATE_DATE DESC
+                SELECT F.INFO_ID AS infoId,
+                       F.PHONE AS phone,
+                       F.BIRTH_DATE AS birthDate,
+                       DU.FULL_NAME AS createBy,
+                       F.CREATE_DATE AS createDate,
+                       F.HEAD_FAMILY_NAME AS headFamilyName,
+                       F.OLD_FAMILY_NO AS oldFamilyNo
+                FROM MOBAPP.SC_FAMILY_INFO F
+                LEFT JOIN MOBAPP.SC_DASHBOARD_USERS DU ON F.CREATE_BY = DU.DASHBOARD_USER_ID
+                ORDER BY F.CREATE_DATE DESC
                 """)
                 .query(AllPhones.class)
                 .list();

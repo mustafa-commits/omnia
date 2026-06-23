@@ -5,6 +5,7 @@ import com.sc.demo.model.homePage.homePagePhoto;
 import com.sc.demo.model.homePage.linkType;
 import com.sc.demo.repository.homePage.PhotoRepo;
 import com.sc.demo.service.token.TokenService;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -27,13 +28,17 @@ public class HomePageService {
     @Autowired
     private JdbcClient jdbcClient;
 
-    public String addHomePagePhoto(linkType linkType, String link, MultipartFile file, Long createBy){
+    @Autowired
+    private TokenService tokenService;
+
+    public String addHomePagePhoto(linkType linkType, String link, MultipartFile file, String token){
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         String originalFilename = file.getOriginalFilename();
         String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
         String filePath = environment.getProperty("ATTACHMENT_PATH_HOMEPAGE") + newFilename;
 
-        photoRepo.save(new homePagePhoto(newFilename, linkType, link, createBy));
+        photoRepo.save(new homePagePhoto(newFilename, linkType, link, Long.parseLong(employeesId)));
 
         try {
             file.transferTo(new File(filePath));

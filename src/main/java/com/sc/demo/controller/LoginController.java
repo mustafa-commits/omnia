@@ -2,7 +2,6 @@ package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.dto.login.LogInResponse;
-import com.sc.demo.model.users.PhoneType;
 import com.sc.demo.service.login.LoginService;
 import com.sc.demo.service.token.TokenService;
 import lombok.extern.slf4j.Slf4j;

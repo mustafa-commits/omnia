@@ -1,5 +1,6 @@
 package com.sc.demo.controller;
 
+import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.addPhoneNumber.AddPhonRequest;
 import com.sc.demo.model.dto.addPhoneNumber.AllPhones;
 import com.sc.demo.model.dto.addPhoneNumber.CheckPhoneRequest;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class AddPhoneController {
+public class AddPhoneController implements SecuredRestController {
 
     @Autowired
     private AddPhoneService addPhoneService;
@@ -24,8 +25,9 @@ public class AddPhoneController {
 
     // اضافة رقم هاتف جديد
     @PostMapping("/V1/api/sc/AddNewPhone")
-    public boolean addNewPhone(@RequestBody AddPhonRequest addPhonRequest){
-        return addPhoneService.addPhone(addPhonRequest);
+    public boolean addNewPhone(@RequestBody AddPhonRequest addPhonRequest,
+                               @RequestHeader(name = "authorization") String token){
+        return addPhoneService.addPhone(addPhonRequest, token);
     }
 
     // جلب جميع الاسماء المضافة
