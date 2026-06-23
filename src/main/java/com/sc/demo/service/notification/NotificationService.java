@@ -41,13 +41,14 @@ public class NotificationService {
     private TokenService tokenService;
 
     // انشاء اشعار
-    public NotificationMaster createNotification(NotificationRequest notificationRequest) {
+    public NotificationMaster createNotification(NotificationRequest notificationRequest, String token) {
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Map<String, String> map = new HashMap<>();
         map.put("notification_type", "3");
         map.put("content_available", "1");
 
-        NotificationMaster notificationMaster = new NotificationMaster(notificationRequest.createBy(),
+        NotificationMaster notificationMaster = new NotificationMaster(Long.parseLong(employeesId),
                 notificationRequest.title(), notificationRequest.description(),
                 notificationRequest.sendingType());
 
@@ -63,7 +64,7 @@ public class NotificationService {
         notificationMaster = notificationRepo.save(notificationMaster);
         if (notificationRequest.sendingType().equals(SendingType.PRIVATE)) {
             for (NotificationDetails n : notificationRequest.notificationDetails()) {
-                notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), n.getCreateBy(), notificationMaster));
+                notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(employeesId), notificationMaster));
 
                 Optional<AppToken> byToken = notificationTokenRepo.findById(n.getUserId());
 
@@ -75,8 +76,7 @@ public class NotificationService {
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
-                    System.out.println(messageList);
-                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), n.getCreateBy(), notificationMaster));
+                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(employeesId), notificationMaster));
                 }
             }
             if (messageList.size() >= 1) {
@@ -91,7 +91,6 @@ public class NotificationService {
                 .setNotification(firebaseNotification)
                 .setApnsConfig(apnsConfig)
                 .build();
-        System.out.println(message);
         firebaseMessaging.sendAsync(message);
 
         return notificationMaster;

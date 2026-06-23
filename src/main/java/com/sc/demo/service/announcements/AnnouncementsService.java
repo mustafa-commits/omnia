@@ -73,7 +73,7 @@ public class AnnouncementsService {
                     SELECT T.TOKEN AS token
                           ,U.USER_ID AS userId
                     FROM MOBAPP.SC_APP_USER U
-                    LEFT JOIN MOBAPP.SC_TOKEN T on (U.USER_ID = T.USER_ID)
+                    LEFT JOIN MOBAPP.SC_APP_TOKEN T on (U.USER_ID = T.USER_ID)
                     WHERE U.BRANCHES = :branch
                     """)
                     .param("branch", getUsersInBranch)
@@ -172,9 +172,9 @@ public class AnnouncementsService {
         var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Announcements updateAnnouncement = announcementsRepo.findById(announcementId).get();
-        updateAnnouncement.setTitle(title);
-        updateAnnouncement.setBranches(branches);
-        updateAnnouncement.setDescription(description);
+        updateAnnouncement.setTitle(title != null && !title.isEmpty() ? title : updateAnnouncement.getTitle());
+        updateAnnouncement.setBranches(branches != null && !branches.isEmpty() ? branches : updateAnnouncement.getBranches());
+        updateAnnouncement.setDescription(description != null && !description.isEmpty() ? description : updateAnnouncement.getDescription());
         updateAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
         updateAnnouncement.setLastUpdate(LocalDateTime.now());
 

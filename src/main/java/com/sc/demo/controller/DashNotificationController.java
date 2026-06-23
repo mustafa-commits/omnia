@@ -21,8 +21,9 @@ public class DashNotificationController implements SecuredRestController {
 
     // انشاء اشعار
     @PostMapping("/V1/api/sc/createNotification")
-    public NotificationMaster createNotification(@RequestBody NotificationRequest notificationRequest){
-        return notificationService.createNotification(notificationRequest);
+    public NotificationMaster createNotification(@RequestBody NotificationRequest notificationRequest,
+                                                 @RequestHeader(name = "authorization") String token){
+        return notificationService.createNotification(notificationRequest, token);
     }
 
     // جلب جميع اشعارات الداشبورد للعائلة
@@ -39,9 +40,9 @@ public class DashNotificationController implements SecuredRestController {
     // تعديل اشعار
     @PutMapping("/V1/api/sc/editNotification")
     public Boolean editNotification(@RequestParam Long notificationId,
-                                               @RequestParam(required = false) String title,
-                                               @RequestParam(required = false) String description,
-                                               @RequestHeader(name = "authorization") String token){
+                                   @RequestParam(required = false) String title,
+                                   @RequestParam(required = false) String description,
+                                   @RequestHeader(name = "authorization") String token){
         return notificationService.editNotification(notificationId, title, description, token);
     }
 }

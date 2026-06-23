@@ -39,17 +39,16 @@ public class AppChatService {
     @Autowired
     private ChatTokenRepo chatTokenRepo;
 
-    public boolean createChat(AppChatRequest appChatRequest){
+    public boolean createChat(AppChatRequest appChatRequest, String token){
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
-        AppChatMaster appChatMaster = new AppChatMaster(appChatRequest.createBy(), appChatRequest.chatTitle());
+        AppChatMaster appChatMaster = new AppChatMaster(Long.parseLong(userTokenId), appChatRequest.chatTitle());
 
         appChatMaster = chatRepo.save(appChatMaster);
 
-        Long userIdSender = appChatRequest.createBy();
-
         AppChatDetails appChatDetails = appChatRequest.appChatDetails();
 
-        messagesRepo.save(new AppChatDetails(userIdSender, WhoIsSender.USER, Platform.APP,
+        messagesRepo.save(new AppChatDetails(Long.parseLong(userTokenId), WhoIsSender.USER, Platform.APP,
                 appChatDetails.getMessages(),appChatMaster));
 
         AppChatDetails welcomeMessage = new AppChatDetails();

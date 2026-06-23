@@ -42,7 +42,6 @@ public class homePagePhoto {
         this.fileName = fileName;
         this.linkType = linkType;
         this.link = link;
-        this.createBy = createBy;
     }
 
     @PrePersist
