@@ -9,7 +9,7 @@ public record AppUserStatisticsResponse(
         String branches,
         String guardianName,
         PhoneType phoneType,
-        LocalDateTime timeUsed,
+        LocalDateTime lastUse,
         Long familyPersonsId
 ) {
 }

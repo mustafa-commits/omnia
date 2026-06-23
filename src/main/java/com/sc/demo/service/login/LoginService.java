@@ -2,10 +2,10 @@ package com.sc.demo.service.login;
 
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.dto.login.GetUserIdWithToken;
+import com.sc.demo.model.dto.login.LogInResponse;
 import com.sc.demo.model.users.AppUser;
 import com.sc.demo.model.verification.MethodType;
 import com.sc.demo.model.dto.login.ChekLoginRequest;
-import com.sc.demo.model.dto.login.LogInResponse;
 import com.sc.demo.model.verification.VerificationApp;
 import com.sc.demo.repository.login.AppUserRepo;
 import com.sc.demo.repository.login.VerificationLoginRepo;

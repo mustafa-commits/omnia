@@ -8,7 +8,6 @@ public record DashAppChatResponse(
         String chatTitle,
         String messages,
         LocalDateTime createDate,
-        Long msgActive,
-        Long msgActivity
+        Long msgActive
 ) {
 }

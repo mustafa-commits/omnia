@@ -21,13 +21,14 @@ public class TokenService {
     public String generateToken(String userId, Long requestId, Long headFamilyId, String branches) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
+                .issuer("https://aynyateem.com/")
                 .issuedAt(now)
                 .expiresAt(now.plus(2, ChronoUnit.DAYS))
                 .subject(userId)
                 .claim("requestId", requestId)
                 .claim("headFamilyId", headFamilyId)
                 .claim("branches", branches)
+                .claim("scope", "APP")
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
@@ -36,10 +37,11 @@ public class TokenService {
     public String generateEmployeesToken(String employeesId) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
+                .issuer("https://aynyateem.com/")
                 .issuedAt(now)
                 .expiresAt(now.plus(2, ChronoUnit.DAYS))
                 .subject(employeesId)
+                .claim("scope", "DASHBOARD")
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

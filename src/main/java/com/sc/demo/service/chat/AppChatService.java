@@ -178,11 +178,12 @@ public class AppChatService {
 
 
     public List<MessagesResponse> getMessages(Long chatId, String token){
-        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
         Optional<AppChatDetails> byUserId = messagesRepo.findById(Long.parseLong(userTokenId));
 
-        if (byUserId.isPresent()) {
+        if (byUserId.isPresent() && ("APP".equals(userScope) && byUserId.get().getSeenAt() != null)) {
             byUserId.get().setSeenAt(LocalDateTime.now());
             messagesRepo.save(byUserId.get());
         }
@@ -194,7 +195,9 @@ public class AppChatService {
                         WHO_IS_SENDER AS whoIsSender,
                         CREATE_BY AS createBy,
                         CREATE_DATE AS createDate,
-                        PLATFORM AS platForm
+                        PLATFORM AS platForm,
+                        SEEN_AT AS seenAt,
+                        MSG_ACTIVITY AS msgActivity
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chatId
                 ORDER BY CREATE_DATE DESC

@@ -79,7 +79,16 @@ public class DashAppChatService {
     }
 
     // جلب الرسائل
-    public List<MessagesResponse> getDashMessages(Long chatId){
+    public List<MessagesResponse> getDashMessages(Long chatId, String token){
+
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
+        Optional<AppChatDetails> byUserId = messagesRepo.findById(Long.parseLong(userTokenId));
+
+        if (byUserId.isPresent() && ("DASHBOARD".equals(userScope) && byUserId.get().getSeenAt() != null)) {
+            byUserId.get().setSeenAt(LocalDateTime.now());
+            messagesRepo.save(byUserId.get());
+        }
         System.out.println(chatId);
         return jdbcClient.sql("""
                 SELECT CASE WHEN MSG_TYPE in (1,2) THEN TO_CHAR(:path) || MESSAGES
@@ -87,7 +96,9 @@ public class DashAppChatService {
                         WHO_IS_SENDER AS whoIsSender,
                         CREATE_BY AS createBy,
                         CREATE_DATE AS createDate,
-                        PLATFORM AS platForm
+                        PLATFORM AS platForm,
+                        SEEN_AT AS seenAt,
+                        MSG_ACTIVITY AS msgActivity
                 FROM MOBAPP.SC_CHAT_DETAILS
                 WHERE CHAT_ID = :chatId
                 ORDER BY CREATE_DATE DESC
@@ -107,7 +118,6 @@ public class DashAppChatService {
                   ,D.MESSAGES AS messages
                   ,D.CREATE_DATE AS createDate
                   ,M.MSG_ACTIVE AS msgActive
-                  ,D.MSG_ACTIVITY AS msgActivity
             FROM MOBAPP.SC_CHAT_MASTER M
             LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
             LEFT JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
@@ -128,7 +138,6 @@ public class DashAppChatService {
                   ,D.MESSAGES AS messages
                   ,D.CREATE_DATE AS createDate
                   ,M.MSG_ACTIVE AS msgActive
-                  ,D.MSG_ACTIVITY AS msgActivity
             FROM MOBAPP.SC_CHAT_MASTER M
             LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
             LEFT JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)

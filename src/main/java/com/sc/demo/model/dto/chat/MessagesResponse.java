@@ -9,6 +9,8 @@ public record MessagesResponse(
         WhoIsSender whoIsSender,
         Long createBy,
         LocalDateTime createDate,
-        Long platForm
+        Long platForm,
+        LocalDateTime seenAt,
+        Long msgActivity
 ) {
 }

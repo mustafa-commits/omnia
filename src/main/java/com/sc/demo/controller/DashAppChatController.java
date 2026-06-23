@@ -44,9 +44,10 @@ public class DashAppChatController implements SecuredRestController {
 
     // اظهار الرسائل في الداش بورد
     @GetMapping("/V1/api/sc/getDashMessages")
-    public List<MessagesResponse> getDashMessages(@RequestParam Long chatId){
+    public List<MessagesResponse> getDashMessages(@RequestParam Long chatId,
+                                                  @RequestHeader(name = "authorization") String token){
         System.out.println(chatId);
-        return dashAppChatService.getDashMessages(chatId);
+        return dashAppChatService.getDashMessages(chatId, token);
     }
 
     // اظهار الصور والصوت
