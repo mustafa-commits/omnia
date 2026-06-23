@@ -1,5 +1,6 @@
 package com.sc.demo.service.users;
 
+import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.dto.familyInfo.ChildrenAndMailyFamilyMembersResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoBasicResponse;
 import com.sc.demo.model.dto.familyInfo.FamilyInfoHousingResponse;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FamilyInfoService {
@@ -30,10 +32,11 @@ public class FamilyInfoService {
 
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
-
+        Optional<AppUser> byHeadFamilyId = appTimeUsedRepo.findById(Long.parseLong(headFamilyId.toString()));
         LocalDateTime timeUsed = LocalDateTime.now();
-//        appTimeUsedRepo.save(timeUsed);
-
+        if (byHeadFamilyId.isPresent()) {
+            appTimeUsedRepo.save(timeUsed);
+        }
         return jdbcClient.sql("""
                     SELECT F.OLD_FAMILY_NO AS FamilyNo
                          ,H.FAMILY_PERSONS_ID AS FamilyPersonsId

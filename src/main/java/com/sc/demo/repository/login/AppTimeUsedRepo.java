@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 
 @Repository
-public interface AppTimeUsedRepo extends JpaRepository<AppUser, LocalDateTime> {
+public interface AppTimeUsedRepo extends JpaRepository<AppUser, Long> {
 }
