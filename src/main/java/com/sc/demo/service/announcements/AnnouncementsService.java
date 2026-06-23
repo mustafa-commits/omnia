@@ -1,7 +1,6 @@
 package com.sc.demo.service.announcements;
 
 import com.sc.demo.model.Tokens.AppToken;
-import com.sc.demo.model.Tokens.DashToken;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
@@ -122,6 +121,7 @@ public class AnnouncementsService {
                           ,A.TITLE
                           ,A.DESCRIPTION
                           ,TO_CHAR(:path) || AA.FILE_NAME AS fileName
+                          ,A.PIN AS pin
                    FROM SC_ANNOUNCEMENTS A
                    LEFT JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID
@@ -143,6 +143,7 @@ public class AnnouncementsService {
                          ,TO_CHAR(:path) || AA.FILE_NAME AS fileName
                          ,A.DESCRIPTION
                          ,A.SENDING_TYPE AS sendingType
+                         ,A.PIN AS pin
                    FROM SC_ANNOUNCEMENTS A
                    LEFT JOIN SC_ANNOUNCEMENTS_DETAILS AD ON A.ANNOUNCEMENTS_ID = AD.ANNOUNCEMENTS_ID
                    LEFT JOIN SC_ANNOUNCEMENTS_ATTACHMENT AA ON A.ANNOUNCEMENTS_ID = AA.ANNOUNCEMENTS_ID

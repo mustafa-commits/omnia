@@ -8,6 +8,7 @@ public record AllAnnouncementsFamilyRequest(
         String title,
         String fileName,
         String description,
-        Long sendingType
+        Long sendingType,
+        Long pin
 ) {
 }

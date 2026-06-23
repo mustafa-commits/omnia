@@ -55,7 +55,7 @@ public class DashAnnouncementsController implements SecuredRestController {
         Files.copy(file, response.getOutputStream());
     }
 
-    // جميع تبليغات الداشبورد للعائلة
+    // جميع تبليغات الداش بورد
     @GetMapping("/V1/api/sc/getAllAnnouncementsFamily")
     public List<AllAnnouncementsFamilyRequest> getAllAnnouncementsFamily(){
         return announcementsService.AllAnnouncementsFamily();

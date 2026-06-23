@@ -6,6 +6,7 @@ public record PhoneAnnouncementsRequest(
         String title,
         String description,
         LocalDateTime createDate,
-        String fileName
+        String fileName,
+        Long pin
 ) {
 }

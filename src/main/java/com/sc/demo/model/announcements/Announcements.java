@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.parameters.P;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,10 @@ public class Announcements {
     private String description;
 
     private String branches;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "PIN")
+    private Pin pin = Pin.NOTPIN;
 
     private Integer isActive = 1;
 
