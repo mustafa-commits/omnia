@@ -4,8 +4,8 @@ import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.model.users.AppUser;
+import com.sc.demo.repository.chat.AppChatDetailsRepo;
 import com.sc.demo.repository.chat.ChatTokenRepo;
-import com.sc.demo.repository.chat.MessagesRepo;
 import com.sc.demo.repository.chat.ChatRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class AppChatService {
     private ChatRepo chatRepo;
 
     @Autowired
-    private MessagesRepo messagesRepo;
+    private AppChatDetailsRepo appChatDetailsRepo;
 
     @Autowired
     private Environment environment;
@@ -180,13 +180,16 @@ public class AppChatService {
     public List<MessagesResponse> getMessages(Long chatId){
 //        var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
 
-        AppChatDetails byChatId = messagesRepo.findById(chatId).get();
-        byChatId.setSeenAt(LocalDateTime.now());
-        messagesRepo.save(byChatId);
+//        AppChatDetails byChatId = appChatDetailsRepo.findById(chatId).get();
+//
+//        byChatId.setSeenAt(LocalDateTime.now());
+//        appChatDetailsRepo.save(byChatId);
 //        if ("APP".equals(userScope) && byChatId.get().getSeenAt() != null) {
 //            byChatId.get().setSeenAt(LocalDateTime.now());
 //            messagesRepo.save(byChatId.get());
 //        }
+        jdbcClient.sql("""
+        update SC_CHAT_DETAILS d set d.seen_at=sysdate where d.chat_id=:Id and d.platform=1""").param("Id",chatId).update();
 
         System.out.println(chatId);
         return jdbcClient.sql("""

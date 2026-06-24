@@ -1,5 +1,6 @@
 package com.sc.demo.service.notification;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.*;
 import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.dto.notification.*;
@@ -70,7 +71,8 @@ public class NotificationService {
 
                 if (byToken.isPresent()) {
                     messageList.add(Message.builder()
-                            .setToken(byToken.get().getToken())
+//                            .setToken(byToken.get().getToken())
+                            .setToken("ffr5c50QTJO0U60S38J8V_:APA91bHNTr7qZmFGM4gRJL2Up3DeaTCsARR05xnZ0w7NDqKMTU-_Vl_GKNXx8kJUfeQn8WHEatVahw6EuCIb5-GT4CjzOt1ti5qW_VBd9sPoCo7mGFj5TAs")
                             .putAllData(map)
                             .setNotification(firebaseNotification)
                             .setAndroidConfig(AndroidConfig.builder()
@@ -85,7 +87,12 @@ public class NotificationService {
                 }
             }
             if (messageList.size() >= 1) {
-                firebaseMessaging.sendEachAsync(messageList);
+                try {
+                    System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
+                    System.out.println("\n"+FirebaseMessaging.getInstance(FirebaseApp.getInstance("social-care-app")).sendAsync(messageList.get(0)));
+                } catch (FirebaseMessagingException e) {
+                    throw new RuntimeException(e);
+                }
             }
             return notificationMaster;
         }

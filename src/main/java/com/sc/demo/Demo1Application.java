@@ -32,7 +32,7 @@ public class Demo1Application extends SpringBootServletInitializer {
 		);
 		FirebaseOptions firebaseOptions= FirebaseOptions.builder()
 				.setCredentials(googleCredentials).build();
-		FirebaseApp app=FirebaseApp.initializeApp(firebaseOptions,"sponsor");
+		FirebaseApp app=FirebaseApp.initializeApp(firebaseOptions,"social-care-app");
 		return  FirebaseMessaging.getInstance(app);
 	}
 
