@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.sc</groupId>
 	<artifactId>demo1</artifactId>
-	<version>1.1.21</version>
+	<version>1.1.22</version>
 	<packaging>war</packaging>
 	<name>SC</name>
 	<description>social care app</description>

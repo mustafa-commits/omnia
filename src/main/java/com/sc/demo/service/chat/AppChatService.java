@@ -178,11 +178,17 @@ public class AppChatService {
 
 
     public List<MessagesResponse> getMessages(Long chatId, String token){
-
-        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
         var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
-        Optional<AppChatDetails> byUserId = messagesRepo.findById(Long.parseLong(userTokenId));
+        System.out.println("userScope:" + userScope);
+        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
+        Optional<AppChatDetails> byUserId = messagesRepo.findById(Long.parseLong(userTokenId));
+        System.out.println("byUserId: " + byUserId);
+        if (byUserId.isPresent()) {
+            System.out.println("User found!");
+        } else {
+            System.out.println("User does not exist."); // Handles Optional.empty
+        }
         if (byUserId.isPresent() && ("APP".equals(userScope) && byUserId.get().getSeenAt() != null)) {
             byUserId.get().setSeenAt(LocalDateTime.now());
             messagesRepo.save(byUserId.get());

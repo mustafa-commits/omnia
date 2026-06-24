@@ -204,11 +204,10 @@ public class AnnouncementsService {
 
     // تثبيت او الغاء تثبيت التبليغ
     public Boolean editAnnouncementPin(Long announcementId, String token){
-
         var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Announcements pinAnnouncement = announcementsRepo.findById(announcementId).get();
-        pinAnnouncement.setPin(Pin.PIN);
+        pinAnnouncement.setPin(pinAnnouncement.getPin() != Pin.PIN ? Pin.PIN : Pin.NOTPIN);
         pinAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
         pinAnnouncement.setLastUpdate(LocalDateTime.now());
 

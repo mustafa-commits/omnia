@@ -34,7 +34,7 @@ public class FamilyInfoService {
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Optional<AppUser> byUserId = appUserRepo.findById(Long.parseLong(userTokenId));
-
+        System.out.println("byUserId: " + byUserId);
         if (byUserId.isPresent()) {
             byUserId.get().setLastUse(LocalDateTime.now());
             appUserRepo.save(byUserId.get());
