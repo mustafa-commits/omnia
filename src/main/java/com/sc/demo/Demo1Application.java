@@ -28,7 +28,7 @@ public class Demo1Application extends SpringBootServletInitializer {
 	FirebaseMessaging firebaseMessaging() throws IOException {
 
 		GoogleCredentials googleCredentials=GoogleCredentials.fromStream(
-				new ClassPathResource("Firebase-service-account.json").getInputStream()
+				new ClassPathResource("social-care-app-b940f-firebase-adminsdk-fbsvc-f81543da7b.json").getInputStream()
 		);
 		FirebaseOptions firebaseOptions= FirebaseOptions.builder()
 				.setCredentials(googleCredentials).build();

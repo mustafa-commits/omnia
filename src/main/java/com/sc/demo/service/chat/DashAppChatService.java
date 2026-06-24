@@ -3,7 +3,7 @@ package com.sc.demo.service.chat;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.repository.chat.ChatRepo;
-import com.sc.demo.repository.chat.MessagesRepo;
+import com.sc.demo.repository.chat.AppChatDetailsRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -32,7 +32,7 @@ public class DashAppChatService {
     private Environment environment;
 
     @Autowired
-    private MessagesRepo messagesRepo;
+    private AppChatDetailsRepo appChatDetailsRepo;
 
     // ارسال رسالة في الداش بورد
     public boolean dashWriteMessages(MessagesRequest messagesRequest, MultipartFile file, MultipartFile voice, String token) {
@@ -71,24 +71,23 @@ public class DashAppChatService {
                 Long.parseLong(employeesId), whoIsSender, messagesRequest.platform(),
                 messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
                 messagesRequest.msgType());
-        Long detailsChatId = messagesRepo.save(appChatDetails).getDetailsChatId();
+        Long detailsChatId = appChatDetailsRepo.save(appChatDetails).getDetailsChatId();
         System.out.println(detailsChatId);
         return true;
     }
 
     // جلب الرسائل
     public List<MessagesResponse> getDashMessages(Long chatId){
-        AppChatDetails byChatId = messagesRepo.findById(chatId).get();
-        byChatId.setSeenAt(LocalDateTime.now());
-        messagesRepo.save(byChatId);
-//        var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
-//        Optional<AppChatDetails> byChatId = messagesRepo.findById(chatId);
-
-//        if ("DASHBOARD".equals(userScope) && byChatId.get().getSeenAt() != null) {
-//            byChatId.get().setSeenAt(LocalDateTime.now());
-//            messagesRepo.save(byChatId.get());
-//        }
-        System.out.println(chatId);
+        jdbcClient.sql("""
+                UPDATE MOBAPP.SC_CHAT_DETAILS
+                SET SEEN_AT = SYSDATE
+                WHERE CHAT_ID = :chatId
+                AND PLATFORM = 0
+                AND SEEN_AT IS NULL
+                """)
+                .param("chatId",chatId)
+                .update();
+        
         return jdbcClient.sql("""
                 SELECT CASE WHEN MSG_TYPE in (1,2) THEN TO_CHAR(:path) || MESSAGES
                         ELSE MESSAGES END AS messages,
@@ -166,7 +165,7 @@ public class DashAppChatService {
                 closeMessage.setMsgActivity(MsgActivity.CLOSE_REQUEST);
                 closeMessage.setWhoIsSender(WhoIsSender.SYSTEM);
                 closeMessage.setChatApp(byChatId.get());
-                messagesRepo.save(closeMessage);
+                appChatDetailsRepo.save(closeMessage);
                 byChatId.get().setMsgActive(MsgActive.PENDING);
                 byChatId.get().setLastUpdate(LocalDateTime.now());
                 byChatId.get().setLastUpdateBy(Long.parseLong(employeesId));
@@ -190,8 +189,9 @@ public class DashAppChatService {
             closeChat.setCreateBy(Long.parseLong(userTokenId));
             closeChat.setPlatform(Platform.SYSTEM);
             closeChat.setMsgActivity(MsgActivity.NOT_ACTIVE);
+            closeChat.setConfirmProcedure(ConfirmProcedure.YES);
             closeChat.setChatApp(byChatId.get());
-            messagesRepo.save(closeChat);
+            appChatDetailsRepo.save(closeChat);
             byChatId.get().setMsgActive(MsgActive.ARCHIVED);
             byChatId.get().setLastUpdate(LocalDateTime.now());
             byChatId.get().setLastUpdateBy(Long.parseLong(userTokenId));
@@ -205,8 +205,9 @@ public class DashAppChatService {
             openChat.setCreateBy(Long.parseLong(userTokenId));
             openChat.setPlatform(Platform.SYSTEM);
             openChat.setMsgActivity(MsgActivity.ACTIVE);
+            openChat.setConfirmProcedure(ConfirmProcedure.NO);
             openChat.setChatApp(byChatId.get());
-            messagesRepo.save(openChat);
+            appChatDetailsRepo.save(openChat);
             byChatId.get().setMsgActive(MsgActive.ACTIVE);
             byChatId.get().setLastUpdate(LocalDateTime.now());
             byChatId.get().setLastUpdateBy(Long.parseLong(userTokenId));

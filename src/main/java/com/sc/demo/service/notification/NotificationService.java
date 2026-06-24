@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class NotificationService {
@@ -59,7 +56,7 @@ public class NotificationService {
                 .setBody(notificationRequest.description())
                 .build();
 
-        List<Message> messageList = List.of();
+        List<Message> messageList = new ArrayList<>();
         ApnsConfig apnsConfig = getApnsConfig();
 
         notificationMaster = notificationRepo.save(notificationMaster);
@@ -71,13 +68,12 @@ public class NotificationService {
 
                 if (byToken.isPresent()) {
                     messageList.add(Message.builder()
-//                            .setToken(byToken.get().getToken())
-                            .setToken("ffr5c50QTJO0U60S38J8V_:APA91bHNTr7qZmFGM4gRJL2Up3DeaTCsARR05xnZ0w7NDqKMTU-_Vl_GKNXx8kJUfeQn8WHEatVahw6EuCIb5-GT4CjzOt1ti5qW_VBd9sPoCo7mGFj5TAs")
+                            .setToken(byToken.get().getToken())
                             .putAllData(map)
                             .setNotification(firebaseNotification)
                             .setAndroidConfig(AndroidConfig.builder()
                                             .setNotification(AndroidNotification.builder()
-                                                            .setChannelId("aynFamily")
+                                                            .setChannelId("ayn Family")
                                                             .build())
                                             .build())
                             .setApnsConfig(apnsConfig)
@@ -89,7 +85,6 @@ public class NotificationService {
             if (messageList.size() >= 1) {
                 try {
                     System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
-                    System.out.println("\n"+FirebaseMessaging.getInstance(FirebaseApp.getInstance("social-care-app")).sendAsync(messageList.get(0)));
                 } catch (FirebaseMessagingException e) {
                     throw new RuntimeException(e);
                 }

@@ -1,9 +1,9 @@
 package com.sc.demo.service.chat;
 
+import com.google.firebase.messaging.*;
 import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
-import com.sc.demo.model.users.AppUser;
 import com.sc.demo.repository.chat.AppChatDetailsRepo;
 import com.sc.demo.repository.chat.ChatTokenRepo;
 import com.sc.demo.repository.chat.ChatRepo;
@@ -16,8 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AppChatService {
@@ -43,13 +42,27 @@ public class AppChatService {
     public boolean createChat(AppChatRequest appChatRequest, String token){
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
+        Map<String, String> map = new HashMap<>();
+        map.put("chatId", "3");
+        map.put("chatTitle", "3");
+        map.put("messages", "3");
+        map.put("content_available", "1");
+
         AppChatMaster appChatMaster = new AppChatMaster(Long.parseLong(userTokenId), appChatRequest.chatTitle());
+        Notification firebaseNotification = Notification
+                .builder()
+                .setTitle(appChatRequest.chatTitle())
+                .setBody(appChatRequest.appChatDetails().getMessages())
+                .build();
+
+        List<Message> messageList = new ArrayList<>();
+        ApnsConfig apnsConfig = getApnsConfig();
 
         appChatMaster = chatRepo.save(appChatMaster);
 
         AppChatDetails appChatDetails = appChatRequest.appChatDetails();
 
-        messagesRepo.save(new AppChatDetails(Long.parseLong(userTokenId), WhoIsSender.USER, Platform.APP,
+        appChatDetailsRepo.save(new AppChatDetails(Long.parseLong(userTokenId), WhoIsSender.USER, Platform.APP,
                 appChatDetails.getMessages(),appChatMaster));
 
         AppChatDetails welcomeMessage = new AppChatDetails();
@@ -64,7 +77,7 @@ public class AppChatService {
                 مع الشكر والتقدير
                 """);
 
-        messagesRepo.save(welcomeMessage);
+        appChatDetailsRepo.save(welcomeMessage);
 
         return true;
     }
@@ -171,25 +184,22 @@ public class AppChatService {
                 Long.parseLong(userTokenId), whoIsSender,
                 messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
                 messagesRequest.msgType());
-        Long detailsChatId = messagesRepo.save(appChatDetails).getDetailsChatId();
+        Long detailsChatId = appChatDetailsRepo.save(appChatDetails).getDetailsChatId();
         System.out.println(detailsChatId);
         return true;
     }
 
 
     public List<MessagesResponse> getMessages(Long chatId){
-//        var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
-
-//        AppChatDetails byChatId = appChatDetailsRepo.findById(chatId).get();
-//
-//        byChatId.setSeenAt(LocalDateTime.now());
-//        appChatDetailsRepo.save(byChatId);
-//        if ("APP".equals(userScope) && byChatId.get().getSeenAt() != null) {
-//            byChatId.get().setSeenAt(LocalDateTime.now());
-//            messagesRepo.save(byChatId.get());
-//        }
         jdbcClient.sql("""
-        update SC_CHAT_DETAILS d set d.seen_at=sysdate where d.chat_id=:Id and d.platform=1""").param("Id",chatId).update();
+                UPDATE MOBAPP.SC_CHAT_DETAILS
+                SET SEEN_AT = SYSDATE
+                WHERE CHAT_ID = :chatId
+                AND PLATFORM IN (1, 2)
+                AND SEEN_AT IS NULL
+                """)
+                .param("chatId",chatId)
+                .update();
 
         System.out.println(chatId);
         return jdbcClient.sql("""
@@ -209,6 +219,14 @@ public class AppChatService {
                 .param("path", "http://37.239.42.53:1801/socialCare/V1/api/sc/photoChat/")
                 .query(MessagesResponse.class)
                 .list();
+    }
+
+    private ApnsConfig getApnsConfig() {
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("content_available",1);
+        ApsAlert apsAlert= ApsAlert.builder().setTitle("AL-AYN Family").setSubtitle("اشعار").build();
+        return ApnsConfig.builder()
+                .setAps(Aps.builder().setSound("1").putAllCustomData(map2).setAlert(apsAlert).build()).build();
     }
 
 }
