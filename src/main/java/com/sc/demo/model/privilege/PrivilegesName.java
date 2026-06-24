@@ -1,4 +1,4 @@
-package com.sc.demo.model.employees;
+package com.sc.demo.model.privilege;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

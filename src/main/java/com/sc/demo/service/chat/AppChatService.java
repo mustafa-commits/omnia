@@ -59,7 +59,7 @@ public class AppChatService {
         welcomeMessage.setMessages("""
                 السلام عليكم ورحمة الله وبركاته
                 نود أن نلفت عنايتكم ألى ان كادر الدعم الفني متواجدين للإجابة على استفساراتكم من الساعة ( 8:00 )
-                 صباحاً لغاية الساعة ( 4:00 ) مساءً  طيلة أيام الأسبوع باستثناء يومي الخميس الجمعة,
+                صباحاً لغاية الساعة ( 4:00 ) مساءً  طيلة أيام الأسبوع باستثناء يومي الخميس الجمعة,
                 لطفاً يرجى ارسال استفسارك بالتفصيل ليتسنى لنا الإجابة على طلبكم بأسرع وقت ممكن ,
                 مع الشكر والتقدير
                 """);
@@ -69,7 +69,7 @@ public class AppChatService {
         return true;
     }
 
-    // حفظ Token القادم من firebase في قاعدة البيانات
+    // حفظ Token القادم من fireBase في قاعدة البيانات
     public long saveToken(ChatTokenRequest chatTokenRequest) {
         Optional<AppToken> byToken = chatTokenRepo.findById(chatTokenRequest.userId());
 
@@ -101,7 +101,7 @@ public class AppChatService {
                 FROM MOBAPP.SC_CHAT_MASTER M
                 JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
                 WHERE M.CREATE_BY = :userId
-                AND M.MSG_ACTIVE = 0
+                AND M.MSG_ACTIVE IN (0, 1)
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 ORDER BY M.CREATE_DATE DESC
                 """)
@@ -125,7 +125,7 @@ public class AppChatService {
                 FROM MOBAPP.SC_CHAT_MASTER M
                 JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
                 WHERE M.CREATE_BY = :userId
-                AND M.MSG_ACTIVE IN (1, 2)
+                AND M.MSG_ACTIVE = 2
                 AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D.CHAT_ID = D1.CHAT_ID)
                 ORDER BY M.CREATE_DATE DESC
                 """)
@@ -179,20 +179,12 @@ public class AppChatService {
 
     public List<MessagesResponse> getMessages(Long chatId, String token){
         var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
-        System.out.println("userScope:" + userScope);
-        var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
+        Optional<AppChatDetails> byChatId = messagesRepo.findById(chatId);
 
-        Optional<AppChatDetails> byUserId = messagesRepo.findById(Long.parseLong(userTokenId));
-        System.out.println("byUserId: " + byUserId);
-        if (byUserId.isPresent()) {
-            System.out.println("User found!");
-        } else {
-            System.out.println("User does not exist."); // Handles Optional.empty
-        }
-        if (byUserId.isPresent() && ("APP".equals(userScope) && byUserId.get().getSeenAt() != null)) {
-            byUserId.get().setSeenAt(LocalDateTime.now());
-            messagesRepo.save(byUserId.get());
-        }
+//        if ("APP".equals(userScope) && byChatId.get().getSeenAt() != null) {
+            byChatId.get().setSeenAt(LocalDateTime.now());
+            messagesRepo.save(byChatId.get());
+//        }
 
         System.out.println(chatId);
         return jdbcClient.sql("""

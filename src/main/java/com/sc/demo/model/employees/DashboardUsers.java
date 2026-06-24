@@ -1,5 +1,7 @@
 package com.sc.demo.model.employees;
 
+import com.sc.demo.model.privilege.PrivilegesDashboard;
+import com.sc.demo.model.privilege.PrivilegesName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,13 +18,13 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccessToDashboard {
+public class DashboardUsers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dashboardUserId;
 
-    @OneToMany(mappedBy = "dashboardUserId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "DASHBOARD_USER_ID", cascade = CascadeType.ALL)
     private List<PrivilegesDashboard> privilegesDashboards = new ArrayList<>();
 
     @Column(length = 50)
@@ -35,8 +37,7 @@ public class AccessToDashboard {
 
     private String password;
 
-    @Enumerated(EnumType.ORDINAL)
-    private Department departmentId;
+    private Long departmentId;
 
     private PrivilegesName privilegesName;
 
@@ -50,9 +51,9 @@ public class AccessToDashboard {
 
     private Long lastUpdateBy;
 
-    public AccessToDashboard(String phone, Department departmentId, String password,
-                             String userName, String fullName, PrivilegesName privilegesName,
-                             Long createBy) {
+    public DashboardUsers(String phone, Long departmentId, String password,
+                          String userName, String fullName, PrivilegesName privilegesName,
+                          Long createBy) {
         Phone = phone;
         this.departmentId = departmentId;
         this.password = password;

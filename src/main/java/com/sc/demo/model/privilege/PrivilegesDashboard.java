@@ -1,5 +1,6 @@
-package com.sc.demo.model.employees;
+package com.sc.demo.model.privilege;
 
+import com.sc.demo.model.employees.DashboardUsers;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,12 +22,12 @@ public class PrivilegesDashboard {
     private Long privilegeId;
 
     @ManyToOne
-    @JoinColumn(name = "dashboard_fk")
-    private AccessToDashboard dashboardUserId;
+    @JoinColumn(name = "DASHBOARD_USER_ID")
+    private DashboardUsers dashboardUserId;
 
     private String userPrivilege;
 
-    private String privilegeName;
+    private PrivilegesName privilegeName;
 
     private Integer isActive = 1;
 
@@ -38,12 +39,11 @@ public class PrivilegesDashboard {
 
     private Long lastUpdateBy;
 
-    public PrivilegesDashboard(AccessToDashboard dashboardUserId, String userPrivilege,
-                               String privilegeName, Long createBy) {
+    public PrivilegesDashboard(DashboardUsers dashboardUserId, String userPrivilege,
+                               PrivilegesName privilegeName, Long createBy) {
         this.dashboardUserId = dashboardUserId;
         this.userPrivilege = userPrivilege;
         this.privilegeName = privilegeName;
-        this.createBy = createBy;
     }
 
     @PrePersist

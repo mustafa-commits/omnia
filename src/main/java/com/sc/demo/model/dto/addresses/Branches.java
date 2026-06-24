@@ -1,4 +1,4 @@
-package com.sc.demo.model.dto.branches;
+package com.sc.demo.model.dto.addresses;
 
 public record Branches(
         String code,

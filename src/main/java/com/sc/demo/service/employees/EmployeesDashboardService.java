@@ -3,7 +3,7 @@ package com.sc.demo.service.employees;
 import com.sc.demo.model.dto.employees.EmployeesRequest;
 import com.sc.demo.model.dto.employees.EmployeesResponse;
 import com.sc.demo.model.dto.login.GetUserIdWithToken;
-import com.sc.demo.model.employees.AccessToDashboard;
+import com.sc.demo.model.employees.DashboardUsers;
 import com.sc.demo.repository.employees.AddEmployeesRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +25,12 @@ public class EmployeesDashboardService {
     @Autowired
     private TokenService tokenService;
 
-    public Boolean addEmployees(EmployeesResponse employeesResponse){
-        addEmployeesRepo.save(new AccessToDashboard(employeesResponse.phone(), employeesResponse.departmentId(),
+    public Boolean addEmployees(EmployeesResponse employeesResponse, String token){
+        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+
+        addEmployeesRepo.save(new DashboardUsers(employeesResponse.phone(), employeesResponse.departmentId(),
                 employeesResponse.password(), employeesResponse.userName(), employeesResponse.fullName(),
-                employeesResponse.privilegesName(), employeesResponse.createBy()));
+                employeesResponse.privilegesName(), Long.parseLong(employeesId)));
 
         return true;
     }
@@ -47,9 +49,9 @@ public class EmployeesDashboardService {
                 .list();
     }
 
-    // التحقق من مستخدم الداشبورد
+    // التحقق من مستخدم الداش بورد
     public GetUserIdWithToken loginEmployee(String userName, String password){
-        Optional<AccessToDashboard> dashboardCheck = jdbcClient.sql("""
+        Optional<DashboardUsers> dashboardCheck = jdbcClient.sql("""
                 SELECT DASHBOARD_USER_ID AS dashboardUserId
                 FROM MOBAPP.SC_DASHBOARD_USERS
                 WHERE USER_NAME = :userName
@@ -57,7 +59,7 @@ public class EmployeesDashboardService {
                 """)
                 .param("userName", userName)
                 .param("password", password)
-                .query(AccessToDashboard.class)
+                .query(DashboardUsers.class)
                 .optional();
 
         if (dashboardCheck.isPresent()) {

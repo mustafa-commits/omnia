@@ -1,9 +1,7 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.dto.notification.AllNotificationFamilyRequest;
-import com.sc.demo.model.dto.notification.NotificationByType;
 import com.sc.demo.model.dto.notification.NotificationRequest;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.service.notification.NotificationService;
@@ -26,7 +24,7 @@ public class DashNotificationController implements SecuredRestController {
         return notificationService.createNotification(notificationRequest, token);
     }
 
-    // جلب جميع اشعارات الداشبورد للعائلة
+    // جلب جميع اشعارات الداش بورد للعائلة
     @GetMapping("/V1/api/sc/getAllNotificationFamily")
     public List<AllNotificationFamilyRequest> getAllNotificationFamily(){
         return notificationService.AllNotificationFamily();

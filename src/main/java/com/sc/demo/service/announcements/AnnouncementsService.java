@@ -135,7 +135,7 @@ public class AnnouncementsService {
                 .list();
     }
 
-    // الداشبورد جميع التبليغات التي تصل للعائلة اذا كانت خاصة او عامة
+    // الداش بورد جميع التبليغات التي تصل للعائلة اذا كانت خاصة او عامة
     public List<AllAnnouncementsFamilyRequest> AllAnnouncementsFamily() {
         return jdbcClient.sql("""
                    SELECT A.ANNOUNCEMENTS_ID AS announcementsId

@@ -33,7 +33,7 @@ public class TokenService {
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    // انشاء توكن مستخدمي الداشبورد
+    // انشاء توكن مستخدمي الداش بورد
     public String generateEmployeesToken(String employeesId) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()

@@ -1,6 +1,7 @@
 package com.sc.demo.controller;
 
-import com.sc.demo.model.dto.branches.Branches;
+import com.sc.demo.model.dto.addresses.Branches;
+import com.sc.demo.model.dto.addresses.Departments;
 import com.sc.demo.service.address.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,5 +21,11 @@ public class AddressController {
     @GetMapping("/V1/api/sc/getBranches")
     public List<Branches> getBranches(){
         return addressService.getBranches();
+    }
+
+    // اقسام المؤسسة
+    @GetMapping("/V1/api/sc/getDepartments")
+    public List<Departments> getDepartments(){
+        return addressService.getDepartments();
     }
 }

@@ -69,7 +69,7 @@ public class AppChatController implements SecuredRestController {
 
     // اظهار الرسائل في المحادثات
     @GetMapping("/V1/api/sc/getMessagesChat")
-    public List<MessagesResponse> getMessages(@RequestParam long chatId,
+    public List<MessagesResponse> getMessages(@RequestParam Long chatId,
                                               @RequestHeader(name = "authorization") String token){
         System.out.println(chatId);
         return appChatService.getMessages(chatId, token);

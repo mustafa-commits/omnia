@@ -1,11 +1,10 @@
 package com.sc.demo.model.dto.employees;
 
-import com.sc.demo.model.employees.Department;
-import com.sc.demo.model.employees.PrivilegesName;
+import com.sc.demo.model.privilege.PrivilegesName;
 
 public record EmployeesResponse(
         String phone,
-        Department departmentId,
+        Long departmentId,
         String password,
         String userName,
         String fullName,

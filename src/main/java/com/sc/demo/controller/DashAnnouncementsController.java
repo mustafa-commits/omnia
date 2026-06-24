@@ -39,7 +39,7 @@ public class DashAnnouncementsController implements SecuredRestController {
                 (title, description, branches, sendingType, null), file, userId, token);
     }
 
-    //  المرفقات مع التبليغات الداشبورد
+    //  المرفقات مع التبليغات الداش بورد
     @GetMapping("/V1/api/sc/allAnnouncementsPhotos/{filename:.+}")
     public void serveAllFile(
             @PathVariable String filename,

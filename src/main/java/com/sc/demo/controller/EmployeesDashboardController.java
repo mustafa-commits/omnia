@@ -16,10 +16,11 @@ public class EmployeesDashboardController {
     @Autowired
     private EmployeesDashboardService employeesDashboardService;
 
-    // اضافة مستخدمي الداشبورد
+    // اضافة مستخدمي الداش بورد
     @PostMapping("/V1/api/sc/newDashboardAccess")
-    public Boolean addEmployees(@RequestBody EmployeesResponse employeesResponse){
-        return employeesDashboardService.addEmployees(employeesResponse);
+    public Boolean addEmployees(@RequestBody EmployeesResponse employeesResponse,
+                                @RequestHeader(name = "authorization") String token){
+        return employeesDashboardService.addEmployees(employeesResponse, token);
     }
 
     // جلب الموضفين المضافين
@@ -31,7 +32,7 @@ public class EmployeesDashboardController {
     // تأكد من تسجيل دخول المستخدم الى الداش بورد
     @PostMapping("/V1/api/sc/loginEmployee")
     public GetUserIdWithToken loginEmployee(@RequestParam String userName,
-                                              @RequestParam String password){
+                                            @RequestParam String password){
         return employeesDashboardService.loginEmployee(userName, password);
     }
 }

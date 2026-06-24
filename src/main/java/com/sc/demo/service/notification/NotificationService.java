@@ -130,7 +130,7 @@ public class NotificationService {
                 .list();
     }
 
-    // الداشبورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
+    // الداش بورد جميع الاشعارات التي تصل للعائلة اذا كانت خاصة او عامة
     public List<AllNotificationFamilyRequest> AllNotificationFamily() {
 
         return jdbcClient.sql("""

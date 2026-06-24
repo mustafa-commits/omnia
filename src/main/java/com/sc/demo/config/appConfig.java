@@ -12,7 +12,6 @@ import javax.sql.DataSource;
 @Configuration
 public class appConfig {
 
-
     @Value("${url}")
     private String URL;
 
