@@ -24,7 +24,7 @@ public class DashboardUsers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dashboardUserId;
 
-    @OneToMany(mappedBy = "DASHBOARD_USER_ID", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dashboardUserId", cascade = CascadeType.ALL)
     private List<PrivilegesDashboard> privilegesDashboards = new ArrayList<>();
 
     @Column(length = 50)

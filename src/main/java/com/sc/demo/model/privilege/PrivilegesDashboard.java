@@ -39,7 +39,7 @@ public class PrivilegesDashboard {
 
     private Long lastUpdateBy;
 
-    public PrivilegesDashboard(DashboardUsers dashboardUserId, String userPrivilege,
+    public PrivilegesDashboard(String userPrivilege,
                                PrivilegesName privilegeName, Long createBy) {
         this.dashboardUserId = dashboardUserId;
         this.userPrivilege = userPrivilege;

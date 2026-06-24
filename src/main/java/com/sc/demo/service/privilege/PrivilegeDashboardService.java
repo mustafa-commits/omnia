@@ -26,8 +26,7 @@ public class PrivilegeDashboardService {
         var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
         Optional<DashboardUsers> byEmployeeId = addEmployeesRepo.findById(Long.parseLong(employeesId));
 
-        privilegesEmployeeRepo.save(new PrivilegesDashboard(byEmployeeId.get().setDashboardUserId(),
-                userPrivilege, privilegeName, Long.parseLong(employeesId)));
+        privilegesEmployeeRepo.save(new PrivilegesDashboard(userPrivilege, privilegeName, Long.parseLong(employeesId)));
         return true;
     }
 }

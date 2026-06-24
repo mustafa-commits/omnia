@@ -77,13 +77,16 @@ public class DashAppChatService {
     }
 
     // جلب الرسائل
-    public List<MessagesResponse> getDashMessages(Long chatId, String token){
-        var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
-        Optional<AppChatDetails> byChatId = messagesRepo.findById(chatId);
+    public List<MessagesResponse> getDashMessages(Long chatId){
+        AppChatDetails byChatId = messagesRepo.findById(chatId).get();
+        byChatId.setSeenAt(LocalDateTime.now());
+        messagesRepo.save(byChatId);
+//        var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
+//        Optional<AppChatDetails> byChatId = messagesRepo.findById(chatId);
 
 //        if ("DASHBOARD".equals(userScope) && byChatId.get().getSeenAt() != null) {
-            byChatId.get().setSeenAt(LocalDateTime.now());
-            messagesRepo.save(byChatId.get());
+//            byChatId.get().setSeenAt(LocalDateTime.now());
+//            messagesRepo.save(byChatId.get());
 //        }
         System.out.println(chatId);
         return jdbcClient.sql("""
@@ -117,7 +120,7 @@ public class DashAppChatService {
             FROM MOBAPP.SC_CHAT_MASTER M
             LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
             LEFT JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
-            WHERE M.MSG_ACTIVE IN (0, 1)
+            WHERE M.MSG_ACTIVE = 0
             AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
             ORDER BY M.CREATE_DATE DESC
             """)
@@ -137,7 +140,7 @@ public class DashAppChatService {
             FROM MOBAPP.SC_CHAT_MASTER M
             LEFT JOIN MOBAPP.SC_CHAT_DETAILS D ON (M.CHAT_ID = D.CHAT_ID)
             LEFT JOIN MOBAPP.SC_APP_USER U ON (M.CREATE_BY = U.USER_ID)
-            WHERE M.MSG_ACTIVE = 2
+            WHERE M.MSG_ACTIVE IN (1, 2)
             AND D.CREATE_DATE = (SELECT MAX(CREATE_DATE) FROM MOBAPP.SC_CHAT_DETAILS D1 WHERE D1.CHAT_ID = D.CHAT_ID)
             ORDER BY M.CREATE_DATE DESC
             """)

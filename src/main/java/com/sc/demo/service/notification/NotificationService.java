@@ -73,6 +73,11 @@ public class NotificationService {
                             .setToken(byToken.get().getToken())
                             .putAllData(map)
                             .setNotification(firebaseNotification)
+                            .setAndroidConfig(AndroidConfig.builder()
+                                            .setNotification(AndroidNotification.builder()
+                                                            .setChannelId("aynFamily")
+                                                            .build())
+                                            .build())
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
@@ -176,7 +181,7 @@ public class NotificationService {
     private ApnsConfig getApnsConfig() {
         Map<String, Object> map2 = new HashMap<>();
         map2.put("content_available",1);
-        ApsAlert apsAlert= ApsAlert.builder().setTitle("AL-AYN").setSubtitle("اشعار").build();
+        ApsAlert apsAlert= ApsAlert.builder().setTitle("AL-AYN Family").setSubtitle("اشعار").build();
         return ApnsConfig.builder()
                 .setAps(Aps.builder().setSound("1").putAllCustomData(map2).setAlert(apsAlert).build()).build();
     }

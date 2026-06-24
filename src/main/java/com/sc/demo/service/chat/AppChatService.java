@@ -177,13 +177,15 @@ public class AppChatService {
     }
 
 
-    public List<MessagesResponse> getMessages(Long chatId, String token){
-        var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
-        Optional<AppChatDetails> byChatId = messagesRepo.findById(chatId);
+    public List<MessagesResponse> getMessages(Long chatId){
+//        var userScope = tokenService.decodeToken(token.substring(7)).getClaim("scope");
 
+        AppChatDetails byChatId = messagesRepo.findById(chatId).get();
+        byChatId.setSeenAt(LocalDateTime.now());
+        messagesRepo.save(byChatId);
 //        if ("APP".equals(userScope) && byChatId.get().getSeenAt() != null) {
-            byChatId.get().setSeenAt(LocalDateTime.now());
-            messagesRepo.save(byChatId.get());
+//            byChatId.get().setSeenAt(LocalDateTime.now());
+//            messagesRepo.save(byChatId.get());
 //        }
 
         System.out.println(chatId);
