@@ -22,8 +22,8 @@ public class PermissionGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupId;
 
-    @OneToMany(mappedBy = "permissionGroup", cascade = CascadeType.ALL)
-    private List<Permissions> privilegeGroupId = new ArrayList<>();
+//    @OneToMany(mappedBy = "permissionGroup", cascade = CascadeType.ALL)
+//    private List<Permissions> privilegeGroupId = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "groupId")
