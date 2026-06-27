@@ -191,7 +191,6 @@ public class AppChatService {
     // ارسال رسالة في التطبيق
     public boolean writeMessages(MessagesRequest messagesRequest, MultipartFile file, MultipartFile voice, String token) {
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
-
         String newFileName = null;
 
         Map<String, String> map = new HashMap<>();
