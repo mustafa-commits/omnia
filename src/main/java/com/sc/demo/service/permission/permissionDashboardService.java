@@ -1,20 +1,19 @@
-package com.sc.demo.service.privilege;
+package com.sc.demo.service.permission;
 
 import com.sc.demo.model.employees.DashboardUsers;
-import com.sc.demo.model.privilege.Permissions;
-import com.sc.demo.model.privilege.PrivilegesName;
+import com.sc.demo.model.permission.Permissions;
 import com.sc.demo.repository.employees.AddEmployeesRepo;
-import com.sc.demo.repository.privilege.PrivilegesEmployeeRepo;
+import com.sc.demo.repository.permission.permissionEmployeeRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class PrivilegeDashboardService {
+public class permissionDashboardService {
 
     @Autowired
-    private PrivilegesEmployeeRepo privilegesEmployeeRepo;
+    private permissionEmployeeRepo permissionEmployeeRepo;
 
     @Autowired
     private AddEmployeesRepo addEmployeesRepo;
@@ -22,11 +21,11 @@ public class PrivilegeDashboardService {
     @Autowired
     private TokenService tokenService;
 
-    public Boolean addPrivileges(PrivilegesName privilegeName, String userPrivilege, String token){
+    public Boolean addpermission(String permissionName, String userpermission, String token){
         var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
         Optional<DashboardUsers> byEmployeeId = addEmployeesRepo.findById(Long.parseLong(employeesId));
 
-        privilegesEmployeeRepo.save(new Permissions(userPrivilege, privilegeName, Long.parseLong(employeesId)));
+        permissionEmployeeRepo.save(new Permissions(userpermission, permissionName, Long.parseLong(employeesId)));
         return true;
     }
 }

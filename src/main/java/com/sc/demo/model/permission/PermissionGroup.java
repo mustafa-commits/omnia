@@ -1,5 +1,6 @@
-package com.sc.demo.model.privilege;
+package com.sc.demo.model.permission;
 
+import com.sc.demo.model.employees.DashboardUsers;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,24 +9,26 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sc_dashboard_privileges")
+@Table(name = "sc_dashboard_group_permissions")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Permissions {
+public class PermissionGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long privilegeId;
+    private Long groupId;
 
     @ManyToOne
-    @JoinColumn(name = "groupId")
-    private PermissionGroup permissionGroup;
+    @JoinColumn(name = "dashboardUsers")
+    private DashboardUsers dashboardUsers;
 
-    private String userPrivilege;
+    @ManyToOne
+    @JoinColumn(name = "permissionsGroupId")
+    private Permissions permissions;
 
-    private PrivilegesName privilegeName;
+    private String permissionName;
 
     private Integer isActive = 1;
 
@@ -37,12 +40,6 @@ public class Permissions {
 
     private Long lastUpdateBy;
 
-    public Permissions(String userPrivilege, PrivilegesName privilegeName, Long createBy) {
-        this.userPrivilege = userPrivilege;
-        this.privilegeName = privilegeName;
-    }
-
     @PrePersist
     public void prePersist(){this.createDate = LocalDateTime.now(); }
-
 }

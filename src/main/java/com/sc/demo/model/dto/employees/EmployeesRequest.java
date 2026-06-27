@@ -4,7 +4,7 @@ public record EmployeesRequest(
         Long dashboardUserId,
         String PHONE,
         String fullName,
-        Long privilegesName,
+        Long permissionName,
         String userName
 ) {
 }

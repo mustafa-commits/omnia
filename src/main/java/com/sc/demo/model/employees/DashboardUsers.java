@@ -1,7 +1,7 @@
 package com.sc.demo.model.employees;
 
 
-import com.sc.demo.model.privilege.PrivilegesName;
+import com.sc.demo.model.permission.PermissionGroup;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,8 +24,8 @@ public class DashboardUsers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dashboardUserId;
 
-    @OneToMany(mappedBy = "groupId", cascade = CascadeType.ALL)
-    private List<PrivilegesGroup> groupId = new ArrayList<>();
+    @OneToMany(mappedBy = "dashboardUsers", cascade = CascadeType.ALL)
+    private List<PermissionGroup> PermissionGroupId = new ArrayList<>();
 
     @Column(length = 50)
     private String userName;
@@ -39,8 +39,6 @@ public class DashboardUsers {
 
     private Long departmentId;
 
-    private PrivilegesName privilegesName;
-
     private Integer isActive = 1;
 
     private LocalDateTime createDate;
@@ -52,14 +50,12 @@ public class DashboardUsers {
     private Long lastUpdateBy;
 
     public DashboardUsers(String phone, Long departmentId, String password,
-                          String userName, String fullName, PrivilegesName privilegesName,
-                          Long createBy) {
+                          String userName, String fullName, Long createBy) {
         Phone = phone;
         this.departmentId = departmentId;
         this.password = password;
         this.userName = userName;
         this.fullName = fullName;
-        this.privilegesName = privilegesName;
         this.createBy = createBy;
     }
 
