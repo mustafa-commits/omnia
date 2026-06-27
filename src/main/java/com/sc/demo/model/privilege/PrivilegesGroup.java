@@ -6,26 +6,28 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "sc_dashboard_privileges")
+@Table(name = "sc_dashboard_group")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PrivilegesDashboard {
+public class PrivilegesGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long privilegeId;
+    private Long groupId;
+
+    @OneToMany(mappedBy = "privilegeGroupId", cascade = CascadeType.ALL)
+    private List<PrivilegesDashboard> privilegeGroupId = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "groupId")
-    private PrivilegesGroup privilegeGroupId;
-
-    private String userPrivilege;
+    private PrivilegesDashboard privilegeGroupsId;
 
     private PrivilegesName privilegeName;
 
@@ -39,12 +41,6 @@ public class PrivilegesDashboard {
 
     private Long lastUpdateBy;
 
-    public PrivilegesDashboard(String userPrivilege, PrivilegesName privilegeName, Long createBy) {
-        this.userPrivilege = userPrivilege;
-        this.privilegeName = privilegeName;
-    }
-
     @PrePersist
     public void prePersist(){this.createDate = LocalDateTime.now(); }
-
 }

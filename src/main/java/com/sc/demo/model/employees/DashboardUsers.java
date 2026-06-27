@@ -1,6 +1,7 @@
 package com.sc.demo.model.employees;
 
 import com.sc.demo.model.privilege.PrivilegesDashboard;
+import com.sc.demo.model.privilege.PrivilegesGroup;
 import com.sc.demo.model.privilege.PrivilegesName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,8 +25,8 @@ public class DashboardUsers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dashboardUserId;
 
-    @OneToMany(mappedBy = "dashboardUserId", cascade = CascadeType.ALL)
-    private List<PrivilegesDashboard> privilegesDashboards = new ArrayList<>();
+    @OneToMany(mappedBy = "groupId", cascade = CascadeType.ALL)
+    private List<PrivilegesGroup> groupId = new ArrayList<>();
 
     @Column(length = 50)
     private String userName;
