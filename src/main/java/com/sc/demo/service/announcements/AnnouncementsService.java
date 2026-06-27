@@ -1,19 +1,21 @@
 package com.sc.demo.service.announcements;
 
+import com.google.firebase.messaging.*;
 import com.sc.demo.model.Tokens.AppToken;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
 import com.sc.demo.model.announcements.Pin;
+import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
-import com.sc.demo.model.dto.announcements.AnnouncementsTokenRequest;
+import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.notification.SendingType;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
-import com.sc.demo.repository.announcements.AnnouncementsTokenRepo;
+import com.sc.demo.repository.chat.TokenRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -23,8 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AnnouncementsService {
@@ -48,16 +49,31 @@ public class AnnouncementsService {
     private TokenService tokenService;
 
     @Autowired
-    private AnnouncementsTokenRepo announcementsTokenRepo;
+    private TokenRepo tokenRepo;
+
+    @Autowired
+    private FirebaseMessaging firebaseMessaging;
 
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
                                              MultipartFile file, List<Long> userId, String token) {
         var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
 
+        Map<String, String> map = new HashMap<>();
+        map.put("content_available", "1");
+
         Announcements announcements = new Announcements(announcementsRequest.title(),
                 announcementsRequest.description(), announcementsRequest.sendingType() == SendingType.BRANCH ? announcementsRequest.branches() : null,
                 announcementsRequest.sendingType(), Long.parseLong(employeesId));
+
+        Notification firebaseNotification = Notification
+                .builder()
+                .setTitle(announcementsRequest.title())
+                .setBody(announcementsRequest.description())
+                .build();
+
+        List<Message> messageList = new ArrayList<>();
+        ApnsConfig apnsConfig = getApnsConfig();
 
         System.out.println(announcements);
         announcements = announcementsRepo.save(announcements);
@@ -66,10 +82,36 @@ public class AnnouncementsService {
         if (announcementsRequest.sendingType() == SendingType.PRIVATE) {
             for (Long a : userId) {
                 announcementsDetailsRepo.save(new AnnouncementsDetails(a, Long.parseLong(employeesId), announcements));
+                Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(employeesId));
+
+                if (byToken.isPresent()) {
+                    messageList.add(Message.builder()
+                            .setToken(byToken.get().getToken())
+                            .putAllData(map)
+                            .setNotification(firebaseNotification)
+                            .setAndroidConfig(AndroidConfig.builder()
+                                    .setNotification(AndroidNotification.builder()
+                                            .setChannelId("ayn Family")
+                                            .build())
+                                    .build())
+                            .setApnsConfig(apnsConfig)
+                            .build()
+                    );
+                    announcementsDetailsRepo.save(new AnnouncementsDetails(a, Long.parseLong(employeesId), announcements));
+                }
+
+                if (messageList.size() >= 1) {
+                    try {
+                        System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
+                    } catch (FirebaseMessagingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                return announcements;
             }
         }else if (announcementsRequest.sendingType() == SendingType.BRANCH) {
             String getUsersInBranch = announcementsRequest.branches();
-            List<AnnouncementsTokenRequest> getToken = jdbcClient.sql("""
+            List<TokenRequest> getToken = jdbcClient.sql("""
                     SELECT T.TOKEN AS token
                           ,U.USER_ID AS userId
                     FROM MOBAPP.SC_APP_USER U
@@ -77,9 +119,9 @@ public class AnnouncementsService {
                     WHERE U.BRANCHES = :branch
                     """)
                     .param("branch", getUsersInBranch)
-                    .query(AnnouncementsTokenRequest.class)
+                    .query(TokenRequest.class)
                     .list();
-            for (AnnouncementsTokenRequest b : getToken ) {
+            for (TokenRequest b : getToken ) {
                 announcementsDetailsRepo.save(new AnnouncementsDetails(b.userId(), Long.parseLong(employeesId), announcements));
             }
         }
@@ -97,19 +139,21 @@ public class AnnouncementsService {
     }
 
     // حفظ Token القادم من firebase في قاعدة البيانات
-    public long saveToken(AnnouncementsTokenRequest announcementsTokenRequest) {
-        Optional<AppToken> byToken = announcementsTokenRepo.findById(announcementsTokenRequest.userId());
+    public long saveToken(TokenRequest tokenRequest) {
+        Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
 
         if (byToken.isPresent()) {
             AppToken appToken = byToken.get();
             appToken.setLastUpdate(LocalDateTime.now());
-            appToken.setToken(announcementsTokenRequest.token());
-            return announcementsTokenRepo.save(appToken).getUserId();
+            appToken.setToken(tokenRequest.token());
+            appToken.setTokenType(Platform.APP);
+            return tokenRepo.save(appToken).getUserId();
         } else {
             AppToken appToken = new AppToken();
-            appToken.setToken(announcementsTokenRequest.token());
-            appToken.setUserId(announcementsTokenRequest.userId());
-            return announcementsTokenRepo.save(appToken).getUserId();
+            appToken.setToken(tokenRequest.token());
+            appToken.setUserId(tokenRequest.userId());
+            appToken.setTokenType(Platform.APP);
+            return tokenRepo.save(appToken).getUserId();
         }
     }
 
@@ -213,5 +257,13 @@ public class AnnouncementsService {
 
         announcementsRepo.save(pinAnnouncement);
         return true;
+    }
+
+    private ApnsConfig getApnsConfig() {
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("content_available",1);
+        ApsAlert apsAlert= ApsAlert.builder().setTitle("AL-AYN Family").setSubtitle("اشعار").build();
+        return ApnsConfig.builder()
+                .setAps(Aps.builder().setSound("1").putAllCustomData(map2).setAlert(apsAlert).build()).build();
     }
 }

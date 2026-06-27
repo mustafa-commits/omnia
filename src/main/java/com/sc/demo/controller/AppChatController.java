@@ -4,6 +4,7 @@ import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.chat.MsgType;
 import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.chat.*;
+import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.service.chat.AppChatService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,9 @@ public class AppChatController implements SecuredRestController {
     }
 
     // تخزين Token
-    @PostMapping("/V1/api/sc/setDashboardToken")
-    public long setChatToken(@RequestBody ChatTokenRequest chatTokenRequest){
-        return appChatService.saveToken(chatTokenRequest);
+    @PostMapping("/V1/api/sc/setToken")
+    public long setToken(@RequestBody TokenRequest tokenRequest){
+        return appChatService.saveToken(tokenRequest);
     }
 
     // اظهار المحادثات الفعالة

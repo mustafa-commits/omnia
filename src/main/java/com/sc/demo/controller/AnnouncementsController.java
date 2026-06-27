@@ -1,8 +1,8 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.dto.announcements.AnnouncementsTokenRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
+import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.service.announcements.AnnouncementsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +47,7 @@ public class AnnouncementsController implements SecuredRestController {
 
     // تخزين Token
     @PostMapping("/V1/api/sc/setAnnouncementsToken")
-    public long setAnnouncementsToken(@RequestBody AnnouncementsTokenRequest announcementsTokenRequest){
-        return announcementsService.saveToken(announcementsTokenRequest);
+    public long setAnnouncementsToken(@RequestBody TokenRequest tokenRequest){
+        return announcementsService.saveToken(tokenRequest);
     }
 }

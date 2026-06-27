@@ -17,17 +17,19 @@ public class SearchService {
 
     public List<SearchResponse> SearchByName(String GuardianName){
         return jdbcClient.sql("""
-                    SELECT * FROM (SELECT   DISTINCT PERSON_NAME_FIRST  || ' '
-                                                  || PERSON_NAME_SECOND || ' '
-                                                  || PERSON_NAME_THIRD  || ' '
-                                                  || PERSON_NAME_FOURTH || ' '
-                                                  || ARABIC_VALUE AS GuardianName
-                                   ,FAMILY_PERSONS_ID AS FamilyPersonsId
-                                   FROM AIN_CAPPS.SC_FAMILY_PERSONS
-                                   LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES V ON V.LOOKUP_CODE = FAMILY_TITLE_ID AND LOOKUP_TYPE = 'FAMILY_TITLE'
-                                   WHERE IS_GUARDIAN = 1
-                    ) SearchName
-                    WHERE SEARCHNAME.GUARDIANNAME LIKE '%' || :GuardianName || '%'
+                   SELECT * FROM (SELECT   DISTINCT P.PERSON_NAME_FIRST  || ' '
+                                                 || P.PERSON_NAME_SECOND || ' '
+                                                 || P.PERSON_NAME_THIRD  || ' '
+                                                 || P.PERSON_NAME_FOURTH || ' '
+                                                 || V.ARABIC_VALUE AS GuardianName
+                                  ,P.FAMILY_PERSONS_ID AS FamilyPersonsId
+                                  ,U.USER_ID AS userId
+                                  FROM AIN_CAPPS.SC_FAMILY_PERSONS P
+                                  LEFT JOIN MOBAPP.SC_APP_USER U ON P.HEAD_FAMILY_ID = U.HEAD_FAMILY_ID
+                                  LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES V ON V.LOOKUP_CODE = FAMILY_TITLE_ID AND LOOKUP_TYPE = 'FAMILY_TITLE'
+                                  WHERE IS_GUARDIAN = 1
+                   ) SearchName
+                   WHERE SEARCHNAME.GUARDIANNAME LIKE '%' || :GuardianName || '%'
                 """)
                 .param("GuardianName", GuardianName, SqlTypes.VARCHAR)
                 .query(SearchResponse.class)

@@ -1,5 +1,6 @@
 package com.sc.demo.model.Tokens;
 
+import com.sc.demo.model.chat.Platform;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,9 @@ public class AppToken {
     @Column(length = 4000)
     private String token;
 
-    private Long tokenType;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "TOKEN_TYPE")
+    private Platform tokenType;
 
     private Integer isActive = 1;
 

@@ -2,6 +2,7 @@ package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.notification.*;
+import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.service.notification.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,8 @@ public class NotificationController implements SecuredRestController {
 
     // تخزين Token
     @PostMapping("/V1/api/sc/setNotificationToken")
-    public long setNotificationToken(@RequestBody NotificationTokenRequest notificationTokenRequest){
-        return notificationService.saveToken(notificationTokenRequest);
+    public long setNotificationToken(@RequestBody TokenRequest tokenRequest){
+        return notificationService.saveToken(tokenRequest);
     }
 
     // جلب اشعارات التلفون

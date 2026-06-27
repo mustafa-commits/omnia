@@ -1,15 +1,16 @@
 package com.sc.demo.service.notification;
 
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.*;
 import com.sc.demo.model.Tokens.AppToken;
+import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.notification.*;
+import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.notification.SendingType;
+import com.sc.demo.repository.chat.TokenRepo;
 import com.sc.demo.repository.notifications.NotificationDetailsRepo;
 import com.sc.demo.repository.notifications.NotificationRepo;
-import com.sc.demo.repository.notifications.NotificationTokenRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
@@ -33,7 +34,7 @@ public class NotificationService {
     private FirebaseMessaging firebaseMessaging;
 
     @Autowired
-    private NotificationTokenRepo notificationTokenRepo;
+    private TokenRepo tokenRepo;
 
     @Autowired
     private TokenService tokenService;
@@ -55,16 +56,20 @@ public class NotificationService {
                 .setTitle(notificationRequest.title())
                 .setBody(notificationRequest.description())
                 .build();
+        System.out.println("firebaseNotification " + firebaseNotification);
 
         List<Message> messageList = new ArrayList<>();
         ApnsConfig apnsConfig = getApnsConfig();
+        System.out.println("messageList 1 " + messageList);
+        System.out.println("apnsConfig " + apnsConfig);
 
         notificationMaster = notificationRepo.save(notificationMaster);
         if (notificationRequest.sendingType().equals(SendingType.PRIVATE)) {
             for (NotificationDetails n : notificationRequest.notificationDetails()) {
                 notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(employeesId), notificationMaster));
 
-                Optional<AppToken> byToken = notificationTokenRepo.findById(n.getUserId());
+                Optional<AppToken> byToken = tokenRepo.findById(n.getUserId());
+                System.out.println("byToken" + byToken);
 
                 if (byToken.isPresent()) {
                     messageList.add(Message.builder()
@@ -73,13 +78,14 @@ public class NotificationService {
                             .setNotification(firebaseNotification)
                             .setAndroidConfig(AndroidConfig.builder()
                                             .setNotification(AndroidNotification.builder()
-                                                            .setChannelId("ayn Family")
-                                                            .build())
+                                                    .setChannelId("ayn Family")
+                                                    .build())
                                             .build())
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
-                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(employeesId), notificationMaster));
+//                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(employeesId), notificationMaster));
+                    System.out.println("messageList 2 " + messageList);
                 }
             }
             if (messageList.size() >= 1) {
@@ -96,27 +102,34 @@ public class NotificationService {
                 .setTopic("all")
                 .putAllData(map)
                 .setNotification(firebaseNotification)
+                .setAndroidConfig(AndroidConfig.builder()
+                        .setNotification(AndroidNotification.builder()
+                                .setChannelId("ayn Family")
+                                .build())
+                        .build())
                 .setApnsConfig(apnsConfig)
                 .build();
         firebaseMessaging.sendAsync(message);
-
+        System.out.println("message" + message);
         return notificationMaster;
     }
 
     // حفظ Token القادم من firebase في قاعدة البيانات
-    public long saveToken(NotificationTokenRequest notificationTokenRequest) {
-        Optional<AppToken> byToken = notificationTokenRepo.findById(notificationTokenRequest.userId());
+    public long saveToken(TokenRequest tokenRequest) {
+        Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
 
         if (byToken.isPresent()) {
             AppToken appToken = byToken.get();
             appToken.setLastUpdate(LocalDateTime.now());
-            appToken.setToken(notificationTokenRequest.token());
-            return notificationTokenRepo.save(appToken).getUserId();
+            appToken.setToken(tokenRequest.token());
+            appToken.setTokenType(Platform.APP);
+            return tokenRepo.save(appToken).getUserId();
         } else {
             AppToken appToken = new AppToken();
-            appToken.setToken(notificationTokenRequest.token());
-            appToken.setUserId(notificationTokenRequest.userId());
-            return notificationTokenRepo.save(appToken).getUserId();
+            appToken.setToken(tokenRequest.token());
+            appToken.setUserId(tokenRequest.userId());
+            appToken.setTokenType(Platform.APP);
+            return tokenRepo.save(appToken).getUserId();
         }
     }
 
