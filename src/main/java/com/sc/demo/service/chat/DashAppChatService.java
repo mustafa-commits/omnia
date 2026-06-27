@@ -44,7 +44,7 @@ public class DashAppChatService {
 
     // ارسال رسالة في الداش بورد
     public boolean dashWriteMessages(MessagesRequest messagesRequest, MultipartFile file, MultipartFile voice, String token) {
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
         String newFileName = null;
 
         Map<String, String> map = new HashMap<>();
@@ -79,7 +79,7 @@ public class DashAppChatService {
                 : WhoIsSender.EMPLOYEE;
 
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
-                Long.parseLong(employeesId), whoIsSender, messagesRequest.platform(),
+                Long.parseLong(userDashboardId), whoIsSender, messagesRequest.platform(),
                 messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
                 messagesRequest.msgType());
 
@@ -94,7 +94,7 @@ public class DashAppChatService {
 
         appChatDetailsRepo.save(appChatDetails).getDetailsChatId();
 
-        Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(employeesId));
+        Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(userDashboardId));
 
         messageList.add(Message.builder()
                 .setToken(byToken.get().getToken())
@@ -204,7 +204,7 @@ public class DashAppChatService {
 
     // طلب ارشفة المحادثات
     public Boolean requestArchivedChat(Long chatId, String token){
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
         Optional<AppChatMaster> byChatId = chatRepo.findById(chatId);
         System.out.println(byChatId);
 
@@ -215,7 +215,7 @@ public class DashAppChatService {
                         نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة) في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم) وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
                         """);
                 closeMessage.setCreateDate(LocalDateTime.now());
-                closeMessage.setCreateBy(Long.parseLong(employeesId));
+                closeMessage.setCreateBy(Long.parseLong(userDashboardId));
                 closeMessage.setPlatform(Platform.SYSTEM);
                 closeMessage.setMsgActivity(MsgActivity.CLOSE_REQUEST);
                 closeMessage.setWhoIsSender(WhoIsSender.SYSTEM);
@@ -223,7 +223,7 @@ public class DashAppChatService {
                 appChatDetailsRepo.save(closeMessage);
                 byChatId.get().setMsgActive(MsgActive.PENDING);
                 byChatId.get().setLastUpdate(LocalDateTime.now());
-                byChatId.get().setLastUpdateBy(Long.parseLong(employeesId));
+                byChatId.get().setLastUpdateBy(Long.parseLong(userDashboardId));
                 chatRepo.save(byChatId.get());
             }
         }

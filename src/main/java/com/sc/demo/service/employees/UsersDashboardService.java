@@ -26,10 +26,10 @@ public class UsersDashboardService {
     private TokenService tokenService;
 
     public Boolean newDashboardUser(EmployeesResponse employeesResponse, String token){
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         addEmployeesRepo.save(new DashboardUsers(employeesResponse.phone(), employeesResponse.departmentId(),
-                employeesResponse.password(), employeesResponse.userName(), employeesResponse.fullName(), Long.parseLong(employeesId)));
+                employeesResponse.password(), employeesResponse.userName(), employeesResponse.fullName(), Long.parseLong(userDashboardId)));
 
         return true;
     }

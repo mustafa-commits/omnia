@@ -57,14 +57,14 @@ public class AnnouncementsService {
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
                                              MultipartFile file, List<Long> userId, String token) {
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Map<String, String> map = new HashMap<>();
         map.put("content_available", "1");
 
         Announcements announcements = new Announcements(announcementsRequest.title(),
                 announcementsRequest.description(), announcementsRequest.sendingType() == SendingType.BRANCH ? announcementsRequest.branches() : null,
-                announcementsRequest.sendingType(), Long.parseLong(employeesId));
+                announcementsRequest.sendingType(), Long.parseLong(userDashboardId));
 
         Notification firebaseNotification = Notification
                 .builder()
@@ -81,8 +81,8 @@ public class AnnouncementsService {
 
         if (announcementsRequest.sendingType() == SendingType.PRIVATE) {
             for (Long a : userId) {
-                announcementsDetailsRepo.save(new AnnouncementsDetails(a, Long.parseLong(employeesId), announcements));
-                Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(employeesId));
+                announcementsDetailsRepo.save(new AnnouncementsDetails(a, Long.parseLong(userDashboardId), announcements));
+                Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(userDashboardId));
 
                 if (byToken.isPresent()) {
                     messageList.add(Message.builder()
@@ -97,7 +97,7 @@ public class AnnouncementsService {
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
-                    announcementsDetailsRepo.save(new AnnouncementsDetails(a, Long.parseLong(employeesId), announcements));
+                    announcementsDetailsRepo.save(new AnnouncementsDetails(a, Long.parseLong(userDashboardId), announcements));
                 }
 
                 if (messageList.size() >= 1) {
@@ -122,7 +122,7 @@ public class AnnouncementsService {
                     .query(TokenRequest.class)
                     .list();
             for (TokenRequest b : getToken ) {
-                announcementsDetailsRepo.save(new AnnouncementsDetails(b.userId(), Long.parseLong(employeesId), announcements));
+                announcementsDetailsRepo.save(new AnnouncementsDetails(b.userId(), Long.parseLong(userDashboardId), announcements));
             }
         }
 
@@ -130,7 +130,7 @@ public class AnnouncementsService {
             String originalFilename = file.getOriginalFilename();
             String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
             String filePath = environment.getProperty("ATTACHMENT_PATH_ANNOUNCEMENTS") + newFilename;
-            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, Long.parseLong(employeesId), announcements));
+            announcementsAttachmentRepo.save(new AnnouncementsAttachment(newFilename, Long.parseLong(userDashboardId), announcements));
             file.transferTo(new File(filePath));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -213,7 +213,7 @@ public class AnnouncementsService {
     public Boolean editAnnouncement(Long announcementId, String title, String description,
                                           MultipartFile file, String token){
 
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Announcements updateAnnouncement = announcementsRepo.findById(announcementId).get();
         if (title != null) {
@@ -222,7 +222,7 @@ public class AnnouncementsService {
         if (description != null) {
             updateAnnouncement.setDescription(description);
         }
-        updateAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
+        updateAnnouncement.setLastUpdateBy(Long.parseLong(userDashboardId));
         updateAnnouncement.setLastUpdate(LocalDateTime.now());
 
         if (file != null) try {
@@ -233,7 +233,7 @@ public class AnnouncementsService {
 
         updateAnnouncementAttachment.setFileName(newFilename);
         updateAnnouncementAttachment.setLastUpdate(LocalDateTime.now());
-        updateAnnouncementAttachment.setLastUpdateBy(Long.parseLong(employeesId));
+        updateAnnouncementAttachment.setLastUpdateBy(Long.parseLong(userDashboardId));
         updateAnnouncementAttachment.setAnnouncements(updateAnnouncement);
         announcementsAttachmentRepo.save(updateAnnouncementAttachment);
 
@@ -248,11 +248,11 @@ public class AnnouncementsService {
 
     // تثبيت او الغاء تثبيت التبليغ
     public Boolean editAnnouncementPin(Long announcementId, String token){
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Announcements pinAnnouncement = announcementsRepo.findById(announcementId).get();
         pinAnnouncement.setPin(pinAnnouncement.getPin() != Pin.PIN ? Pin.PIN : Pin.NOTPIN);
-        pinAnnouncement.setLastUpdateBy(Long.parseLong(employeesId));
+        pinAnnouncement.setLastUpdateBy(Long.parseLong(userDashboardId));
         pinAnnouncement.setLastUpdate(LocalDateTime.now());
 
         announcementsRepo.save(pinAnnouncement);

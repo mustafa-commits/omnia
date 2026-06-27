@@ -34,13 +34,13 @@ public class TokenService {
     }
 
     // انشاء توكن مستخدمي الداش بورد
-    public String generateEmployeesToken(String employeesId) {
+    public String generateEmployeesToken(String userDashboardId) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("https://aynyateem.com/")
                 .issuedAt(now)
                 .expiresAt(now.plus(2, ChronoUnit.DAYS))
-                .subject(employeesId)
+                .subject(userDashboardId)
                 .claim("scope", "DASHBOARD")
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

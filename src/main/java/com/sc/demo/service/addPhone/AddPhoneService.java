@@ -80,7 +80,7 @@ public class AddPhoneService {
     // اضافة رقم هاتف
     public boolean addPhone(AddPhonRequest addPhonRequest, String token){
         Optional<FamilyInfo> byHeadAndRequestId = addPhoneRepo.findById(Long.parseLong(addPhonRequest.oldFamilyNo()));
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
         var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
         var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
         var branches = tokenService.decodeToken(token.substring(7)).getClaim("branches");
@@ -89,7 +89,7 @@ public class AddPhoneService {
             return false;
         }else {
             addPhoneRepo.save(new FamilyInfo(addPhonRequest.guardianName(), Long.parseLong(headFamilyId.toString()), Long.parseLong(requestId.toString()),
-                    addPhonRequest.headFamilyName(), Long.parseLong(employeesId),
+                    addPhonRequest.headFamilyName(), Long.parseLong(userDashboardId),
                     addPhonRequest.birthDate(), addPhonRequest.phone(),
                     addPhonRequest.oldFamilyNo(), String.valueOf(branches)));
             return true;

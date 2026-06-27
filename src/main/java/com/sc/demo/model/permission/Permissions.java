@@ -23,8 +23,6 @@ public class Permissions {
     @JoinColumn(name = "permissions")
     private PermissionGroup permissionGroup;
 
-    private String userpermission;
-
     private String permissionName;
 
     private Integer isActive = 1;
@@ -37,8 +35,7 @@ public class Permissions {
 
     private Long lastUpdateBy;
 
-    public Permissions(String userpermission, String permissionName, Long createBy) {
-        this.userpermission = userpermission;
+    public Permissions(String permissionName, Long createBy) {
         this.permissionName = permissionName;
     }
 

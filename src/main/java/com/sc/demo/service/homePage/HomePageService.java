@@ -32,13 +32,13 @@ public class HomePageService {
     private TokenService tokenService;
 
     public String addHomePagePhoto(linkType linkType, String link, MultipartFile file, String token){
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         String originalFilename = file.getOriginalFilename();
         String newFilename = System.nanoTime() + originalFilename.substring(originalFilename.lastIndexOf("."));
         String filePath = environment.getProperty("ATTACHMENT_PATH_HOMEPAGE") + newFilename;
 
-        photoRepo.save(new homePagePhoto(newFilename, linkType, link, Long.parseLong(employeesId)));
+        photoRepo.save(new homePagePhoto(newFilename, linkType, link, Long.parseLong(userDashboardId)));
 
         try {
             file.transferTo(new File(filePath));

@@ -13,10 +13,9 @@ public class permissionDashboardController implements SecuredRestController {
     private permissionDashboardService permissionDashboardService;
 
     // اضافة صلاحية لمستخدمي الداش بورد
-    @PostMapping("/V1/api/sc/newEmployeepermission")
-    public Boolean addpermission(@RequestParam String permissionName,
-                                 @RequestParam String userpermission,
+    @PostMapping("/V1/api/sc/newEmployeePermission")
+    public Boolean addPermission(@RequestParam String permissionName,
                                  @RequestHeader(name = "authorization") String token){
-        return permissionDashboardService.addpermission(permissionName, userpermission, token);
+        return permissionDashboardService.addPermission(permissionName, token);
     }
 }

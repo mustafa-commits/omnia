@@ -41,13 +41,13 @@ public class NotificationService {
 
     // انشاء اشعار
     public NotificationMaster createNotification(NotificationRequest notificationRequest, String token) {
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Map<String, String> map = new HashMap<>();
         map.put("notification_type", "3");
         map.put("content_available", "1");
 
-        NotificationMaster notificationMaster = new NotificationMaster(Long.parseLong(employeesId),
+        NotificationMaster notificationMaster = new NotificationMaster(Long.parseLong(userDashboardId),
                 notificationRequest.title(), notificationRequest.description(),
                 notificationRequest.sendingType());
 
@@ -66,7 +66,7 @@ public class NotificationService {
         notificationMaster = notificationRepo.save(notificationMaster);
         if (notificationRequest.sendingType().equals(SendingType.PRIVATE)) {
             for (NotificationDetails n : notificationRequest.notificationDetails()) {
-                notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(employeesId), notificationMaster));
+                notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(userDashboardId), notificationMaster));
 
                 Optional<AppToken> byToken = tokenRepo.findById(n.getUserId());
                 System.out.println("byToken" + byToken);
@@ -84,7 +84,7 @@ public class NotificationService {
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
-//                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(employeesId), notificationMaster));
+//                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(userDashboardId), notificationMaster));
                     System.out.println("messageList 2 " + messageList);
                 }
             }
@@ -177,7 +177,7 @@ public class NotificationService {
     // تعديل اشعار
     public Boolean editNotification(Long notificationId, String title, String description, String token){
 
-        var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
+        var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         NotificationMaster updateNotification = notificationRepo.findById(notificationId).get();
         if (title != null) {
@@ -186,7 +186,7 @@ public class NotificationService {
         if (description != null) {
             updateNotification.setDescription(description);
         }
-        updateNotification.setLastUpdateBy(Long.parseLong(employeesId));
+        updateNotification.setLastUpdateBy(Long.parseLong(userDashboardId));
         updateNotification.setLastUpdate(LocalDateTime.now());
 
         notificationRepo.save(updateNotification);
