@@ -1,7 +1,6 @@
 package com.sc.demo.model.employees;
 
-import com.sc.demo.model.privilege.PrivilegesDashboard;
-import com.sc.demo.model.privilege.PrivilegesGroup;
+
 import com.sc.demo.model.privilege.PrivilegesName;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

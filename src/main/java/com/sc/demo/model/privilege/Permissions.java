@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PrivilegesDashboard {
+public class Permissions {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class PrivilegesDashboard {
 
     @ManyToOne
     @JoinColumn(name = "groupId")
-    private PrivilegesGroup privilegeGroupId;
+    private PermissionGroup permissionGroup;
 
     private String userPrivilege;
 
@@ -37,7 +37,7 @@ public class PrivilegesDashboard {
 
     private Long lastUpdateBy;
 
-    public PrivilegesDashboard(String userPrivilege, PrivilegesName privilegeName, Long createBy) {
+    public Permissions(String userPrivilege, PrivilegesName privilegeName, Long createBy) {
         this.userPrivilege = userPrivilege;
         this.privilegeName = privilegeName;
     }

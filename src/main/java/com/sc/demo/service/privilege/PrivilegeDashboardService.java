@@ -1,7 +1,7 @@
 package com.sc.demo.service.privilege;
 
 import com.sc.demo.model.employees.DashboardUsers;
-import com.sc.demo.model.privilege.PrivilegesDashboard;
+import com.sc.demo.model.privilege.Permissions;
 import com.sc.demo.model.privilege.PrivilegesName;
 import com.sc.demo.repository.employees.AddEmployeesRepo;
 import com.sc.demo.repository.privilege.PrivilegesEmployeeRepo;
@@ -26,7 +26,7 @@ public class PrivilegeDashboardService {
         var employeesId = tokenService.decodeToken(token.substring(7)).getSubject();
         Optional<DashboardUsers> byEmployeeId = addEmployeesRepo.findById(Long.parseLong(employeesId));
 
-        privilegesEmployeeRepo.save(new PrivilegesDashboard(userPrivilege, privilegeName, Long.parseLong(employeesId)));
+        privilegesEmployeeRepo.save(new Permissions(userPrivilege, privilegeName, Long.parseLong(employeesId)));
         return true;
     }
 }

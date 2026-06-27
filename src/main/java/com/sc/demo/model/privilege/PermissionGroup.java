@@ -16,20 +16,20 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PrivilegesGroup {
+public class PermissionGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupId;
 
-    @OneToMany(mappedBy = "privilegeGroupId", cascade = CascadeType.ALL)
-    private List<PrivilegesDashboard> privilegeGroupId = new ArrayList<>();
+    @OneToMany(mappedBy = "permissionGroup", cascade = CascadeType.ALL)
+    private List<Permissions> privilegeGroupId = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "groupId")
-    private PrivilegesDashboard privilegeGroupsId;
+    private Permissions privilegeGroupsId;
 
-    private PrivilegesName privilegeName;
+    private String privilegeName;
 
     private Integer isActive = 1;
 
