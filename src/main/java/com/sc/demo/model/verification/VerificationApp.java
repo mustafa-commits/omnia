@@ -1,13 +1,11 @@
 package com.sc.demo.model.verification;
 
-import com.sc.demo.model.users.PhoneType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
-
 import java.time.LocalDateTime;
 
 @Entity

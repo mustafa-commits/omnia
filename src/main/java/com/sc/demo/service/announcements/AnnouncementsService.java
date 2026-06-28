@@ -71,18 +71,20 @@ public class AnnouncementsService {
                 .setTitle(announcementsRequest.title())
                 .setBody(announcementsRequest.description())
                 .build();
+        System.out.println("firebaseNotification " + firebaseNotification);
 
         List<Message> messageList = new ArrayList<>();
         ApnsConfig apnsConfig = getApnsConfig();
+        System.out.println("messageList 1 " + messageList);
+        System.out.println("apnsConfig " + apnsConfig);
 
-        System.out.println(announcements);
         announcements = announcementsRepo.save(announcements);
-
-
         if (announcementsRequest.sendingType() == SendingType.PRIVATE) {
             for (Long a : userId) {
                 announcementsDetailsRepo.save(new AnnouncementsDetails(a, Long.parseLong(userDashboardId), announcements));
-                Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(userDashboardId));
+
+                Optional<AppToken> byToken = tokenRepo.findById(a);
+                System.out.println("byToken" + byToken);
 
                 if (byToken.isPresent()) {
                     messageList.add(Message.builder()
@@ -97,7 +99,7 @@ public class AnnouncementsService {
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
-                    announcementsDetailsRepo.save(new AnnouncementsDetails(a, Long.parseLong(userDashboardId), announcements));
+                    System.out.println("messageList 2 " + messageList);
                 }
 
                 if (messageList.size() >= 1) {
@@ -121,8 +123,36 @@ public class AnnouncementsService {
                     .param("branch", getUsersInBranch)
                     .query(TokenRequest.class)
                     .list();
+
             for (TokenRequest b : getToken ) {
                 announcementsDetailsRepo.save(new AnnouncementsDetails(b.userId(), Long.parseLong(userDashboardId), announcements));
+
+                Optional<AppToken> byToken = tokenRepo.findById(b.userId());
+                System.out.println("byToken" + byToken);
+
+                if (byToken.isPresent()) {
+                    messageList.add(Message.builder()
+                            .setToken(byToken.get().getToken())
+                            .putAllData(map)
+                            .setNotification(firebaseNotification)
+                            .setAndroidConfig(AndroidConfig.builder()
+                                    .setNotification(AndroidNotification.builder()
+                                            .setChannelId("ayn Family")
+                                            .build())
+                                    .build())
+                            .setApnsConfig(apnsConfig)
+                            .build()
+                    );
+                    System.out.println("messageList 2 " + messageList);
+                }
+
+                if (messageList.size() >= 1) {
+                    try {
+                        System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
+                    } catch (FirebaseMessagingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
 
@@ -135,6 +165,20 @@ public class AnnouncementsService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        Message message = Message.builder()
+                .setTopic("all")
+                .putAllData(map)
+                .setNotification(firebaseNotification)
+                .setAndroidConfig(AndroidConfig.builder()
+                        .setNotification(AndroidNotification.builder()
+                                .setChannelId("ayn Family")
+                                .build())
+                        .build())
+                .setApnsConfig(apnsConfig)
+                .build();
+        firebaseMessaging.sendAsync(message);
+        System.out.println("message" + message);
         return announcements;
     }
 

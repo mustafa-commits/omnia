@@ -84,10 +84,10 @@ public class NotificationService {
                             .setApnsConfig(apnsConfig)
                             .build()
                     );
-//                    notificationDetailsRepo.save(new NotificationDetails(n.getUserId(), Long.parseLong(userDashboardId), notificationMaster));
                     System.out.println("messageList 2 " + messageList);
                 }
             }
+
             if (messageList.size() >= 1) {
                 try {
                     System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
