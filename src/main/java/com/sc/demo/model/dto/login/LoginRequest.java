@@ -4,6 +4,6 @@ public record LoginRequest(
         Long userId,
         String userName,
         Long groupId,
-        String token
+        String groupName
 ) {
 }

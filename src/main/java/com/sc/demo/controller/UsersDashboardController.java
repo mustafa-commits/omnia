@@ -32,8 +32,8 @@ public class UsersDashboardController implements SecuredRestController {
 
     // تأكد من تسجيل دخول المستخدم الى الداش بورد
     @PostMapping("/V1/api/sc/loginUserDashboard")
-    public LoginRequest loginUserDashboard(@RequestParam String userName,
-                                           @RequestParam String password){
+    public UsersDashboardService.LoginRequest2 loginUserDashboard(@RequestParam String userName,
+                                                                  @RequestParam String password){
         return usersDashboardService.loginUserDashboard(userName, password);
     }
 }

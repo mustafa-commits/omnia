@@ -11,6 +11,7 @@ import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class UsersDashboardService {
     @Autowired
     private TokenService tokenService;
 
-    public Boolean newUserDashboard(UserDashboardResponse userDashboardResponse, String token){
+    public Boolean newUserDashboard(UserDashboardResponse userDashboardResponse, String token) {
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         addUserDashboardRepo.save(new UserDashboard(userDashboardResponse.phone(), userDashboardResponse.departmentId(),
@@ -37,30 +38,32 @@ public class UsersDashboardService {
     }
 
     // جميع مستخدمي الداش بورد
-    public List<DashboardUserRequest> viewDashboardUser(){
+    public List<DashboardUserRequest> viewDashboardUser() {
         return jdbcClient.sql("""
-                SELECT USER_DASHBOARD_ID AS userDashboardId,
-                       PHONE,
-                       FULL_NAME AS fullName,
-                       USER_NAME AS userName
-                FROM MOBAPP.SC_DASHBOARD_USER
-                ORDER BY USER_DASHBOARD_ID
-                """)
+                        SELECT USER_DASHBOARD_ID AS userDashboardId,
+                               PHONE,
+                               FULL_NAME AS fullName,
+                               USER_NAME AS userName
+                        FROM MOBAPP.SC_DASHBOARD_USER
+                        ORDER BY USER_DASHBOARD_ID
+                        """)
                 .query(DashboardUserRequest.class)
                 .list();
     }
 
     // التحقق من مستخدم الداش بورد
-    public LoginRequest loginUserDashboard(String userName, String password){
+    public LoginRequest2 loginUserDashboard(String userName, String password) {
         Optional<LoginRequest> dashboardLoginCheck = jdbcClient.sql("""
-                SELECT USER_DASHBOARD_ID AS userId
-                      ,USER_NAME AS userName
-                      ,GROUP_ID AS groupId
-                FROM MOBAPP.SC_DASHBOARD_USER DU
-                LEFT JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON DU.USER_DASHBOARD_ID = GP.USER_DASHBOARD
-                WHERE USER_NAME = :userName
-                AND PASSWORD = :password
-                """)
+                        SELECT DU.USER_ID AS userId
+                                  ,USER_NAME AS userName
+                                  ,GROUP_ID AS groupId
+                                  ,PERMISSION_TEMPLATE_NAME AS groupName
+                            FROM MOBAPP.SC_DASHBOARD_USER DU
+                            JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON DU.USER_ID = GP.USER_ID
+                            WHERE USER_NAME = :userName
+                            AND PASSWORD = :password
+                            AND DU.IS_ACTIVE=1 AND GP.IS_ACTIVE=1
+                        """)
                 .param("userName", userName)
                 .param("password", password)
                 .query(LoginRequest.class)
@@ -68,25 +71,40 @@ public class UsersDashboardService {
 
         //new query to get list of permissions
         // class { x record, list<Int
+        if (dashboardLoginCheck.isPresent()){
         List<PermissionRequest> dashboardPermission = jdbcClient.sql("""
-                SELECT P.PERMISSION_ID AS permissionId,
-                       PERMISSION_NAME AS permissionName
-                FROM MOBAPP.SC_DASHBOARD_PERMISSIONS P
-                LEFT JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON GP.PERMISSION_ID = P.PERMISSION_ID
-                LEFT JOIN MOBAPP.SC_DASHBOARD_USER DU ON DU.USER_ID = GP.USER_ID
-                WHERE DU.USER_ID = :userId
-                """)
+                        SELECT P.PERMISSION_ID AS permissionId,
+                               PERMISSION_NAME AS permissionName
+                        FROM MOBAPP.SC_DASHBOARD_PERMISSIONS P
+                        LEFT JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON GP.PERMISSION_ID = P.PERMISSION_ID
+                        LEFT JOIN MOBAPP.SC_DASHBOARD_USER DU ON DU.USER_ID = GP.USER_ID
+                        WHERE DU.USER_ID = :userId
+                        """)
                 .param("userId", dashboardLoginCheck.get().userId())
                 .query(PermissionRequest.class)
                 .list();
 
         if (dashboardLoginCheck.isPresent()) {
-            return new LoginRequest(dashboardLoginCheck.get().userId(), dashboardLoginCheck.get().userName(), dashboardLoginCheck.get().groupId(),
-                    dashboardPermission.get().permissionId(), dashboardPermission.get().permissionName(),
+            return new LoginRequest2(
+                    dashboardLoginCheck.get().userId(),
+                    dashboardLoginCheck.get().userName()
+                    , dashboardLoginCheck.get().groupName(),
+                    dashboardPermission,
                     tokenService.generateUserDashboardToken(String.valueOf(dashboardLoginCheck.get().userId()), dashboardLoginCheck.get().userName()
                             , Long.parseLong(String.valueOf(dashboardLoginCheck.get().groupId()))));
         }
+        }
         return null;
+    }
+
+
+    public record LoginRequest2(
+            Long userId,
+            String userName,
+            String groupName,
+            List<PermissionRequest> permissions,
+            String token
+    ) {
     }
 
 }
