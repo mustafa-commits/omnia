@@ -21,10 +21,10 @@ public class UserDashboard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userDashboardId;
+    private Long userId;
 
-    @OneToMany(mappedBy = "userDashboard", cascade = CascadeType.ALL)
-    private List<PermissionGroup> permissionGroupId = new ArrayList<>();
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    private List<PermissionGroup> groupId = new ArrayList<>();
 
     @Column(length = 50)
     private String userName;
@@ -49,13 +49,13 @@ public class UserDashboard {
     private Long lastUpdateBy;
 
     public UserDashboard(String phone, Long departmentId, String password,
-                         String userName, String fullName, List<PermissionGroup> permissionTemplate, Long createBy) {
+                         String userName, String fullName, List<PermissionGroup> groupId, Long createBy) {
         Phone = phone;
         this.departmentId = departmentId;
         this.password = password;
         this.userName = userName;
         this.fullName = fullName;
-        this.permissionGroupId = permissionTemplate;
+        this.groupId = groupId;
     }
 
     @PrePersist

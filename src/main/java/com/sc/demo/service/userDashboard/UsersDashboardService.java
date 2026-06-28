@@ -2,9 +2,10 @@ package com.sc.demo.service.userDashboard;
 
 import com.sc.demo.model.dto.DashboardUser.DashboardUserRequest;
 import com.sc.demo.model.dto.DashboardUser.UserDashboardResponse;
-import com.sc.demo.model.dto.token.TokenLoginRequest;
-import com.sc.demo.model.userDashboard.UserDashboard;
+import com.sc.demo.model.dto.login.LoginRequest;
+import com.sc.demo.model.dto.permission.PermissionRequest;
 import com.sc.demo.model.dto.token.TokenRequest;
+import com.sc.demo.model.userDashboard.UserDashboard;
 import com.sc.demo.repository.userDashboard.AddUserDashboardRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +51,11 @@ public class UsersDashboardService {
     }
 
     // التحقق من مستخدم الداش بورد
-    public TokenLoginRequest loginUserDashboard(String userName, String password){
-        Optional<UserDashboard> dashboardCheck = jdbcClient.sql("""
-                SELECT DU.USER_DASHBOARD_ID AS userDashboardId
-                      ,GP.GROUP_ID AS permissionGroupId
+    public LoginRequest loginUserDashboard(String userName, String password){
+        Optional<LoginRequest> dashboardLoginCheck = jdbcClient.sql("""
+                SELECT USER_DASHBOARD_ID AS userId
+                      ,USER_NAME AS userName
+                      ,GROUP_ID AS groupId
                 FROM MOBAPP.SC_DASHBOARD_USER DU
                 LEFT JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON DU.USER_DASHBOARD_ID = GP.USER_DASHBOARD
                 WHERE USER_NAME = :userName
@@ -61,17 +63,28 @@ public class UsersDashboardService {
                 """)
                 .param("userName", userName)
                 .param("password", password)
-                .query(UserDashboard.class)
+                .query(LoginRequest.class)
                 .optional(); // x record userId , name , groupId
 
         //new query to get list of permissions
         // class { x record, list<Int
+        List<PermissionRequest> dashboardPermission = jdbcClient.sql("""
+                SELECT P.PERMISSION_ID AS permissionId,
+                       PERMISSION_NAME AS permissionName
+                FROM MOBAPP.SC_DASHBOARD_PERMISSIONS P
+                LEFT JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON GP.PERMISSION_ID = P.PERMISSION_ID
+                LEFT JOIN MOBAPP.SC_DASHBOARD_USER DU ON DU.USER_ID = GP.USER_ID
+                WHERE DU.USER_ID = :userId
+                """)
+                .param("userId", dashboardLoginCheck.get().userId())
+                .query(PermissionRequest.class)
+                .list();
 
-        if (dashboardCheck.isPresent()) {
-            return new TokenLoginRequest(dashboardCheck.get().getUserDashboardId(),
-                    tokenService.generateUserDashboardToken(
-                            String.valueOf(dashboardCheck.get().getUserDashboardId()),
-                            dashboardCheck.get().getPermissionGroupId()));
+        if (dashboardLoginCheck.isPresent()) {
+            return new LoginRequest(dashboardLoginCheck.get().userId(), dashboardLoginCheck.get().userName(), dashboardLoginCheck.get().groupId(),
+                    dashboardPermission.get().permissionId(), dashboardPermission.get().permissionName(),
+                    tokenService.generateUserDashboardToken(String.valueOf(dashboardLoginCheck.get().userId()), dashboardLoginCheck.get().userName()
+                            , Long.parseLong(String.valueOf(dashboardLoginCheck.get().groupId()))));
         }
         return null;
     }

@@ -20,8 +20,8 @@ public class Permissions {
     private Long permissionId;
 
     @ManyToOne
-    @JoinColumn(name = "permissions")
-    private PermissionGroup permissionGroup;
+    @JoinColumn(name = "groupId")
+    private PermissionGroup groupId;
 
     private String permissionName;
 

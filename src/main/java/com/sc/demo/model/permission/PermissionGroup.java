@@ -21,12 +21,12 @@ public class PermissionGroup {
     private Long groupId;
 
     @ManyToOne
-    @JoinColumn(name = "userDashboard")
-    private UserDashboard userDashboard;
+    @JoinColumn(name = "userId")
+    private UserDashboard userId;
 
     @ManyToOne
-    @JoinColumn(name = "permissionsGroupId")
-    private Permissions permissions;
+    @JoinColumn(name = "permissionId")
+    private Permissions permissionId;
 
     private String permissionTemplateName;
 

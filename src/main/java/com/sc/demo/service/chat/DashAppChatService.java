@@ -201,7 +201,7 @@ public class DashAppChatService {
             if (byChatId.get().getMsgActive().equals(MsgActive.ACTIVE)) {
                 AppChatDetails closeMessage = new AppChatDetails();
                 closeMessage.setMessages("""
-                        نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة) في حال لديكم استفسار اخرى يرجى الضغط على كلمة(نعم) وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
+                        نود اعلامكم سيتم انهاء المحادثة تلقائيآ في غضون(12 ساعة) في حال لديكم استفسار اخرى يرجى الضغط على كلمة(استمرار) وفي حال عدم وجود استفسار الضغظ على كلمة(اغلاق)
                         """);
                 closeMessage.setCreateDate(LocalDateTime.now());
                 closeMessage.setCreateBy(Long.parseLong(userDashboardId));

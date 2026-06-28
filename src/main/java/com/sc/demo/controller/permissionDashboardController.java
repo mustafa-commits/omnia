@@ -38,7 +38,7 @@ public class permissionDashboardController implements SecuredRestController {
         return permissionDashboardService.editPermission(permissionId, permissionName, token);
     }
 
-    // تعديل  اسم الصلاحية على الداش بورد
+    // تعديل  اسم قالب الصلاحية على الداش بورد
     @PutMapping("/V1/api/sc/editPermissionTemplate")
     public Boolean editPermissionTemplate(@RequestParam Long groupId,
                                           @RequestParam String permissionTemplateName,
