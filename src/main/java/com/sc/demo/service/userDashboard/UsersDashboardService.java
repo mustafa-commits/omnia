@@ -62,7 +62,10 @@ public class UsersDashboardService {
                 .param("userName", userName)
                 .param("password", password)
                 .query(UserDashboard.class)
-                .optional();
+                .optional(); // x record userId , name , groupId
+
+        //new query to get list of permissions
+        // class { x record, list<Int
 
         if (dashboardCheck.isPresent()) {
             return new TokenLoginRequest(dashboardCheck.get().getUserDashboardId(),
@@ -72,4 +75,5 @@ public class UsersDashboardService {
         }
         return null;
     }
+
 }
