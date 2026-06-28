@@ -48,6 +48,7 @@ public class DashAppChatService {
         String newFileName = null;
 
         Map<String, String> map = new HashMap<>();
+        map.put("SENDING_TYPE_NOTIFICATION", "2");
         map.put("content_available", "1");
 
         if(messagesRequest.msgType() == MsgType.IMAGE) {

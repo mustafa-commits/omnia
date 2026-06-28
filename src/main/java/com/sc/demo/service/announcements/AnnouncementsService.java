@@ -61,6 +61,7 @@ public class AnnouncementsService {
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Map<String, String> map = new HashMap<>();
+        map.put("SENDING_TYPE_NOTIFICATION", "1");
         map.put("content_available", "1");
 
         Announcements announcements = new Announcements(announcementsRequest.title(),

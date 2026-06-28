@@ -45,7 +45,7 @@ public class NotificationService {
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Map<String, String> map = new HashMap<>();
-        map.put("notification_type", "3");
+        map.put("SENDING_TYPE_NOTIFICATION", "0");
         map.put("content_available", "1");
 
         NotificationMaster notificationMaster = new NotificationMaster(Long.parseLong(userDashboardId),
