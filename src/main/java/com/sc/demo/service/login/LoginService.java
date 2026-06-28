@@ -1,8 +1,8 @@
 package com.sc.demo.service.login;
 
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
-import com.sc.demo.model.dto.login.GetUserIdWithToken;
 import com.sc.demo.model.dto.login.LogInResponse;
+import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.users.AppUser;
 import com.sc.demo.model.verification.MethodType;
 import com.sc.demo.model.dto.login.ChekLoginRequest;
@@ -113,7 +113,7 @@ public class LoginService implements CommandLineRunner {
                 .optional();
 
         if (logInChek.isPresent()) {
-            List<GetUserIdWithToken> setGuardianInfo = new ArrayList<>();
+            List<TokenRequest> setGuardianInfo = new ArrayList<>();
             List<LogInResponse> responseList = jdbcClient.sql("""
                         SELECT H.HEAD_FAMILY_ID AS headFamilyId
                                ,R.AID_REQUEST_ID AS requestId
@@ -170,7 +170,7 @@ public class LoginService implements CommandLineRunner {
                     ).getUserId();
 
                 }
-                setGuardianInfo.add(new GetUserIdWithToken(loginUser, tokenService.generateToken(String.valueOf(loginUser),
+                setGuardianInfo.add(new TokenRequest(loginUser, tokenService.generateToken(String.valueOf(loginUser),
                         response.requestId(), response.headFamilyId(), response.Branches())));
             }
            return ResponseEntity.ok(setGuardianInfo);

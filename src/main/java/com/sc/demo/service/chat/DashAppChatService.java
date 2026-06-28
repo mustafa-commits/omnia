@@ -75,8 +75,8 @@ public class DashAppChatService {
         }
 
         WhoIsSender whoIsSender = Platform.APP.equals(messagesRequest.platform())
-                ? WhoIsSender.USER
-                : WhoIsSender.EMPLOYEE;
+                ? WhoIsSender.APPUSER
+                : WhoIsSender.USERDASHBOARD;
 
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 Long.parseLong(userDashboardId), whoIsSender, messagesRequest.platform(),

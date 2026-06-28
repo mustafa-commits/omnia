@@ -34,7 +34,7 @@ public class TokenService {
     }
 
     // انشاء توكن مستخدمي الداش بورد
-    public String generateEmployeesToken(String userDashboardId) {
+    public String generateUserDashboardToken(String userDashboardId) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("https://aynyateem.com/")

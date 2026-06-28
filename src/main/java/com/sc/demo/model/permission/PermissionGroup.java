@@ -1,6 +1,6 @@
 package com.sc.demo.model.permission;
 
-import com.sc.demo.model.employees.DashboardUsers;
+import com.sc.demo.model.userDashboard.UserDashboard;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,14 +21,14 @@ public class PermissionGroup {
     private Long groupId;
 
     @ManyToOne
-    @JoinColumn(name = "dashboardUsers")
-    private DashboardUsers dashboardUsers;
+    @JoinColumn(name = "userDashboard")
+    private UserDashboard userDashboard;
 
     @ManyToOne
     @JoinColumn(name = "permissionsGroupId")
     private Permissions permissions;
 
-    private String permissionName;
+    private String permissionTemplateName;
 
     private Integer isActive = 1;
 
@@ -39,6 +39,10 @@ public class PermissionGroup {
     private LocalDateTime lastUpdate;
 
     private Long lastUpdateBy;
+
+    public PermissionGroup(String permissionTemplateName, Long createBy) {
+        this.permissionTemplateName = permissionTemplateName;
+    }
 
     @PrePersist
     public void prePersist(){this.createDate = LocalDateTime.now(); }

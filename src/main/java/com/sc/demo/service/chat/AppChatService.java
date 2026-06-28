@@ -64,7 +64,7 @@ public class AppChatService {
 
         AppChatDetails appChatDetails = appChatRequest.appChatDetails();
 
-        appChatDetailsRepo.save(new AppChatDetails(Long.parseLong(userTokenId), WhoIsSender.USER, Platform.APP,
+        appChatDetailsRepo.save(new AppChatDetails(Long.parseLong(userTokenId), WhoIsSender.APPUSER, Platform.APP,
                 appChatDetails.getMessages(),appChatMaster));
 
         Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(userTokenId));
@@ -221,8 +221,8 @@ public class AppChatService {
         }
 
         WhoIsSender whoIsSender = Platform.APP.equals(messagesRequest.platform())
-                ? WhoIsSender.USER
-                : WhoIsSender.EMPLOYEE;
+                ? WhoIsSender.APPUSER
+                : WhoIsSender.USERDASHBOARD;
 
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
                 Long.parseLong(userTokenId), whoIsSender,

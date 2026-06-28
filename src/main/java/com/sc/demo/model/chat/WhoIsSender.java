@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.NUMBER)
 public enum WhoIsSender {
-    USER,
-    EMPLOYEE,
+    APPUSER,
+    USERDASHBOARD,
     SYSTEM
 }

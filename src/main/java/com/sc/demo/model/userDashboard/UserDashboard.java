@@ -1,4 +1,4 @@
-package com.sc.demo.model.employees;
+package com.sc.demo.model.userDashboard;
 
 
 import com.sc.demo.model.permission.PermissionGroup;
@@ -12,18 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "sc_dashboard_users")
+@Table(name = "sc_dashboard_user")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DashboardUsers {
+public class UserDashboard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dashboardUserId;
+    private Long userDashboardId;
 
-    @OneToMany(mappedBy = "dashboardUsers", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userDashboard", cascade = CascadeType.ALL)
     private List<PermissionGroup> PermissionGroupId = new ArrayList<>();
 
     @Column(length = 50)
@@ -48,8 +48,8 @@ public class DashboardUsers {
 
     private Long lastUpdateBy;
 
-    public DashboardUsers(String phone, Long departmentId, String password,
-                          String userName, String fullName, Long createBy) {
+    public UserDashboard(String phone, Long departmentId, String password,
+                         String userName, String fullName, Long createBy) {
         Phone = phone;
         this.departmentId = departmentId;
         this.password = password;
