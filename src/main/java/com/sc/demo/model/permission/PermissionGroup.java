@@ -28,7 +28,7 @@ public class PermissionGroup {
     @JoinColumn(name = "permissionId")
     private Permissions permissionId;
 
-    private String permissionTemplateName;
+    private String groupName;
 
     private Integer isActive = 1;
 
@@ -40,8 +40,8 @@ public class PermissionGroup {
 
     private Long lastUpdateBy;
 
-    public PermissionGroup(String permissionTemplateName, Long createBy) {
-        this.permissionTemplateName = permissionTemplateName;
+    public PermissionGroup(String groupName, Long createBy) {
+        this.groupName = groupName;
     }
 
     @PrePersist

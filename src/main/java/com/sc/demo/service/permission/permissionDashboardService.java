@@ -32,18 +32,18 @@ public class permissionDashboardService {
     private JdbcClient jdbcClient;
 
     // اضافة صلاحية على الداش بورد
-    public Boolean addPermission(String permissionName, String token){
+    public Boolean addPermission(String permissionName, Long groupId, String token){
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
-        permissionRepo.save(new Permissions(permissionName, Long.parseLong(userDashboardId)));
+        permissionRepo.save(new Permissions(permissionName, permissionTemplateRepo.getReferenceById(groupId), Long.parseLong(userDashboardId)));
         return true;
     }
 
     // اضافة قالب صلاحية على الداش بورد
-    public Boolean addPermissionTemplate(String permissionTemplateName, String token){
+    public Boolean addPermissionTemplate(String groupName, String token){
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
-        permissionTemplateRepo.save(new PermissionGroup(permissionTemplateName, Long.parseLong(userDashboardId)));
+        permissionTemplateRepo.save(new PermissionGroup(groupName, Long.parseLong(userDashboardId)));
         return true;
     }
 
@@ -61,11 +61,11 @@ public class permissionDashboardService {
     }
 
     // تعديل قالب الصلاحية
-    public Boolean editPermissionTemplate(Long groupId, String permissionTemplateName, String token){
+    public Boolean editPermissionTemplate(Long groupId, String groupName, String token){
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         PermissionGroup updatePermissionTemplate = permissionTemplateRepo.findById(groupId).get();
-        updatePermissionTemplate.setPermissionTemplateName(permissionTemplateName);
+        updatePermissionTemplate.setGroupName(groupName);
         updatePermissionTemplate.setLastUpdate(LocalDateTime.now());
         updatePermissionTemplate.setLastUpdateBy(Long.parseLong(userDashboardId));
 
@@ -89,7 +89,7 @@ public class permissionDashboardService {
     public List<PermissionTemplateRequest> getPermissionTemplates(){
         return jdbcClient.sql("""
                 SELECT GROUP_ID AS groupId,
-                       PERMISSION_TEMPLATE_NAME AS permissionTemplateName
+                       GROUP_NAME AS groupName
                 FROM MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS
                 ORDER BY GROUP_ID
                 """)

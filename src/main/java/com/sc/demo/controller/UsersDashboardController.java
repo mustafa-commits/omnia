@@ -1,10 +1,9 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.dto.DashboardUser.DashboardUserRequest;
-import com.sc.demo.model.dto.DashboardUser.UserDashboardResponse;
-import com.sc.demo.model.dto.login.LoginRequest;
-import com.sc.demo.model.dto.token.TokenRequest;
+import com.sc.demo.model.dto.usersDashboard.UsersDashboardRequest;
+import com.sc.demo.model.dto.usersDashboard.UserDashboardResponse;
+import com.sc.demo.model.dto.login.LoginRequest2;
 import com.sc.demo.service.userDashboard.UsersDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,22 +17,22 @@ public class UsersDashboardController implements SecuredRestController {
     private UsersDashboardService usersDashboardService;
 
     // اضافة مستخدمي الداش بورد
-    @PostMapping("/V1/api/sc/newDashboardUser")
-    public Boolean newDashboardUser(@RequestBody UserDashboardResponse userDashboardResponse,
+    @PostMapping("/V1/api/sc/newUsersDashboard")
+    public Boolean newUsersDashboard(@RequestBody UserDashboardResponse userDashboardResponse,
                                     @RequestHeader(name = "authorization") String token){
         return usersDashboardService.newUserDashboard(userDashboardResponse, token);
     }
 
     // جلب الموضفين المضافين
     @GetMapping("/V1/api/sc/usersDashboard")
-    public List<DashboardUserRequest> usersDashboard(){
-        return usersDashboardService.viewDashboardUser();
+    public List<UsersDashboardRequest> usersDashboard(){
+        return usersDashboardService.viewUsersDashboard();
     }
 
     // تأكد من تسجيل دخول المستخدم الى الداش بورد
     @PostMapping("/V1/api/sc/loginUserDashboard")
-    public UsersDashboardService.LoginRequest2 loginUserDashboard(@RequestParam String userName,
-                                                                  @RequestParam String password){
+    public LoginRequest2 loginUserDashboard(@RequestParam String userName,
+                                            @RequestParam String password){
         return usersDashboardService.loginUserDashboard(userName, password);
     }
 }

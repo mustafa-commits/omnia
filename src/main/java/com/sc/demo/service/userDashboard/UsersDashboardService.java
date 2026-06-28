@@ -1,11 +1,12 @@
 package com.sc.demo.service.userDashboard;
 
-import com.sc.demo.model.dto.DashboardUser.DashboardUserRequest;
-import com.sc.demo.model.dto.DashboardUser.UserDashboardResponse;
+import com.sc.demo.model.dto.usersDashboard.UsersDashboardRequest;
+import com.sc.demo.model.dto.usersDashboard.UserDashboardResponse;
 import com.sc.demo.model.dto.login.LoginRequest;
+import com.sc.demo.model.dto.login.LoginRequest2;
 import com.sc.demo.model.dto.permission.PermissionRequest;
-import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.userDashboard.UserDashboard;
+import com.sc.demo.repository.permission.PermissionTemplateRepo;
 import com.sc.demo.repository.userDashboard.AddUserDashboardRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,22 +33,22 @@ public class UsersDashboardService {
 
         addUserDashboardRepo.save(new UserDashboard(userDashboardResponse.phone(), userDashboardResponse.departmentId(),
                 userDashboardResponse.password(), userDashboardResponse.userName(), userDashboardResponse.fullName(),
-                userDashboardResponse.permissionTemplate(), Long.parseLong(userDashboardId)));
+                userDashboardResponse.groupId(), Long.parseLong(userDashboardId)));
 
         return true;
     }
 
     // جميع مستخدمي الداش بورد
-    public List<DashboardUserRequest> viewDashboardUser() {
+    public List<UsersDashboardRequest> viewUsersDashboard() {
         return jdbcClient.sql("""
-                        SELECT USER_DASHBOARD_ID AS userDashboardId,
+                        SELECT USER_ID AS userId,
                                PHONE,
                                FULL_NAME AS fullName,
                                USER_NAME AS userName
                         FROM MOBAPP.SC_DASHBOARD_USER
-                        ORDER BY USER_DASHBOARD_ID
+                        ORDER BY USER_ID
                         """)
-                .query(DashboardUserRequest.class)
+                .query(UsersDashboardRequest.class)
                 .list();
     }
 
@@ -57,7 +58,7 @@ public class UsersDashboardService {
                         SELECT DU.USER_ID AS userId
                                   ,USER_NAME AS userName
                                   ,GROUP_ID AS groupId
-                                  ,PERMISSION_TEMPLATE_NAME AS groupName
+                                  ,GROUP_NAME AS groupName
                             FROM MOBAPP.SC_DASHBOARD_USER DU
                             JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON DU.USER_ID = GP.USER_ID
                             WHERE USER_NAME = :userName
@@ -87,8 +88,8 @@ public class UsersDashboardService {
         if (dashboardLoginCheck.isPresent()) {
             return new LoginRequest2(
                     dashboardLoginCheck.get().userId(),
-                    dashboardLoginCheck.get().userName()
-                    , dashboardLoginCheck.get().groupName(),
+                    dashboardLoginCheck.get().userName(),
+                    dashboardLoginCheck.get().groupName(),
                     dashboardPermission,
                     tokenService.generateUserDashboardToken(String.valueOf(dashboardLoginCheck.get().userId()), dashboardLoginCheck.get().userName()
                             , Long.parseLong(String.valueOf(dashboardLoginCheck.get().groupId()))));
@@ -98,13 +99,5 @@ public class UsersDashboardService {
     }
 
 
-    public record LoginRequest2(
-            Long userId,
-            String userName,
-            String groupName,
-            List<PermissionRequest> permissions,
-            String token
-    ) {
-    }
 
 }

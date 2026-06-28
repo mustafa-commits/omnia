@@ -3,6 +3,7 @@ package com.sc.demo.controller;
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.permission.PermissionRequest;
 import com.sc.demo.model.dto.permission.PermissionTemplateRequest;
+import com.sc.demo.model.permission.PermissionGroup;
 import com.sc.demo.service.permission.permissionDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +20,16 @@ public class permissionDashboardController implements SecuredRestController {
     // اضافة صلاحية على الداش بورد
     @PostMapping("/V1/api/sc/addPermission")
     public Boolean addPermission(@RequestParam String permissionName,
+                                 @RequestParam Long groupId,
                                  @RequestHeader(name = "authorization") String token){
-        return permissionDashboardService.addPermission(permissionName, token);
+        return permissionDashboardService.addPermission(permissionName, groupId, token);
     }
 
     // اضافة قالب للصلاحيات على الداش بورد
     @PostMapping("/V1/api/sc/addPermissionTemplate")
-    public Boolean addPermissionTemplate(@RequestParam String permissionTemplateName,
+    public Boolean addPermissionTemplate(@RequestParam String groupName,
                                          @RequestHeader(name = "authorization") String token){
-        return permissionDashboardService.addPermissionTemplate(permissionTemplateName, token);
+        return permissionDashboardService.addPermissionTemplate(groupName, token);
     }
 
     // تعديل  اسم الصلاحية على الداش بورد
@@ -41,9 +43,9 @@ public class permissionDashboardController implements SecuredRestController {
     // تعديل  اسم قالب الصلاحية على الداش بورد
     @PutMapping("/V1/api/sc/editPermissionTemplate")
     public Boolean editPermissionTemplate(@RequestParam Long groupId,
-                                          @RequestParam String permissionTemplateName,
+                                          @RequestParam String groupName,
                                           @RequestHeader(name = "authorization") String token){
-        return permissionDashboardService.editPermissionTemplate(groupId, permissionTemplateName, token);
+        return permissionDashboardService.editPermissionTemplate(groupId, groupName, token);
     }
 
     //  جلب الصلاحيات في الداش بورد

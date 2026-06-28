@@ -47,19 +47,19 @@ public class AppChatService {
     public boolean createChat(AppChatRequest appChatRequest, String token){
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
 
-        Map<String, String> map = new HashMap<>();
-        map.put("content_available", "1");
+//        Map<String, String> map = new HashMap<>();
+//        map.put("content_available", "1");
 
         AppChatMaster appChatMaster = new AppChatMaster(Long.parseLong(userTokenId), appChatRequest.chatTitle());
 
-        Notification firebaseNotification = Notification
-                .builder()
-                .setTitle(appChatRequest.chatTitle())
-                .setBody(appChatRequest.appChatDetails().getMessages())
-                .build();
-
-        List<Message> messageList = new ArrayList<>();
-        ApnsConfig apnsConfig = getApnsConfig();
+//        Notification firebaseNotification = Notification
+//                .builder()
+//                .setTitle(appChatRequest.chatTitle())
+//                .setBody(appChatRequest.appChatDetails().getMessages())
+//                .build();
+//
+//        List<Message> messageList = new ArrayList<>();
+//        ApnsConfig apnsConfig = getApnsConfig();
 
         appChatMaster = chatRepo.save(appChatMaster);
 
@@ -82,51 +82,51 @@ public class AppChatService {
                 """);
         appChatDetailsRepo.save(welcomeMessage);
 
-        if (messageList.size() >= 1) {
-            try {
-                System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
-            } catch (FirebaseMessagingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        Message message = Message.builder()
-            .setTopic("all")
-            .putAllData(map)
-            .setNotification(firebaseNotification)
-            .setAndroidConfig(AndroidConfig.builder()
-                    .setNotification(AndroidNotification.builder()
-                            .setChannelId("ayn Family")
-                            .build())
-                    .build())
-            .setApnsConfig(apnsConfig)
-            .build();
-
-        firebaseMessaging.sendAsync(message);
+//        if (messageList.size() >= 1) {
+//            try {
+//                System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
+//            } catch (FirebaseMessagingException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+//        Message message = Message.builder()
+//            .setTopic("all")
+//            .putAllData(map)
+//            .setNotification(firebaseNotification)
+//            .setAndroidConfig(AndroidConfig.builder()
+//                    .setNotification(AndroidNotification.builder()
+//                            .setChannelId("ayn Family")
+//                            .build())
+//                    .build())
+//            .setApnsConfig(apnsConfig)
+//            .build();
+//
+//        firebaseMessaging.sendAsync(message);
 
         return true;
     }
 
     // حفظ Token القادم من fireBase في قاعدة البيانات
-    public long saveToken(TokenRequest tokenRequest) {
-        Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
-
-        if (byToken.isPresent()) {
-            AppToken appToken = byToken.get();
-            appToken.setLastUpdate(LocalDateTime.now());
-            appToken.setToken(tokenRequest.token());
-            appToken.setTokenType(Platform.APP);
-            appToken.setSendingTypeNotification(SendingTypeNotification.APPCHAT);
-            return tokenRepo.save(appToken).getUserId();
-        } else {
-            AppToken appToken = new AppToken();
-            appToken.setToken(tokenRequest.token());
-            appToken.setUserId(tokenRequest.userId());
-            appToken.setTokenType(Platform.APP);
-            appToken.setSendingTypeNotification(SendingTypeNotification.APPCHAT);
-            return tokenRepo.save(appToken).getUserId();
-        }
-    }
+//    public long saveToken(TokenRequest tokenRequest) {
+//        Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
+//
+//        if (byToken.isPresent()) {
+//            AppToken appToken = byToken.get();
+//            appToken.setLastUpdate(LocalDateTime.now());
+//            appToken.setToken(tokenRequest.token());
+//            appToken.setTokenType(Platform.APP);
+//            appToken.setSendingTypeNotification(SendingTypeNotification.APPCHAT);
+//            return tokenRepo.save(appToken).getUserId();
+//        } else {
+//            AppToken appToken = new AppToken();
+//            appToken.setToken(tokenRequest.token());
+//            appToken.setUserId(tokenRequest.userId());
+//            appToken.setTokenType(Platform.APP);
+//            appToken.setSendingTypeNotification(SendingTypeNotification.APPCHAT);
+//            return tokenRepo.save(appToken).getUserId();
+//        }
+//    }
 
     // جلب المحادثات المفعلة في التطبيق
     public List<AppChatResponse> phoneChats(String token){
@@ -181,8 +181,8 @@ public class AppChatService {
         var userTokenId = tokenService.decodeToken(token.substring(7)).getSubject();
         String newFileName = null;
 
-        Map<String, String> map = new HashMap<>();
-        map.put("content_available", "1");
+//        Map<String, String> map = new HashMap<>();
+//        map.put("content_available", "1");
 
         if(messagesRequest.msgType() == MsgType.IMAGE) {
             try {
@@ -217,38 +217,38 @@ public class AppChatService {
                 messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
                 messagesRequest.msgType());
 
-        Notification firebaseNotification = Notification
-                .builder()
-                .setTitle("أحبة العين")
-                .setBody(messagesRequest.messages())
-                .build();
-
-        List<Message> messageList = new ArrayList<>();
-        ApnsConfig apnsConfig = getApnsConfig();
-
-        appChatDetailsRepo.save(appChatDetails).getDetailsChatId();
-
-        if (messageList.size() >= 1) {
-            try {
-                System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
-            } catch (FirebaseMessagingException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        Message message = Message.builder()
-                .setTopic("all")
-                .putAllData(map)
-
-                .setNotification(firebaseNotification)
-                .setAndroidConfig(AndroidConfig.builder()
-                        .setNotification(AndroidNotification.builder()
-                                .setChannelId("ayn Family")
-                                .build())
-                        .build())
-                .setApnsConfig(apnsConfig)
-                .build();
-        firebaseMessaging.sendAsync(message);
+//        Notification firebaseNotification = Notification
+//                .builder()
+//                .setTitle("أحبة العين")
+//                .setBody(messagesRequest.messages())
+//                .build();
+//
+//        List<Message> messageList = new ArrayList<>();
+//        ApnsConfig apnsConfig = getApnsConfig();
+//
+//        appChatDetailsRepo.save(appChatDetails).getDetailsChatId();
+//
+//        if (messageList.size() >= 1) {
+//            try {
+//                System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
+//            } catch (FirebaseMessagingException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+//        Message message = Message.builder()
+//                .setTopic("all")
+//                .putAllData(map)
+//
+//                .setNotification(firebaseNotification)
+//                .setAndroidConfig(AndroidConfig.builder()
+//                        .setNotification(AndroidNotification.builder()
+//                                .setChannelId("ayn Family")
+//                                .build())
+//                        .build())
+//                .setApnsConfig(apnsConfig)
+//                .build();
+//        firebaseMessaging.sendAsync(message);
 
         return true;
     }

@@ -1,4 +1,4 @@
-package com.sc.demo.service.Statistics;
+package com.sc.demo.service.statistics;
 
 import com.sc.demo.model.dto.statistics.AppUserStatisticsResponse;
 import com.sc.demo.model.dto.statistics.StatisticsUsesResponse;
@@ -28,7 +28,7 @@ public class AppUserStatisticsService {
             LEFT Join AIN_CAPPS.SC_FAMILY_PERSONS P on (P.HEAD_FAMILY_ID = U.HEAD_FAMILY_ID)
             LEFT JOIN AIN_CAPPS.GL_ACC_DETAILS GL_BRAN ON (GL_BRAN.VALUE_CODE = U.BRANCHES AND GL_BRAN.SEGMENT_ID = 1)
             WHERE P.IS_GUARDIAN = 1
-            ORDER BY U.LAST_USE
+            ORDER BY U.LAST_USE DESC
             """)
                 .query(AppUserStatisticsResponse.class)
                 .list();

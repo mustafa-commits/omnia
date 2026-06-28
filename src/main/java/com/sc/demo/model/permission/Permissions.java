@@ -35,7 +35,8 @@ public class Permissions {
 
     private Long lastUpdateBy;
 
-    public Permissions(String permissionName, Long createBy) {
+    public Permissions(String permissionName, PermissionGroup groupId, Long createBy) {
+        this.groupId = groupId;
         this.permissionName = permissionName;
     }
 

@@ -49,13 +49,12 @@ public class UserDashboard {
     private Long lastUpdateBy;
 
     public UserDashboard(String phone, Long departmentId, String password,
-                         String userName, String fullName, List<PermissionGroup> groupId, Long createBy) {
+                         String userName, String fullName, Long groupId, Long createBy) {
         Phone = phone;
         this.departmentId = departmentId;
         this.password = password;
         this.userName = userName;
         this.fullName = fullName;
-        this.groupId = groupId;
     }
 
     @PrePersist
