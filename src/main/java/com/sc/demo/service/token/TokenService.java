@@ -1,10 +1,12 @@
 package com.sc.demo.service.token;
 
+import com.sc.demo.model.permission.PermissionGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 public class TokenService {
@@ -34,13 +36,14 @@ public class TokenService {
     }
 
     // انشاء توكن مستخدمي الداش بورد
-    public String generateUserDashboardToken(String userDashboardId) {
+    public String generateUserDashboardToken(String userDashboardId, List<PermissionGroup> groupId) {
         Instant now = Instant.now();
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("https://aynyateem.com/")
                 .issuedAt(now)
                 .expiresAt(now.plus(2, ChronoUnit.DAYS))
                 .subject(userDashboardId)
+                .claim("groupId", groupId)
                 .claim("scope", "DASHBOARD")
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();

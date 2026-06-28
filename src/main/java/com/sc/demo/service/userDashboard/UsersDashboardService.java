@@ -2,6 +2,7 @@ package com.sc.demo.service.userDashboard;
 
 import com.sc.demo.model.dto.DashboardUser.DashboardUserRequest;
 import com.sc.demo.model.dto.DashboardUser.UserDashboardResponse;
+import com.sc.demo.model.dto.token.TokenLoginRequest;
 import com.sc.demo.model.userDashboard.UserDashboard;
 import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.repository.userDashboard.AddUserDashboardRepo;
@@ -28,7 +29,8 @@ public class UsersDashboardService {
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         addUserDashboardRepo.save(new UserDashboard(userDashboardResponse.phone(), userDashboardResponse.departmentId(),
-                userDashboardResponse.password(), userDashboardResponse.userName(), userDashboardResponse.fullName(), Long.parseLong(userDashboardId)));
+                userDashboardResponse.password(), userDashboardResponse.userName(), userDashboardResponse.fullName(),
+                userDashboardResponse.permissionTemplate(), Long.parseLong(userDashboardId)));
 
         return true;
     }
@@ -48,10 +50,12 @@ public class UsersDashboardService {
     }
 
     // التحقق من مستخدم الداش بورد
-    public TokenRequest loginUserDashboard(String userName, String password){
+    public TokenLoginRequest loginUserDashboard(String userName, String password){
         Optional<UserDashboard> dashboardCheck = jdbcClient.sql("""
-                SELECT USER_DASHBOARD_ID AS userDashboardId
-                FROM MOBAPP.SC_DASHBOARD_USER
+                SELECT DU.USER_DASHBOARD_ID AS userDashboardId
+                      ,GP.GROUP_ID AS permissionGroupId
+                FROM MOBAPP.SC_DASHBOARD_USER DU
+                LEFT JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON DU.USER_DASHBOARD_ID = GP.USER_DASHBOARD
                 WHERE USER_NAME = :userName
                 AND PASSWORD = :password
                 """)
@@ -61,8 +65,10 @@ public class UsersDashboardService {
                 .optional();
 
         if (dashboardCheck.isPresent()) {
-            return new TokenRequest(dashboardCheck.get().getUserDashboardId(),
-                    tokenService.generateUserDashboardToken(String.valueOf(dashboardCheck.get().getUserDashboardId())));
+            return new TokenLoginRequest(dashboardCheck.get().getUserDashboardId(),
+                    tokenService.generateUserDashboardToken(
+                            String.valueOf(dashboardCheck.get().getUserDashboardId()),
+                            dashboardCheck.get().getPermissionGroupId()));
         }
         return null;
     }

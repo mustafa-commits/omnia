@@ -3,11 +3,11 @@ package com.sc.demo.controller;
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.DashboardUser.DashboardUserRequest;
 import com.sc.demo.model.dto.DashboardUser.UserDashboardResponse;
+import com.sc.demo.model.dto.token.TokenLoginRequest;
 import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.service.userDashboard.UsersDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -18,8 +18,8 @@ public class UsersDashboardController implements SecuredRestController {
     private UsersDashboardService usersDashboardService;
 
     // اضافة مستخدمي الداش بورد
-    @PostMapping("/V1/api/sc/newUserDashboard")
-    public Boolean newUserDashboard(@RequestBody UserDashboardResponse userDashboardResponse,
+    @PostMapping("/V1/api/sc/newDashboardUser")
+    public Boolean newDashboardUser(@RequestBody UserDashboardResponse userDashboardResponse,
                                     @RequestHeader(name = "authorization") String token){
         return usersDashboardService.newUserDashboard(userDashboardResponse, token);
     }
@@ -32,8 +32,8 @@ public class UsersDashboardController implements SecuredRestController {
 
     // تأكد من تسجيل دخول المستخدم الى الداش بورد
     @PostMapping("/V1/api/sc/loginUserDashboard")
-    public TokenRequest loginUserDashboard(@RequestParam String userName,
-                                           @RequestParam String password){
+    public TokenLoginRequest loginUserDashboard(@RequestParam String userName,
+                                                @RequestParam String password){
         return usersDashboardService.loginUserDashboard(userName, password);
     }
 }

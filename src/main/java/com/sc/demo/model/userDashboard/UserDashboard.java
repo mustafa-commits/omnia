@@ -24,7 +24,7 @@ public class UserDashboard {
     private Long userDashboardId;
 
     @OneToMany(mappedBy = "userDashboard", cascade = CascadeType.ALL)
-    private List<PermissionGroup> PermissionGroupId = new ArrayList<>();
+    private List<PermissionGroup> permissionGroupId = new ArrayList<>();
 
     @Column(length = 50)
     private String userName;
@@ -49,13 +49,13 @@ public class UserDashboard {
     private Long lastUpdateBy;
 
     public UserDashboard(String phone, Long departmentId, String password,
-                         String userName, String fullName, Long createBy) {
+                         String userName, String fullName, List<PermissionGroup> permissionTemplate, Long createBy) {
         Phone = phone;
         this.departmentId = departmentId;
         this.password = password;
         this.userName = userName;
         this.fullName = fullName;
-        this.createBy = createBy;
+        this.permissionGroupId = permissionTemplate;
     }
 
     @PrePersist

@@ -1,15 +1,20 @@
 package com.sc.demo.service.permission;
 
 import com.sc.demo.model.announcements.Pin;
+import com.sc.demo.model.dto.chat.AppChatResponse;
+import com.sc.demo.model.dto.permission.PermissionRequest;
+import com.sc.demo.model.dto.permission.PermissionTemplateRequest;
 import com.sc.demo.model.permission.PermissionGroup;
 import com.sc.demo.model.permission.Permissions;
 import com.sc.demo.repository.permission.PermissionTemplateRepo;
 import com.sc.demo.repository.permission.PermissionRepo;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class permissionDashboardService {
@@ -23,6 +28,9 @@ public class permissionDashboardService {
     @Autowired
     private PermissionTemplateRepo permissionTemplateRepo;
 
+    @Autowired
+    private JdbcClient jdbcClient;
+
     // اضافة صلاحية على الداش بورد
     public Boolean addPermission(String permissionName, String token){
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
@@ -31,7 +39,7 @@ public class permissionDashboardService {
         return true;
     }
 
-    // اضافة قالب للصلاحيات على الداش بورد
+    // اضافة قالب صلاحية على الداش بورد
     public Boolean addPermissionTemplate(String permissionTemplateName, String token){
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
@@ -52,7 +60,7 @@ public class permissionDashboardService {
         return true;
     }
 
-    // تعديل اسم قالب الصلاحية
+    // تعديل قالب الصلاحية
     public Boolean editPermissionTemplate(Long groupId, String permissionTemplateName, String token){
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
@@ -64,4 +72,29 @@ public class permissionDashboardService {
         permissionTemplateRepo.save(updatePermissionTemplate);
         return true;
     }
+
+    //  جلب الصلاحيات في الداش بورد
+    public List<PermissionRequest> getPermissions(){
+        return jdbcClient.sql("""
+                SELECT PERMISSION_ID AS permissionId,
+                       PERMISSION_NAME AS permissionName
+                FROM MOBAPP.SC_DASHBOARD_PERMISSIONS
+                ORDER BY PERMISSION_ID
+                """)
+                .query(PermissionRequest.class)
+                .list();
+    }
+
+    //  جلب قوالب الصلاحيات في الداش بورد
+    public List<PermissionTemplateRequest> getPermissionTemplates(){
+        return jdbcClient.sql("""
+                SELECT GROUP_ID AS groupId,
+                       PERMISSION_TEMPLATE_NAME AS permissionTemplateName
+                FROM MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS
+                ORDER BY GROUP_ID
+                """)
+                .query(PermissionTemplateRequest.class)
+                .list();
+    }
+
 }
