@@ -1,10 +1,11 @@
 package com.sc.demo.service.chat;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.Tokens.AppToken;
+import com.sc.demo.model.tokens.AppToken;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.model.dto.token.TokenRequest;
+import com.sc.demo.model.tokens.SendingTypeNotification;
 import com.sc.demo.repository.chat.AppChatDetailsRepo;
 import com.sc.demo.repository.chat.TokenRepo;
 import com.sc.demo.repository.chat.ChatRepo;
@@ -67,21 +68,6 @@ public class AppChatService {
         appChatDetailsRepo.save(new AppChatDetails(Long.parseLong(userTokenId), WhoIsSender.APPUSER, Platform.APP,
                 appChatDetails.getMessages(),appChatMaster));
 
-        Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(userTokenId));
-
-        messageList.add(Message.builder()
-                .setToken(byToken.get().getToken())
-                .putAllData(map)
-                .setNotification(firebaseNotification)
-                .setAndroidConfig(AndroidConfig.builder()
-                        .setNotification(AndroidNotification.builder()
-                                .setChannelId("ayn Family")
-                                .build())
-                        .build())
-                .setApnsConfig(apnsConfig)
-                .build()
-        );
-
         // رسالة تلقائية عند انشاء محادثة
         AppChatDetails welcomeMessage = new AppChatDetails();
         welcomeMessage.setChatApp(appChatMaster);
@@ -126,17 +112,19 @@ public class AppChatService {
         Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
 
         if (byToken.isPresent()) {
-            AppToken AppToken = byToken.get();
-            AppToken.setLastUpdate(LocalDateTime.now());
-            AppToken.setToken(tokenRequest.token());
-            AppToken.setTokenType(Platform.APP);
-            return tokenRepo.save(AppToken).getUserId();
+            AppToken appToken = byToken.get();
+            appToken.setLastUpdate(LocalDateTime.now());
+            appToken.setToken(tokenRequest.token());
+            appToken.setTokenType(Platform.APP);
+            appToken.setSendingTypeNotification(SendingTypeNotification.APPCHAT);
+            return tokenRepo.save(appToken).getUserId();
         } else {
-            AppToken AppToken = new AppToken();
-            AppToken.setToken(tokenRequest.token());
-            AppToken.setUserId(tokenRequest.userId());
-            AppToken.setTokenType(Platform.APP);
-            return tokenRepo.save(AppToken).getUserId();
+            AppToken appToken = new AppToken();
+            appToken.setToken(tokenRequest.token());
+            appToken.setUserId(tokenRequest.userId());
+            appToken.setTokenType(Platform.APP);
+            appToken.setSendingTypeNotification(SendingTypeNotification.APPCHAT);
+            return tokenRepo.save(appToken).getUserId();
         }
     }
 
@@ -239,20 +227,6 @@ public class AppChatService {
         ApnsConfig apnsConfig = getApnsConfig();
 
         appChatDetailsRepo.save(appChatDetails).getDetailsChatId();
-        Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(userTokenId));
-
-        messageList.add(Message.builder()
-                .setToken(byToken.get().getToken())
-                .putAllData(map)
-                .setNotification(firebaseNotification)
-                .setAndroidConfig(AndroidConfig.builder()
-                        .setNotification(AndroidNotification.builder()
-                                .setChannelId("ayn Family")
-                                .build())
-                        .build())
-                .setApnsConfig(apnsConfig)
-                .build()
-        );
 
         if (messageList.size() >= 1) {
             try {
@@ -261,9 +235,11 @@ public class AppChatService {
                 throw new RuntimeException(e);
             }
         }
+
         Message message = Message.builder()
                 .setTopic("all")
                 .putAllData(map)
+
                 .setNotification(firebaseNotification)
                 .setAndroidConfig(AndroidConfig.builder()
                         .setNotification(AndroidNotification.builder()
@@ -273,6 +249,7 @@ public class AppChatService {
                 .setApnsConfig(apnsConfig)
                 .build();
         firebaseMessaging.sendAsync(message);
+
         return true;
     }
 

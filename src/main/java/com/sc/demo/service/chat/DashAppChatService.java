@@ -1,7 +1,7 @@
 package com.sc.demo.service.chat;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.Tokens.AppToken;
+import com.sc.demo.model.tokens.AppToken;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.repository.chat.ChatRepo;
@@ -116,18 +116,7 @@ public class DashAppChatService {
                 throw new RuntimeException(e);
             }
         }
-        Message message = Message.builder()
-                .setTopic("all")
-                .putAllData(map)
-                .setNotification(firebaseNotification)
-                .setAndroidConfig(AndroidConfig.builder()
-                        .setNotification(AndroidNotification.builder()
-                                .setChannelId("ayn Family")
-                                .build())
-                        .build())
-                .setApnsConfig(apnsConfig)
-                .build();
-        firebaseMessaging.sendAsync(message);
+
         return true;
     }
 

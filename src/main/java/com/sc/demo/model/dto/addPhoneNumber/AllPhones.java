@@ -10,6 +10,7 @@ public record AllPhones(
         String createBy,
         LocalDateTime createDate,
         String headFamilyName,
-        String oldFamilyNo
+        String oldFamilyNo,
+        String guardianName
 ) {
 }

@@ -104,9 +104,10 @@ public class AddPhoneService {
                        DU.FULL_NAME AS createBy,
                        F.CREATE_DATE AS createDate,
                        F.HEAD_FAMILY_NAME AS headFamilyName,
-                       F.OLD_FAMILY_NO AS oldFamilyNo
+                       F.OLD_FAMILY_NO AS oldFamilyNo,
+                       F.GUARDIAN_NAME AS guardianName
                 FROM MOBAPP.SC_FAMILY_INFO F
-                LEFT JOIN MOBAPP.SC_DASHBOARD_USERS DU ON F.CREATE_BY = DU.DASHBOARD_USER_ID
+                LEFT JOIN MOBAPP.SC_DASHBOARD_USER DU ON F.CREATE_BY = DU.USER_DASHBOARD_ID
                 ORDER BY F.CREATE_DATE DESC
                 """)
                 .query(AllPhones.class)

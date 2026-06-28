@@ -180,6 +180,6 @@ public class LoginService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(tokenService.generateToken("36", 72L, 403L, "04"));
+        System.out.println(tokenService.generateToken("44", 40L, 150L, "01"));
     }
 }

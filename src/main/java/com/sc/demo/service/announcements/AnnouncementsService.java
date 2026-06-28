@@ -1,7 +1,7 @@
 package com.sc.demo.service.announcements;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.Tokens.AppToken;
+import com.sc.demo.model.tokens.AppToken;
 import com.sc.demo.model.announcements.Announcements;
 import com.sc.demo.model.announcements.AnnouncementsAttachment;
 import com.sc.demo.model.announcements.AnnouncementsDetails;
@@ -12,6 +12,7 @@ import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.notification.SendingType;
+import com.sc.demo.model.tokens.SendingTypeNotification;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
@@ -191,12 +192,14 @@ public class AnnouncementsService {
             appToken.setLastUpdate(LocalDateTime.now());
             appToken.setToken(tokenRequest.token());
             appToken.setTokenType(Platform.APP);
+            appToken.setSendingTypeNotification(SendingTypeNotification.ANNOUNCEMENT);
             return tokenRepo.save(appToken).getUserId();
         } else {
             AppToken appToken = new AppToken();
             appToken.setToken(tokenRequest.token());
             appToken.setUserId(tokenRequest.userId());
             appToken.setTokenType(Platform.APP);
+            appToken.setSendingTypeNotification(SendingTypeNotification.ANNOUNCEMENT);
             return tokenRepo.save(appToken).getUserId();
         }
     }

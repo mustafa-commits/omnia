@@ -1,13 +1,14 @@
 package com.sc.demo.service.notification;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.Tokens.AppToken;
+import com.sc.demo.model.tokens.AppToken;
 import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.notification.*;
 import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.notification.SendingType;
+import com.sc.demo.model.tokens.SendingTypeNotification;
 import com.sc.demo.repository.chat.TokenRepo;
 import com.sc.demo.repository.notifications.NotificationDetailsRepo;
 import com.sc.demo.repository.notifications.NotificationRepo;
@@ -123,12 +124,14 @@ public class NotificationService {
             appToken.setLastUpdate(LocalDateTime.now());
             appToken.setToken(tokenRequest.token());
             appToken.setTokenType(Platform.APP);
+            appToken.setSendingTypeNotification(SendingTypeNotification.NOTIFICATION);
             return tokenRepo.save(appToken).getUserId();
         } else {
             AppToken appToken = new AppToken();
             appToken.setToken(tokenRequest.token());
             appToken.setUserId(tokenRequest.userId());
             appToken.setTokenType(Platform.APP);
+            appToken.setSendingTypeNotification(SendingTypeNotification.NOTIFICATION);
             return tokenRepo.save(appToken).getUserId();
         }
     }
