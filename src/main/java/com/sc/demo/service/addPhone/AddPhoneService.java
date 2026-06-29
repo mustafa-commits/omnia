@@ -79,21 +79,18 @@ public class AddPhoneService {
 
     // اضافة رقم هاتف
     public boolean addPhone(AddPhonRequest addPhonRequest, String token){
-        Optional<FamilyInfo> byHeadAndRequestId = addPhoneRepo.findById(Long.parseLong(addPhonRequest.oldFamilyNo()));
+        Optional<FamilyInfo> byHeadFamilyId = addPhoneRepo.findById(Long.parseLong(String.valueOf(addPhonRequest.headFamilyId())));
+        Optional<FamilyInfo> byPhone = addPhoneRepo.findById(Long.valueOf(addPhonRequest.phone()));
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
-        var headFamilyId = tokenService.decodeToken(token.substring(7)).getClaim("headFamilyId");
-        var requestId = tokenService.decodeToken(token.substring(7)).getClaim("requestId");
-        var branches = tokenService.decodeToken(token.substring(7)).getClaim("branches");
 
-        if (byHeadAndRequestId.isPresent()){
-            return false;
-        }else {
-            addPhoneRepo.save(new FamilyInfo(addPhonRequest.guardianName(), Long.parseLong(headFamilyId.toString()), Long.parseLong(requestId.toString()),
-                    addPhonRequest.headFamilyName(), Long.parseLong(userDashboardId),
-                    addPhonRequest.birthDate(), addPhonRequest.phone(),
-                    addPhonRequest.oldFamilyNo(), String.valueOf(branches)));
+        if (byHeadFamilyId.isEmpty() && byPhone.isEmpty()){
+            addPhoneRepo.save(new FamilyInfo(addPhonRequest.guardianName(), addPhonRequest.headFamilyId(), addPhonRequest.requestId(),
+                addPhonRequest.headFamilyName(), Long.parseLong(userDashboardId),
+                addPhonRequest.birthDate(), addPhonRequest.phone(),
+                addPhonRequest.oldFamilyNo(), addPhonRequest.branches()));
             return true;
         }
+            return false;
     }
 
     public List<AllPhones> allNewPhone(){

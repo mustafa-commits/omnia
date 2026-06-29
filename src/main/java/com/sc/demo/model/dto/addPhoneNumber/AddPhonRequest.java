@@ -7,6 +7,9 @@ public record AddPhonRequest(
         String headFamilyName,
         LocalDate birthDate,
         String phone,
+        String branches,
+        Long requestId,
+        Long headFamilyId,
         String oldFamilyNo
 ) {
 }
