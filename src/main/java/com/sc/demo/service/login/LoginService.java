@@ -3,7 +3,6 @@ package com.sc.demo.service.login;
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
 import com.sc.demo.model.dto.login.LoginResponse;
 import com.sc.demo.model.dto.login.TokenLoginRequest;
-import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.users.AppUser;
 import com.sc.demo.model.verification.MethodType;
 import com.sc.demo.model.dto.login.ChekLoginRequest;

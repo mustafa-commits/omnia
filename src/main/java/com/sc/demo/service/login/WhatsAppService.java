@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class WhatsAppService {
 
-    public boolean sendVerificationCode(long phone, String country_code, long code){
+    public boolean sendVerificationCode(Long phone, String country_code, Long code){
         System.out.println(code);
         return true;
     }

@@ -1,6 +1,5 @@
 package com.sc.demo.controller;
 
-import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class TokenController implements SecuredRestController {
+public class TokenController{
 
     @Autowired
     private TokenService tokenService;
 
     // تخزين Token
-    @PostMapping("/V1/api/sc/setAnnouncementsToken")
-    public long setAnnouncementsToken(@RequestBody TokenRequest tokenRequest){
+    @PostMapping("/V1/api/sc/saveToken")
+    public long saveToken(@RequestBody TokenRequest tokenRequest){
         return tokenService.saveToken(tokenRequest);
     }
 }

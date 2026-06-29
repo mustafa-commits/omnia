@@ -1,7 +1,6 @@
 package com.sc.demo.service.chat;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.token.AppToken;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
