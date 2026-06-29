@@ -4,5 +4,6 @@ public record LogInResponse(
         Long headFamilyId,
         Long requestId,
         String Branches,
-        String guardianName) {
+        String guardianName
+) {
 }

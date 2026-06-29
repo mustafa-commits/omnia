@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 
 @Service
@@ -23,7 +24,9 @@ public class TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("https://aynyateem.com/")
                 .issuedAt(now)
-                .expiresAt(now.plus(2, ChronoUnit.DAYS))
+                .expiresAt(now.atZone(ZoneOffset.UTC)
+                        .plusYears(2)
+                        .toInstant())
                 .subject(userId)
                 .claim("requestId", requestId)
                 .claim("headFamilyId", headFamilyId)
@@ -39,7 +42,9 @@ public class TokenService {
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuer("https://aynyateem.com/")
                 .issuedAt(now)
-                .expiresAt(now.plus(2, ChronoUnit.DAYS))
+                .expiresAt(now.atZone(ZoneOffset.UTC)
+                        .plusYears(2)
+                        .toInstant())
                 .subject(userDashboardId)
                 .claim("groupId", groupId)
                 .claim("userName", userName)

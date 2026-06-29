@@ -48,9 +48,12 @@ public class UsersDashboardService {
                         SELECT GP.GROUP_ID AS groupId,
                                GROUP_NAME AS groupName,
                                GP.IS_ACTIVE AS isActive,
-                               PERMISSION_NAME AS permissionName
+                               LISTAGG(PERMISSION_NAME, ', ') WITHIN GROUP (ORDER BY PERMISSION_ID) AS permissionName
                         FROM MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP
                         LEFT JOIN MOBAPP.SC_DASHBOARD_PERMISSIONS P ON P.GROUP_ID = GP.GROUP_ID
+                        GROUP BY GP.GROUP_ID,
+                                 GROUP_NAME,
+                                 GP.IS_ACTIVE
                         """)
                 .query(DashboardPermissionsRequest.class)
                 .list();

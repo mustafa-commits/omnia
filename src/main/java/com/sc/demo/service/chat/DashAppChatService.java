@@ -130,13 +130,13 @@ public class DashAppChatService {
             AppToken appToken = byToken.get();
             appToken.setLastUpdate(LocalDateTime.now());
             appToken.setToken(tokenRequest.token());
-            appToken.setTokenType(Platform.APP);
+            appToken.setTokenType(Platform.DASHBOARD);
             return tokenRepo.save(appToken).getUserId();
         } else {
             AppToken appToken = new AppToken();
             appToken.setToken(tokenRequest.token());
             appToken.setUserId(tokenRequest.userId());
-            appToken.setTokenType(Platform.APP);
+            appToken.setTokenType(Platform.DASHBOARD);
             return tokenRepo.save(appToken).getUserId();
         }
     }
