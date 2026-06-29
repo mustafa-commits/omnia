@@ -79,11 +79,21 @@ public class AddPhoneService {
 
     // اضافة رقم هاتف
     public boolean addPhone(AddPhonRequest addPhonRequest, String token){
-        Optional<FamilyInfo> byHeadFamilyId = addPhoneRepo.findById(Long.parseLong(String.valueOf(addPhonRequest.headFamilyId())));
-        Optional<FamilyInfo> byPhone = addPhoneRepo.findById(Long.valueOf(addPhonRequest.phone()));
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
+        List<Long> addingPhone = jdbcClient.sql("""
+                        SELECT INFO_ID
+                        FROM MOBAPP.SC_FAMILY_INFO
+                        WHERE PHONE = :phone
+                        AND HEAD_FAMILY_ID = :headFamilyId
+                        AND REQUEST_ID = :requestId
+                        """)
+                .param("phone", addPhonRequest.phone())
+                .param("headFamilyId", addPhonRequest.headFamilyId())
+                .param("requestId", addPhonRequest.requestId())
+                .query(Long.class)
+                .list();
 
-        if (byHeadFamilyId.isEmpty() && byPhone.isEmpty()){
+        if (addingPhone.isEmpty()){
             addPhoneRepo.save(new FamilyInfo(addPhonRequest.guardianName(), addPhonRequest.headFamilyId(), addPhonRequest.requestId(),
                 addPhonRequest.headFamilyName(), Long.parseLong(userDashboardId),
                 addPhonRequest.birthDate(), addPhonRequest.phone(),
