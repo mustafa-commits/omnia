@@ -1,5 +1,6 @@
 package com.sc.demo.service.userDashboard;
 
+import com.sc.demo.model.dto.permission.DashboardPermissionsRequest;
 import com.sc.demo.model.dto.usersDashboard.UsersDashboardRequest;
 import com.sc.demo.model.dto.usersDashboard.UserDashboardResponse;
 import com.sc.demo.model.dto.login.LoginRequest;
@@ -41,14 +42,30 @@ public class UsersDashboardService {
         return true;
     }
 
+    // جلب جميع الصلاحيات
+    public List<DashboardPermissionsRequest> viewDashboardPermissions() {
+        return jdbcClient.sql("""
+                        SELECT GP.GROUP_ID AS groupId,
+                               GROUP_NAME AS groupName,
+                               GP.IS_ACTIVE AS isActive,
+                               PERMISSION_NAME AS permissionName
+                        FROM MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP
+                        LEFT JOIN MOBAPP.SC_DASHBOARD_PERMISSIONS P ON P.GROUP_ID = GP.GROUP_ID
+                        """)
+                .query(DashboardPermissionsRequest.class)
+                .list();
+    }
+
     // جميع مستخدمي الداش بورد
     public List<UsersDashboardRequest> viewUsersDashboard() {
         return jdbcClient.sql("""
                         SELECT USER_ID AS userId,
                                PHONE,
                                FULL_NAME AS fullName,
-                               USER_NAME AS userName
-                        FROM MOBAPP.SC_DASHBOARD_USER
+                               USER_NAME AS userName,
+                               GROUP_NAME AS groupName
+                        FROM MOBAPP.SC_DASHBOARD_USER DU
+                        LEFT JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON DU.GROUP_ID = GP.GROUP_ID
                         ORDER BY USER_ID
                         """)
                 .query(UsersDashboardRequest.class)
@@ -89,6 +106,7 @@ public class UsersDashboardService {
                 return ResponseEntity.ok(new LoginRequest2(
                         dashboardLoginCheck.get().userId(),
                         dashboardLoginCheck.get().userName(),
+                        dashboardLoginCheck.get().groupId(),
                         dashboardLoginCheck.get().groupName(),
                         dashboardPermission,
                         tokenService.generateUserDashboardToken(

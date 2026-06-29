@@ -1,6 +1,7 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
+import com.sc.demo.model.dto.permission.DashboardPermissionsRequest;
 import com.sc.demo.model.dto.usersDashboard.UsersDashboardRequest;
 import com.sc.demo.model.dto.usersDashboard.UserDashboardResponse;
 import com.sc.demo.model.dto.login.LoginRequest2;
@@ -22,6 +23,12 @@ public class UsersDashboardController implements SecuredRestController {
     public Boolean newUsersDashboard(@RequestBody UserDashboardResponse userDashboardResponse,
                                     @RequestHeader(name = "authorization") String token){
         return usersDashboardService.newUserDashboard(userDashboardResponse, token);
+    }
+
+    // جلب الموضفين المضافين
+    @GetMapping("/V1/api/sc/viewDashboardPermissions")
+    public List<DashboardPermissionsRequest> viewDashboardPermissions(){
+        return usersDashboardService.viewDashboardPermissions();
     }
 
     // جلب الموضفين المضافين

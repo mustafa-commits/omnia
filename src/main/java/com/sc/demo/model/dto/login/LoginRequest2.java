@@ -6,6 +6,7 @@ import java.util.List;
 public record LoginRequest2(
         Long userId,
         String userName,
+        Long groupId,
         String groupName,
         List<PermissionRequest> permissions,
         String token

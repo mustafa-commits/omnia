@@ -4,6 +4,7 @@ public record UsersDashboardRequest(
         Long userId,
         String PHONE,
         String fullName,
-        String userName
+        String userName,
+        String groupName
 ) {
 }
