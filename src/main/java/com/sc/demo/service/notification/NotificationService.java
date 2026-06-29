@@ -2,9 +2,7 @@ package com.sc.demo.service.notification;
 
 import com.google.firebase.messaging.*;
 import com.sc.demo.model.token.AppToken;
-import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.notification.*;
-import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.notification.NotificationMaster;
 import com.sc.demo.model.notification.NotificationDetails;
 import com.sc.demo.model.notification.SendingType;
@@ -112,25 +110,6 @@ public class NotificationService {
         firebaseMessaging.sendAsync(message);
         System.out.println("message" + message);
         return notificationMaster;
-    }
-
-    // حفظ Token القادم من firebase في قاعدة البيانات
-    public long saveToken(TokenRequest tokenRequest) {
-        Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
-
-        if (byToken.isPresent()) {
-            AppToken appToken = byToken.get();
-            appToken.setLastUpdate(LocalDateTime.now());
-            appToken.setToken(tokenRequest.token());
-            appToken.setTokenType(Platform.APP);
-            return tokenRepo.save(appToken).getUserId();
-        } else {
-            AppToken appToken = new AppToken();
-            appToken.setToken(tokenRequest.token());
-            appToken.setUserId(tokenRequest.userId());
-            appToken.setTokenType(Platform.APP);
-            return tokenRepo.save(appToken).getUserId();
-        }
     }
 
     // اشعارات التطيق لكل يوزر

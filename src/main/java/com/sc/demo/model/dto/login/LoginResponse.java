@@ -1,6 +1,6 @@
 package com.sc.demo.model.dto.login;
 
-public record LogInResponse(
+public record LoginResponse(
         Long headFamilyId,
         Long requestId,
         String Branches,

@@ -90,14 +90,14 @@ public class DashAppChatService {
                 .setTitle("أحبة العين")
                 .setBody(messagesRequest.messages())
                 .build();
-
+        System.out.println("firebaseNotification: " + firebaseNotification);
         List<Message> messageList = new ArrayList<>();
         ApnsConfig apnsConfig = getApnsConfig();
-
+        System.out.println("apnsConfig: " + apnsConfig);
         appChatDetailsRepo.save(appChatDetails).getDetailsChatId();
 
         Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(userDashboardId));
-
+        System.out.println("byToken: " + byToken);
         messageList.add(Message.builder()
                 .setToken(byToken.get().getToken())
                 .putAllData(map)
@@ -110,7 +110,7 @@ public class DashAppChatService {
                 .setApnsConfig(apnsConfig)
                 .build()
         );
-
+        System.out.println("messageList 111: " + messageList);
         if (messageList.size() >= 1) {
             try {
                 System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
@@ -120,25 +120,6 @@ public class DashAppChatService {
         }
 
         return true;
-    }
-
-    // حفظ Token القادم من fireBase في قاعدة البيانات
-    public long saveToken(TokenRequest tokenRequest) {
-        Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
-
-        if (byToken.isPresent()) {
-            AppToken appToken = byToken.get();
-            appToken.setLastUpdate(LocalDateTime.now());
-            appToken.setToken(tokenRequest.token());
-            appToken.setTokenType(Platform.DASHBOARD);
-            return tokenRepo.save(appToken).getUserId();
-        } else {
-            AppToken appToken = new AppToken();
-            appToken.setToken(tokenRequest.token());
-            appToken.setUserId(tokenRequest.userId());
-            appToken.setTokenType(Platform.DASHBOARD);
-            return tokenRepo.save(appToken).getUserId();
-        }
     }
 
     // جلب الرسائل

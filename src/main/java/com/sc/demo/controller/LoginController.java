@@ -1,7 +1,7 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
-import com.sc.demo.model.dto.login.LogInResponse;
+import com.sc.demo.model.dto.login.LoginResponse;
 import com.sc.demo.service.login.LoginService;
 import com.sc.demo.service.token.TokenService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class LoginController {
 
     // تسجيل الدخول من خلال رقم الهاتف
     @GetMapping("/V1/api/sc/loginByPhone")
-    public List<LogInResponse> login(@RequestParam Long phone,
+    public List<LoginResponse> login(@RequestParam Long phone,
                                      @RequestParam String country_code,
                                      @RequestParam String birthDate) {
         return loginService.logIn(phone, country_code, birthDate);

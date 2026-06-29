@@ -1,11 +1,16 @@
 package com.sc.demo.service.token;
 
+import com.sc.demo.model.chat.Platform;
+import com.sc.demo.model.dto.token.TokenRequest;
+import com.sc.demo.model.token.AppToken;
+import com.sc.demo.repository.chat.TokenRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @Service
 public class TokenService {
@@ -17,6 +22,9 @@ public class TokenService {
 
     @Autowired
     private JwtDecoder jwtDecoder;
+
+    @Autowired
+    private TokenRepo tokenRepo;
 
     // انشاء توكت مستخدمي التطبيق
     public String generateToken(String userId, Long requestId, Long headFamilyId, String branches) {
@@ -55,6 +63,25 @@ public class TokenService {
 
     public Jwt decodeToken(String token) {
         return jwtDecoder.decode(token);
+    }
+
+    // حفظ Token القادم من firebase في قاعدة البيانات
+    public long saveToken(TokenRequest tokenRequest) {
+        Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
+
+        if (byToken.isPresent()) {
+            AppToken appToken = byToken.get();
+            appToken.setLastUpdate(LocalDateTime.now());
+            appToken.setToken(tokenRequest.token());
+            appToken.setTokenType(tokenRequest.tokenType() != Platform.APP ? Platform.DASHBOARD : Platform.APP);
+            return tokenRepo.save(appToken).getUserId();
+        } else {
+            AppToken appToken = new AppToken();
+            appToken.setToken(tokenRequest.token());
+            appToken.setUserId(tokenRequest.userId());
+            appToken.setTokenType(tokenRequest.tokenType() != Platform.APP ? Platform.DASHBOARD : Platform.APP);
+            return tokenRepo.save(appToken).getUserId();
+        }
     }
 
 }

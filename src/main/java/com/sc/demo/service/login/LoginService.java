@@ -1,7 +1,8 @@
 package com.sc.demo.service.login;
 
 import com.sc.demo.model.dto.familyInfo.AppUserRequest;
-import com.sc.demo.model.dto.login.LogInResponse;
+import com.sc.demo.model.dto.login.LoginResponse;
+import com.sc.demo.model.dto.login.TokenLoginRequest;
 import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.users.AppUser;
 import com.sc.demo.model.verification.MethodType;
@@ -42,7 +43,7 @@ public class LoginService implements CommandLineRunner {
     String regex = "^(77|78|79)\\d{8}$";
 
     // تسجيل دخول من خلال رقم الهاتف زتاريخ الميلاد
-    public List<LogInResponse> logIn(Long phone, String country_code, String birthDate){
+    public List<LoginResponse> logIn(Long phone, String country_code, String birthDate){
 
         if (!String.valueOf(phone).matches(regex)){
             return null;
@@ -86,7 +87,7 @@ public class LoginService implements CommandLineRunner {
                 """)
                 .param("phone", phone)
                 .param("birthDate", birthDate)
-                .query(LogInResponse.class)
+                .query(LoginResponse.class)
                 .list();
     }
 
@@ -113,8 +114,8 @@ public class LoginService implements CommandLineRunner {
                 .optional();
 
         if (logInChek.isPresent()) {
-            List<TokenRequest> setGuardianInfo = new ArrayList<>();
-            List<LogInResponse> responseList = jdbcClient.sql("""
+            List<TokenLoginRequest> setGuardianInfo = new ArrayList<>();
+            List<LoginResponse> responseList = jdbcClient.sql("""
                         SELECT H.HEAD_FAMILY_ID AS headFamilyId
                                ,R.AID_REQUEST_ID AS requestId
                                ,F.ORG_ID AS branches
@@ -146,11 +147,11 @@ public class LoginService implements CommandLineRunner {
                         WHERE FI.PHONE LIKE '%' || :phone
                         """)
                     .param("phone", appUserRequest.phone())
-                    .query(LogInResponse.class)
+                    .query(LoginResponse.class)
                     .list();
 
             // بعد التأكد من رقم الهاتف تضيف المعلومات في AppUser
-            for (LogInResponse response : responseList){
+            for (LoginResponse response : responseList){
                 boolean alreadyExists = appUserRepo.existsByHeadFamilyIdAndRequestIdAndBranchesAndGuardianName(
                         response.headFamilyId(),
                         response.requestId(),
@@ -170,7 +171,7 @@ public class LoginService implements CommandLineRunner {
                     ).getUserId();
 
                 }
-                setGuardianInfo.add(new TokenRequest(loginUser, tokenService.generateToken(String.valueOf(loginUser),
+                setGuardianInfo.add(new TokenLoginRequest(loginUser, tokenService.generateToken(String.valueOf(loginUser),
                         response.requestId(), response.headFamilyId(), response.Branches())));
             }
            return ResponseEntity.ok(setGuardianInfo);
@@ -180,6 +181,6 @@ public class LoginService implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println(tokenService.generateToken("44", 40L, 150L, "01"));
+        System.out.println(tokenService.generateToken("57", 20678L, 153599L, "18"));
     }
 }

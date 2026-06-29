@@ -16,18 +16,9 @@ public class NotificationController implements SecuredRestController {
     @Autowired
     private NotificationService notificationService;
 
-    // تخزين Token
-    @PostMapping("/V1/api/sc/setNotificationToken")
-    public long setNotificationToken(@RequestBody TokenRequest tokenRequest){
-        return notificationService.saveToken(tokenRequest);
-    }
-
     // جلب اشعارات التلفون
     @GetMapping("/V1/api/sc/getPhoneNotification")
     public List<PhoneNotificationRequest> getPhoneNotification(@RequestHeader(name = "authorization") String token){
         return notificationService.phoneNotification(token);
     }
-
-
-
 }

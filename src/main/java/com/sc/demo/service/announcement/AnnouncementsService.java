@@ -6,7 +6,6 @@ import com.sc.demo.model.announcement.Announcements;
 import com.sc.demo.model.announcement.AnnouncementsAttachment;
 import com.sc.demo.model.announcement.AnnouncementsDetails;
 import com.sc.demo.model.announcement.Pin;
-import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
@@ -49,10 +48,10 @@ public class AnnouncementsService {
     private TokenService tokenService;
 
     @Autowired
-    private TokenRepo tokenRepo;
+    private FirebaseMessaging firebaseMessaging;
 
     @Autowired
-    private FirebaseMessaging firebaseMessaging;
+    private TokenRepo tokenRepo;
 
     // انشاء تبليغ
     public Announcements createAnnouncements(AnnouncementsRequest announcementsRequest,
@@ -181,25 +180,6 @@ public class AnnouncementsService {
         firebaseMessaging.sendAsync(message);
         System.out.println("message" + message);
         return announcements;
-    }
-
-    // حفظ Token القادم من firebase في قاعدة البيانات
-    public long saveToken(TokenRequest tokenRequest) {
-        Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
-
-        if (byToken.isPresent()) {
-            AppToken appToken = byToken.get();
-            appToken.setLastUpdate(LocalDateTime.now());
-            appToken.setToken(tokenRequest.token());
-            appToken.setTokenType(Platform.APP);
-            return tokenRepo.save(appToken).getUserId();
-        } else {
-            AppToken appToken = new AppToken();
-            appToken.setToken(tokenRequest.token());
-            appToken.setUserId(tokenRequest.userId());
-            appToken.setTokenType(Platform.APP);
-            return tokenRepo.save(appToken).getUserId();
-        }
     }
 
     // تبليغات التطبيق لكل يوزر

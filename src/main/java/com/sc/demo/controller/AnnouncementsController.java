@@ -45,9 +45,4 @@ public class AnnouncementsController implements SecuredRestController {
         return announcementsService.PhoneAnnouncements(token);
     }
 
-    // تخزين Token
-    @PostMapping("/V1/api/sc/setAnnouncementsToken")
-    public long setAnnouncementsToken(@RequestBody TokenRequest tokenRequest){
-        return announcementsService.saveToken(tokenRequest);
-    }
 }
