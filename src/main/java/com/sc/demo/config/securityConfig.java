@@ -58,6 +58,7 @@ public class securityConfig {
                         .requestMatchers("/V1/api/sc/viewDashboardPermissions/**").permitAll()
                         .requestMatchers("/V1/api/sc/getPermissionTemplates/**").permitAll()
                         .requestMatchers("/V1/api/sc/dashPhotoChat/**","/dashPhotoChat","/dashPhotoChat/**").permitAll()
+                        .requestMatchers("/V1/api/sc/saveToken/**","/saveToken","/saveToken/**").permitAll()
                         .requestMatchers("/V1/api/sc/dashWriteMessages/**","/dashWriteMessages","/dashWriteMessages/**").permitAll()
                         .requestMatchers("/V1/api/sc/editAnnouncement/**","/editAnnouncement","/editAnnouncement/**").permitAll()
                         .requestMatchers("/V1/api/sc/createAnnouncements/**","/createAnnouncements","/createAnnouncements/**").permitAll()
