@@ -5,6 +5,7 @@ import com.sc.demo.model.chat.ConfirmProcedure;
 import com.sc.demo.model.chat.MsgType;
 import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.chat.*;
+import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.service.chat.DashAppChatService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,12 @@ public class DashAppChatController implements SecuredRestController {
                                      @RequestHeader(name = "authorization") String token){
         return dashAppChatService.dashWriteMessages(new MessagesRequest(chatId,
                 platform, messages, msgType), file, voice, token);
+    }
+
+    // تخزين Token
+    @PostMapping("/V1/api/sc/setToken")
+    public long setToken(@RequestBody TokenRequest tokenRequest){
+        return dashAppChatService.saveToken(tokenRequest);
     }
 
     // اظهار الرسائل في الداش بورد

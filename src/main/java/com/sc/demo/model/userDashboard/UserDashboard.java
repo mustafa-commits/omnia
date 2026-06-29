@@ -23,7 +23,7 @@ public class UserDashboard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userDashboardId", cascade = CascadeType.ALL)
     private List<PermissionGroup> groupId = new ArrayList<>();
 
     @Column(length = 50)

@@ -1,4 +1,4 @@
-package com.sc.demo.model.tokens;
+package com.sc.demo.model.token;
 
 import com.sc.demo.model.chat.Platform;
 import jakarta.persistence.*;
@@ -25,10 +25,6 @@ public class AppToken {
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "TOKEN_TYPE")
     private Platform tokenType;
-
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "")
-    private SendingTypeNotification sendingTypeNotification;
 
     private Integer isActive = 1;
 

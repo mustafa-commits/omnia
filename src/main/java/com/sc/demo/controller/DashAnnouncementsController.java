@@ -1,11 +1,11 @@
 package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
-import com.sc.demo.model.announcements.Announcements;
+import com.sc.demo.model.announcement.Announcements;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.notification.SendingType;
-import com.sc.demo.service.announcements.AnnouncementsService;
+import com.sc.demo.service.announcement.AnnouncementsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

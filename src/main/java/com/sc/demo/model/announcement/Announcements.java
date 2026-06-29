@@ -1,4 +1,4 @@
-package com.sc.demo.model.announcements;
+package com.sc.demo.model.announcement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sc.demo.model.notification.SendingType;

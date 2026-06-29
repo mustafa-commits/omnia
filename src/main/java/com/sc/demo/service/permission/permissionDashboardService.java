@@ -1,7 +1,5 @@
 package com.sc.demo.service.permission;
 
-import com.sc.demo.model.announcements.Pin;
-import com.sc.demo.model.dto.chat.AppChatResponse;
 import com.sc.demo.model.dto.permission.PermissionRequest;
 import com.sc.demo.model.dto.permission.PermissionTemplateRequest;
 import com.sc.demo.model.permission.PermissionGroup;

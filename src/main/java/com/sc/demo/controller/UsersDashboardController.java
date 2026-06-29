@@ -6,6 +6,7 @@ import com.sc.demo.model.dto.usersDashboard.UserDashboardResponse;
 import com.sc.demo.model.dto.login.LoginRequest2;
 import com.sc.demo.service.userDashboard.UsersDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -31,8 +32,8 @@ public class UsersDashboardController implements SecuredRestController {
 
     // تأكد من تسجيل دخول المستخدم الى الداش بورد
     @PostMapping("/V1/api/sc/loginUserDashboard")
-    public LoginRequest2 loginUserDashboard(@RequestParam String userName,
-                                            @RequestParam String password){
+    public ResponseEntity<LoginRequest2> loginUserDashboard(@RequestParam String userName,
+                                                           @RequestParam String password){
         return usersDashboardService.loginUserDashboard(userName, password);
     }
 }

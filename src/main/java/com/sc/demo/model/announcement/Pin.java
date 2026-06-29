@@ -1,4 +1,4 @@
-package com.sc.demo.model.announcements;
+package com.sc.demo.model.announcement;
 
 public enum Pin {
     NOTPIN,

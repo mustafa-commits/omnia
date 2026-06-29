@@ -1,18 +1,17 @@
-package com.sc.demo.service.announcements;
+package com.sc.demo.service.announcement;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.tokens.AppToken;
-import com.sc.demo.model.announcements.Announcements;
-import com.sc.demo.model.announcements.AnnouncementsAttachment;
-import com.sc.demo.model.announcements.AnnouncementsDetails;
-import com.sc.demo.model.announcements.Pin;
+import com.sc.demo.model.token.AppToken;
+import com.sc.demo.model.announcement.Announcements;
+import com.sc.demo.model.announcement.AnnouncementsAttachment;
+import com.sc.demo.model.announcement.AnnouncementsDetails;
+import com.sc.demo.model.announcement.Pin;
 import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.announcements.AllAnnouncementsFamilyRequest;
 import com.sc.demo.model.dto.announcements.AnnouncementsRequest;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.model.dto.token.TokenRequest;
 import com.sc.demo.model.notification.SendingType;
-import com.sc.demo.model.tokens.SendingTypeNotification;
 import com.sc.demo.repository.announcements.AnnouncementsAttachmentRepo;
 import com.sc.demo.repository.announcements.AnnouncementsDetailsRepo;
 import com.sc.demo.repository.announcements.AnnouncementsRepo;
@@ -61,7 +60,7 @@ public class AnnouncementsService {
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         Map<String, String> map = new HashMap<>();
-        map.put("SENDING_TYPE_NOTIFICATION", "1");
+        map.put("notification_type", "1");
         map.put("content_available", "1");
 
         Announcements announcements = new Announcements(announcementsRequest.title(),
@@ -193,14 +192,12 @@ public class AnnouncementsService {
             appToken.setLastUpdate(LocalDateTime.now());
             appToken.setToken(tokenRequest.token());
             appToken.setTokenType(Platform.APP);
-            appToken.setSendingTypeNotification(SendingTypeNotification.ANNOUNCEMENT);
             return tokenRepo.save(appToken).getUserId();
         } else {
             AppToken appToken = new AppToken();
             appToken.setToken(tokenRequest.token());
             appToken.setUserId(tokenRequest.userId());
             appToken.setTokenType(Platform.APP);
-            appToken.setSendingTypeNotification(SendingTypeNotification.ANNOUNCEMENT);
             return tokenRepo.save(appToken).getUserId();
         }
     }

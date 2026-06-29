@@ -3,7 +3,7 @@ package com.sc.demo.controller;
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.dto.announcements.PhoneAnnouncementsRequest;
 import com.sc.demo.model.dto.token.TokenRequest;
-import com.sc.demo.service.announcements.AnnouncementsService;
+import com.sc.demo.service.announcement.AnnouncementsService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

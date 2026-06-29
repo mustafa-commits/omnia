@@ -1,7 +1,8 @@
 package com.sc.demo.service.chat;
 
 import com.google.firebase.messaging.*;
-import com.sc.demo.model.tokens.AppToken;
+import com.sc.demo.model.dto.token.TokenRequest;
+import com.sc.demo.model.token.AppToken;
 import com.sc.demo.model.chat.*;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.repository.chat.ChatRepo;
@@ -48,7 +49,7 @@ public class DashAppChatService {
         String newFileName = null;
 
         Map<String, String> map = new HashMap<>();
-        map.put("SENDING_TYPE_NOTIFICATION", "2");
+        map.put("notification_type", "2");
         map.put("content_available", "1");
 
         if(messagesRequest.msgType() == MsgType.IMAGE) {
@@ -119,6 +120,25 @@ public class DashAppChatService {
         }
 
         return true;
+    }
+
+    // حفظ Token القادم من fireBase في قاعدة البيانات
+    public long saveToken(TokenRequest tokenRequest) {
+        Optional<AppToken> byToken = tokenRepo.findById(tokenRequest.userId());
+
+        if (byToken.isPresent()) {
+            AppToken appToken = byToken.get();
+            appToken.setLastUpdate(LocalDateTime.now());
+            appToken.setToken(tokenRequest.token());
+            appToken.setTokenType(Platform.APP);
+            return tokenRepo.save(appToken).getUserId();
+        } else {
+            AppToken appToken = new AppToken();
+            appToken.setToken(tokenRequest.token());
+            appToken.setUserId(tokenRequest.userId());
+            appToken.setTokenType(Platform.APP);
+            return tokenRepo.save(appToken).getUserId();
+        }
     }
 
     // جلب الرسائل

@@ -22,7 +22,7 @@ public class PermissionGroup {
 
     @ManyToOne
     @JoinColumn(name = "userId")
-    private UserDashboard userId;
+    private UserDashboard userDashboardId;
 
     @ManyToOne
     @JoinColumn(name = "permissionId")

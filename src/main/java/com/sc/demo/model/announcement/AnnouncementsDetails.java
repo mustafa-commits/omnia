@@ -1,4 +1,4 @@
-package com.sc.demo.model.announcements;
+package com.sc.demo.model.announcement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -8,20 +8,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
 
-
 @Entity
-@Table(name = "sc_announcements_attachment")
+@Table(name = "sc_announcements_details")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnnouncementsAttachment {
+public class AnnouncementsDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long announcements_details_id;
+    private Long announcementsDetailsId;
 
-    private String fileName;
+    private Long userId;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,11 +37,12 @@ public class AnnouncementsAttachment {
 
     private Long lastUpdateBy;
 
-    public AnnouncementsAttachment(String fileName, Long createBy, Announcements announcements) {
-        this.fileName = fileName;
+    public AnnouncementsDetails(Long userId, Long createBy, Announcements announcements) {
+        this.userId = userId;
         this.createBy = createBy;
         this.announcements = announcements;
     }
+
 
     @PrePersist
     public void prePersist(){

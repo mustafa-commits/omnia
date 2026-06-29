@@ -1,6 +1,6 @@
 package com.sc.demo.repository.chat;
 
-import com.sc.demo.model.tokens.AppToken;
+import com.sc.demo.model.token.AppToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
