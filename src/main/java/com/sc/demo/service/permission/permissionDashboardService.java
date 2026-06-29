@@ -32,8 +32,9 @@ public class permissionDashboardService {
     // اضافة صلاحية على الداش بورد
     public Boolean addPermission(String permissionName, Long groupId, String token){
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
-
-        permissionRepo.save(new Permissions(permissionName, permissionTemplateRepo.getReferenceById(groupId), Long.parseLong(userDashboardId)));
+        System.out.println(userDashboardId);
+        permissionRepo.save(new Permissions(permissionName, permissionTemplateRepo.getReferenceById(groupId),
+                Long.parseLong(userDashboardId)));
         return true;
     }
 

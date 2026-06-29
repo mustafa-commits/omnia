@@ -38,6 +38,7 @@ public class Permissions {
     public Permissions(String permissionName, PermissionGroup groupId, Long createBy) {
         this.groupId = groupId;
         this.permissionName = permissionName;
+        this.createBy = createBy;
     }
 
     @PrePersist

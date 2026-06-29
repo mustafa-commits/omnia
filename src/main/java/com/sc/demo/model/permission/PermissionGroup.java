@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "sc_dashboard_group_permissions")
@@ -20,13 +22,8 @@ public class PermissionGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long groupId;
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private UserDashboard userDashboardId;
-
-    @ManyToOne
-    @JoinColumn(name = "permissionId")
-    private Permissions permissionId;
+    @OneToMany(mappedBy = "groupId", cascade = CascadeType.ALL)
+    private List<UserDashboard> userId = new ArrayList<>();
 
     private String groupName;
 
@@ -42,6 +39,7 @@ public class PermissionGroup {
 
     public PermissionGroup(String groupName, Long createBy) {
         this.groupName = groupName;
+        this.createBy = createBy;
     }
 
     @PrePersist

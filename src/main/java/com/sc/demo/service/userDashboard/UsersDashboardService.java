@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -29,12 +28,15 @@ public class UsersDashboardService {
     @Autowired
     private TokenService tokenService;
 
+    @Autowired
+    private PermissionTemplateRepo permissionTemplateRepo;
+
     public Boolean newUserDashboard(UserDashboardResponse userDashboardResponse, String token) {
         var userDashboardId = tokenService.decodeToken(token.substring(7)).getSubject();
 
         addUserDashboardRepo.save(new UserDashboard(userDashboardResponse.phone(), userDashboardResponse.departmentId(),
                 userDashboardResponse.password(), userDashboardResponse.userName(), userDashboardResponse.fullName(),
-                userDashboardResponse.groupId(), Long.parseLong(userDashboardId)));
+                permissionTemplateRepo.getReferenceById(userDashboardResponse.groupId()), Long.parseLong(userDashboardId)));
 
         return true;
     }
@@ -58,10 +60,10 @@ public class UsersDashboardService {
         Optional<LoginRequest> dashboardLoginCheck = jdbcClient.sql("""
                         SELECT DU.USER_ID AS userId
                               ,USER_NAME AS userName
-                              ,GROUP_ID AS groupId
+                              ,GP.GROUP_ID AS groupId
                               ,GROUP_NAME AS groupName
                         FROM MOBAPP.SC_DASHBOARD_USER DU
-                        LEFT JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON DU.USER_ID = GP.USER_ID
+                        JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON DU.GROUP_ID = GP.GROUP_ID
                         WHERE USER_NAME = :userName
                         AND PASSWORD = :password
                         AND DU.IS_ACTIVE = 1 AND GP.IS_ACTIVE = 1
@@ -76,7 +78,7 @@ public class UsersDashboardService {
                         SELECT P.PERMISSION_ID AS permissionId,
                                PERMISSION_NAME AS permissionName
                         FROM MOBAPP.SC_DASHBOARD_PERMISSIONS P
-                        LEFT JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON GP.PERMISSION_ID = P.PERMISSION_ID
+                        JOIN MOBAPP.SC_DASHBOARD_GROUP_PERMISSIONS GP ON GP.GROUP_ID = P.GROUP_ID
                         WHERE P.GROUP_ID = :groupId
                         """)
                 .param("groupId", dashboardLoginCheck.get().groupId())

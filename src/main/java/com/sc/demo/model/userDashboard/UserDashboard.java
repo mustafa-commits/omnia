@@ -23,8 +23,9 @@ public class UserDashboard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @OneToMany(mappedBy = "userDashboardId", cascade = CascadeType.ALL)
-    private List<PermissionGroup> groupId = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "groupId")
+    private PermissionGroup groupId;
 
     @Column(length = 50)
     private String userName;
@@ -49,12 +50,14 @@ public class UserDashboard {
     private Long lastUpdateBy;
 
     public UserDashboard(String phone, Long departmentId, String password,
-                         String userName, String fullName, Long groupId, Long createBy) {
+                         String userName, String fullName, PermissionGroup groupId, Long createBy) {
         Phone = phone;
         this.departmentId = departmentId;
         this.password = password;
         this.userName = userName;
         this.fullName = fullName;
+        this.groupId = groupId;
+        this.createBy = createBy;
     }
 
     @PrePersist
