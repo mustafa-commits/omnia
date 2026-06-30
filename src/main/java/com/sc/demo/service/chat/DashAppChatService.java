@@ -75,12 +75,8 @@ public class DashAppChatService {
             }
         }
 
-        WhoIsSender whoIsSender = Platform.APP.equals(messagesRequest.platform())
-                ? WhoIsSender.APPUSER
-                : WhoIsSender.USERDASHBOARD;
-
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
-                Long.parseLong(userDashboardId), whoIsSender, messagesRequest.platform(),
+                Long.parseLong(userDashboardId), WhoIsSender.USERDASHBOARD, Platform.DASHBOARD,
                 messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
                 messagesRequest.msgType());
 
@@ -95,29 +91,39 @@ public class DashAppChatService {
         System.out.println("apnsConfig: " + apnsConfig);
         appChatDetailsRepo.save(appChatDetails).getDetailsChatId();
 
-        Optional<AppToken> byToken = tokenRepo.findById(Long.parseLong(userDashboardId));
+        Long sendByUserID = jdbcClient.sql("""
+                        SELECT CREATE_BY
+                        FROM MOBAPP.SC_CHAT_MASTER
+                        WHERE CHAT_ID = :chatId
+                        """)
+                .param("chatId", messagesRequest.chatId())
+                .query(Long.class)
+                .single();
+        System.out.println("sendByUserID: " + sendByUserID);
+        Optional<AppToken> byToken = tokenRepo.findById(sendByUserID);
         System.out.println("byToken: " + byToken);
-        messageList.add(Message.builder()
-                .setToken(byToken.get().getToken())
-                .putAllData(map)
-                .setNotification(firebaseNotification)
-                .setAndroidConfig(AndroidConfig.builder()
-                        .setNotification(AndroidNotification.builder()
-                                .setChannelId("ayn Family")
-                                .build())
-                        .build())
-                .setApnsConfig(apnsConfig)
-                .build()
-        );
-        System.out.println("messageList 111: " + messageList);
-        if (messageList.size() >= 1) {
-            try {
-                System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
-            } catch (FirebaseMessagingException e) {
-                throw new RuntimeException(e);
-            }
+        if (!byToken.isEmpty()) {
+            messageList.add(Message.builder()
+                    .setToken(byToken.get().getToken())
+                    .putAllData(map)
+                    .setNotification(firebaseNotification)
+                    .setAndroidConfig(AndroidConfig.builder()
+                            .setNotification(AndroidNotification.builder()
+                                    .setChannelId("ayn Family")
+                                    .build())
+                            .build())
+                    .setApnsConfig(apnsConfig)
+                    .build()
+            );
+            System.out.println("messageList 111: " + messageList);
         }
-
+            if (messageList.size() >= 1) {
+                try {
+                    System.out.println(firebaseMessaging.send(messageList.get(0)).toString());
+                } catch (FirebaseMessagingException e) {
+                    throw new RuntimeException(e);
+                }
+        }
         return true;
     }
 

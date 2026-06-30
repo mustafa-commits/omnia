@@ -74,7 +74,7 @@ public class LoginService implements CommandLineRunner {
                             OR F.PHONE3 LIKE '%' || :phone)
                         AND H.BIRTH_DATE = TO_DATE(:birthDate, 'DD/MM/YYYY')
 
-                        UNION
+                        UNION ALL
 
                         SELECT FI.HEAD_FAMILY_ID AS headFamilyId
                               ,FI.REQUEST_ID AS requestId
@@ -136,7 +136,7 @@ public class LoginService implements CommandLineRunner {
                             OR F.PHONE2 LIKE '%' || :phone
                             OR F.PHONE3 LIKE '%' || :phone)
 
-                        UNION
+                        UNION ALL
 
                         SELECT FI.HEAD_FAMILY_ID AS headFamilyId
                               ,FI.REQUEST_ID AS requestId

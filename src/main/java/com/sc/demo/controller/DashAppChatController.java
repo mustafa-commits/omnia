@@ -3,7 +3,6 @@ package com.sc.demo.controller;
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.chat.ConfirmProcedure;
 import com.sc.demo.model.chat.MsgType;
-import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.service.chat.DashAppChatService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,14 +31,12 @@ public class DashAppChatController implements SecuredRestController {
     // ارسال رسالة
     @PostMapping("/V1/api/sc/dashWriteMessages")
     public boolean dashWriteMessages(@RequestParam Long chatId,
-                                     @RequestParam Platform platform,
                                      @RequestParam String messages,
                                      @RequestParam MsgType msgType,
                                      @RequestParam(required = false) MultipartFile file,
                                      @RequestParam(required = false) MultipartFile voice,
                                      @RequestHeader(name = "authorization") String token){
-        return dashAppChatService.dashWriteMessages(new MessagesRequest(chatId,
-                platform, messages, msgType), file, voice, token);
+        return dashAppChatService.dashWriteMessages(new MessagesRequest(chatId, messages, msgType), file, voice, token);
     }
 
     // اظهار الرسائل في الداش بورد

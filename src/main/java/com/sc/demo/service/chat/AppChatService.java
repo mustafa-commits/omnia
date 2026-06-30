@@ -140,13 +140,9 @@ public class AppChatService {
             }
         }
 
-        WhoIsSender whoIsSender = Platform.APP.equals(messagesRequest.platform())
-                ? WhoIsSender.APPUSER
-                : WhoIsSender.USERDASHBOARD;
-
         AppChatDetails appChatDetails = new AppChatDetails(chatRepo.getReferenceById(messagesRequest.chatId()),
-                Long.parseLong(userTokenId), whoIsSender,
-                messagesRequest.platform(), messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
+                Long.parseLong(userTokenId), WhoIsSender.APPUSER,
+                Platform.APP, messagesRequest.messages().isEmpty() ? newFileName : messagesRequest.messages(),
                 messagesRequest.msgType());
 
         appChatDetailsRepo.save(appChatDetails).getDetailsChatId();

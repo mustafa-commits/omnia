@@ -2,7 +2,6 @@ package com.sc.demo.controller;
 
 import com.sc.demo.SecuredRestController;
 import com.sc.demo.model.chat.MsgType;
-import com.sc.demo.model.chat.Platform;
 import com.sc.demo.model.dto.chat.*;
 import com.sc.demo.service.chat.AppChatService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -51,14 +50,12 @@ public class AppChatController implements SecuredRestController {
     // ارسال رسالة
     @PostMapping("/V1/api/sc/writeMessages")
     public boolean writeMessages(@RequestParam Long chatId,
-                                 @RequestParam Platform platform,
                                  @RequestParam String messages,
                                  @RequestParam MsgType msgType,
                                  @RequestParam(required = false) MultipartFile file,
                                  @RequestParam(required = false) MultipartFile voice,
                                  @RequestHeader(name = "authorization") String token){
-        return appChatService.writeMessages(new MessagesRequest(chatId,
-                platform, messages, msgType), file, voice, token);
+        return appChatService.writeMessages(new MessagesRequest(chatId, messages, msgType), file, voice, token);
     }
 
     // اظهار الرسائل في المحادثات

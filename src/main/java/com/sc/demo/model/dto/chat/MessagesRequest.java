@@ -5,7 +5,6 @@ import com.sc.demo.model.chat.Platform;
 
 public record MessagesRequest(
         Long chatId,
-        Platform platform,
         String messages,
         MsgType msgType
 ) {
