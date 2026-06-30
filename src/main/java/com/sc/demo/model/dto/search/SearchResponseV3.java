@@ -5,7 +5,8 @@ import java.time.LocalDate;
 public record SearchResponseV3(
         String guardianName,
         String headFamilyName,
-        Long familyPersonsId,
+        Long guardianId,
+        Long headFamilyId,
         LocalDate birthDate,
         Long requestId,
         String branches,

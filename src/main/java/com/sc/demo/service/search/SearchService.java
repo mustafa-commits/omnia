@@ -65,30 +65,31 @@ public class SearchService {
 
     public List<SearchResponseV3> SearchByNameV3(String GuardianName){
         return jdbcClient.sql("""
-                    SELECT * FROM (
-                        SELECT DISTINCT p.PERSON_NAME_FIRST || ' '
-                            || p.PERSON_NAME_SECOND || ' '
-                            || p.PERSON_NAME_THIRD  || ' '
-                            || p.PERSON_NAME_FOURTH || ' '
-                            || ARABIC_VALUE AS guardianName
-                            ,p1.PERSON_NAME_FIRST || ' '
-                            || p1.PERSON_NAME_SECOND || ' '
-                            || p1.PERSON_NAME_THIRD  || ' '
-                            || p1.PERSON_NAME_FOURTH || ' '
-                            || ARABIC_VALUE AS headFamilyName
-                            ,p.FAMILY_PERSONS_ID AS familyPersonsId
-                            ,P.BIRTH_DATE AS birthDate
-                            ,R.AID_REQUEST_ID AS requestId
-                            ,F.ORG_ID AS branches
-                            ,F.OLD_FAMILY_NO AS oldFamilyNo
-                        FROM AIN_CAPPS.SC_FAMILY_PERSONS_HIST P
-                        LEFT JOIN AIN_CAPPS.SC_FAMILY_PERSONS_HIST P1 on (p1.FAMILY_PERSONS_ID = p.HEAD_FAMILY_ID)
-                        LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES V ON V.LOOKUP_CODE = p.FAMILY_TITLE_ID AND v.LOOKUP_TYPE = 'FAMILY_TITLE'
-                        LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (P.FOLLOW_ID = F.FOLLOW_ID)
-                        LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
-                        WHERE P.IS_GUARDIAN = 1
-                    ) SearchName
-                    WHERE SEARCHNAME.GUARDIANNAME LIKE '%' || :GuardianName || '%'
+                  SELECT * FROM (
+                  SELECT DISTINCT p.PERSON_NAME_FIRST || ' '
+                      || p.PERSON_NAME_SECOND || ' '
+                      || p.PERSON_NAME_THIRD  || ' '
+                      || p.PERSON_NAME_FOURTH || ' '
+                      || ARABIC_VALUE AS guardianName
+                      ,p1.PERSON_NAME_FIRST || ' '
+                      || p1.PERSON_NAME_SECOND || ' '
+                      || p1.PERSON_NAME_THIRD  || ' '
+                      || p1.PERSON_NAME_FOURTH || ' '
+                      || ARABIC_VALUE AS headFamilyName
+                      ,p.FAMILY_PERSONS_ID AS guardianId
+                      ,P.HEAD_FAMILY_ID AS headFamilyId
+                      ,P.BIRTH_DATE AS birthDate
+                      ,R.AID_REQUEST_ID AS requestId
+                      ,F.ORG_ID AS branches
+                      ,F.OLD_FAMILY_NO AS oldFamilyNo
+                  FROM AIN_CAPPS.SC_FAMILY_PERSONS_HIST P
+                  LEFT JOIN AIN_CAPPS.SC_FAMILY_PERSONS_HIST P1 on (p1.FAMILY_PERSONS_ID = p.HEAD_FAMILY_ID)
+                  LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES V ON V.LOOKUP_CODE = p.FAMILY_TITLE_ID AND v.LOOKUP_TYPE = 'FAMILY_TITLE'
+                  LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (P.FOLLOW_ID = F.FOLLOW_ID)
+                  LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
+                  WHERE P.IS_GUARDIAN = 1
+                  ) SearchName
+                          WHERE SEARCHNAME.GUARDIANNAME LIKE '%' || :GuardianName || '%'
                 """)
                 .param("GuardianName", GuardianName, SqlTypes.VARCHAR)
                 .query(SearchResponseV3.class)
