@@ -27,51 +27,49 @@ public class AddPhoneService {
 
     public List<CheckPhoneRequest> checkForTheNumber(long phone){
         return jdbcClient.sql("""
-                 SELECT H.PERSON_NAME_FIRST || ' '
-                   || H.PERSON_NAME_SECOND || ' '
-                   || H.PERSON_NAME_THIRD  || ' '
-                   || H.PERSON_NAME_FOURTH || ' '
-                   || ARABIC_VALUE AS headFamilyName
-                   ,(SELECT H1.PERSON_NAME_FIRST || ' ' ||
-                             H1.PERSON_NAME_SECOND || ' ' ||
-                             H1.PERSON_NAME_THIRD || ' ' ||
-                             H1.PERSON_NAME_FOURTH
-                    FROM AIN_CAPPS.SC_FAMILY_PERSONS_HIST H1
-                    WHERE H.FAMILY_PERSONS_ID = H1.HEAD_FAMILY_ID
-                    AND H1.IS_GUARDIAN = 1) AS guardianName
-                   ,H.BIRTH_DATE AS birthDate
-                   ,R.AID_REQUEST_ID AS requestId
-                   ,H.FAMILY_PERSONS_ID AS headFamilyId
-                   ,F.ORG_ID AS branches
-                   ,F.OLD_FAMILY_NO AS oldFamilyNo
-                FROM  AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
-                LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
-                LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
-                LEFT Join AIN_CAPPS.SC_FAMILY_PERSONS_HIST H on (R.FAMILY_PERSON_ID = H.FAMILY_PERSONS_ID)
-                LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES V ON V.LOOKUP_CODE = H.FAMILY_TITLE_ID AND v.LOOKUP_TYPE = 'FAMILY_TITLE'
-                WHERE (F.PHONE1 LIKE '%' || :phone
-                   OR F.PHONE2 LIKE '%' || :phone
-                   OR F.PHONE3 LIKE '%' || :phone)
-                AND D.FOLLOW_DESCION_DATE = (SELECT MAX (D1.FOLLOW_DESCION_DATE)
-                                          FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D1
-                                               LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F1
-                                                 ON (D1.FOLLOW_ID = F1.FOLLOW_ID)
-                                              LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R1
-                                                   ON (F1.AID_REQUEST_ID = R1.AID_REQUEST_ID)
-                                          WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
-                                              AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
-                UNION ALL
+              SELECT  H.PERSON_NAME_FIRST || ' ' ||
+                      H.PERSON_NAME_SECOND || ' ' ||
+                      H.PERSON_NAME_THIRD  || ' ' ||
+                      H.PERSON_NAME_FOURTH || ' ' ||
+                      ARABIC_VALUE AS headFamilyName
+                     ,H1.PERSON_NAME_FIRST || ' ' ||
+                      H1.PERSON_NAME_SECOND || ' ' ||
+                      H1.PERSON_NAME_THIRD || ' ' ||
+                      H1.PERSON_NAME_FOURTH AS guardianName
+                     ,H1.BIRTH_DATE AS birthDate
+                     ,R.AID_REQUEST_ID AS requestId
+                     ,H1.HEAD_FAMILY_ID AS headFamilyId
+                     ,F.ORG_ID AS branches
+                     ,F.OLD_FAMILY_NO AS oldFamilyNo
+              FROM  AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D
+              LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F ON (D.FOLLOW_ID = F.FOLLOW_ID)
+              LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R ON (F.AID_REQUEST_ID = R.AID_REQUEST_ID)
+              LEFT JOIN AIN_CAPPS.SC_FAMILY_PERSONS_HIST H ON (R.FAMILY_PERSON_ID = H.FAMILY_PERSONS_ID)
+              LEFT JOIN AIN_CAPPS.SC_FAMILY_PERSONS_HIST H1 ON (R.FAMILY_PERSON_ID = H1.HEAD_FAMILY_ID AND H1.IS_GUARDIAN = 1)
+              LEFT JOIN AIN_CAPPS.FND_LOOKUP_VALUES V ON V.LOOKUP_CODE = H.FAMILY_TITLE_ID AND V.LOOKUP_TYPE = 'FAMILY_TITLE'
+              WHERE (F.PHONE1 LIKE '%' || :phone
+                 OR F.PHONE2 LIKE '%' || :phone
+                 OR F.PHONE3 LIKE '%' || :phone)
+              AND D.FOLLOW_DESCION_DATE = (SELECT MAX (D1.FOLLOW_DESCION_DATE)
+                                        FROM AIN_CAPPS.SC_AID_FOLLOW_DESCION_HD  D1
+                                             LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS_FOLLOW F1
+                                               ON (D1.FOLLOW_ID = F1.FOLLOW_ID)
+                                            LEFT JOIN AIN_CAPPS.SC_AID_REQUESTS R1
+                                                 ON (F1.AID_REQUEST_ID = R1.AID_REQUEST_ID)
+                                        WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
+                                            AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
+               UNION ALL
 
-                SELECT HEAD_FAMILY_NAME AS headFamilyName
-                      ,GUARDIAN_NAME AS guardianName
-                      ,BIRTH_DATE AS birthDate
-                      ,REQUEST_ID AS requestId
-                      ,HEAD_FAMILY_ID AS headFamilyId
-                      ,BRANCHES AS branches
-                      ,OLD_FAMILY_NO AS oldFamilyNo
-                FROM MOBAPP.SC_FAMILY_INFO FI
-                WHERE FI.PHONE LIKE '%' || :phone
-                """)
+               SELECT HEAD_FAMILY_NAME AS headFamilyName
+                     ,GUARDIAN_NAME AS guardianName
+                    ,BIRTH_DATE AS birthDate
+                     ,REQUEST_ID AS requestId
+                     ,HEAD_FAMILY_ID AS headFamilyId
+                     ,BRANCHES AS branches
+                     ,OLD_FAMILY_NO AS oldFamilyNo
+               FROM MOBAPP.SC_FAMILY_INFO FI
+               WHERE FI.PHONE LIKE '%' || :phone
+               """)
                 .param("phone", phone)
                 .query(CheckPhoneRequest.class)
                 .list();

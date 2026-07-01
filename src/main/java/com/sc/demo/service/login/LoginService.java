@@ -15,7 +15,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -69,6 +68,7 @@ public class LoginService implements CommandLineRunner {
                                                  WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
                                                      AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
                         AND H.IS_GUARDIAN = 1
+                        AND D.FOLLOW_DESCION_STATUS = 2
                         AND (F.PHONE1 LIKE '%' || :phone
                             OR F.PHONE2 LIKE '%' || :phone
                             OR F.PHONE3 LIKE '%' || :phone)
@@ -132,6 +132,7 @@ public class LoginService implements CommandLineRunner {
                                                  WHERE R.FAMILY_PERSON_ID = R1.FAMILY_PERSON_ID
                                                      AND F.OLD_FAMILY_NO = F1.OLD_FAMILY_NO)
                         AND H.IS_GUARDIAN = 1
+                        AND D.FOLLOW_DESCION_STATUS = 2
                         AND (F.PHONE1 LIKE '%' || :phone
                             OR F.PHONE2 LIKE '%' || :phone
                             OR F.PHONE3 LIKE '%' || :phone)
